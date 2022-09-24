@@ -1,72 +1,226 @@
-# FeatureExtraction_DataClean_BreakDataIntoLaps
 
-Last update:  2022-07-08 
-
-Author: S. Brennan
-
-GitHub location: https://github.com/ivsg-psu/FeatureExtraction_DataClean_BreakDataIntoLaps
-
-
-## Description
-### What does this code do?
-The purpose of this code is to break data into "laps", e.g. segments of data that are defined by a clear start condition and end condition.
-* Inputs: 
-    * a path of XY points in N x 2 format
-    * the start, end, and optional excursions can be entered as either a line segment or a point and radius. 
-* Outputs
-    * Separate arrays of XY points, one array for each lap
-    * The points that were not used for laps, e.g. the points before the first start and after the last end
-
-If one imagines XY data being recorded from a running app, then the line segment method of finding a lap is useful to find in the XY data every time (or "lap") when someone went from a starting line or finish line in a race, whereas the point and radius method would be useful for finding data representing every time (or lap) where the person went from this specific Starbucks to that specific park bench. 
-
-### Some special features:
-* The conditions can be mixed and matched, so that one could, for example, find every lap of data where someone went from a race finish line (defined by a line segment) to a specific Starbucks (defined by a point and radius). 
-* The methods also support repeated laps, for example going in laps around a track. 
-* The methods support excursion points such that one must pass an excursion point or line segment after the start point before the end point. For example, it is common for the start line of a marathon to immediately nearby and before the end line of the marathon, so that immediately after the start, one crosses the end line before going out onto the main course. One would not want that small segment to count as the marathon run, so one can define an excursion point, a location far out into the course, that one must "hit" before the finish line is counted as the "finish" of the lap.
-* For each lap when there are repeats, the resulting laps of data include the lead-in and fade-out data, namely the datapoint immediately before the start condition was met, and the datapoint after the end condition is met; while this does create replicate data, this allows better merging of data for repeated laps, for example averaging data exactly from start to finish.
-
-### Why? What are the typical uses?
-Particularly when driving, it is not practical to stop data collection each time a measurement area is driven. Data is often collected by repeated driving of an area over/over without stopping, so the data that is collected may contain many replicates of the area of interest. Additionally, for public roads, data must often be segmented from one keypoint to another, for example from one intersection to the next. It is often not practical (nor even legal) to stop the vehicle mid-road to stop the data collection. This code assists in breaking data up to specific start and end locations even when there are no replicates.
-
-### Major releases
-This code is still in development (alpha testing)
+<!--
+*** The following documentation is based on the Best-README-Template.
+*** To avoid retyping too much info. Do a search and replace for the following:
+*** github_username, repo_name, twitter_handle, email, project_title, project_description
+-->
 
 
----
 
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+-->
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <!-- <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a> -->
+
+  <h3 align="center">FeatureExtraction_SafetyMetrics_SafetyMetricsClass</h3>
+
+  <p align="center">
+    MATLAB code implementation of functions that perform safety metric calculations given a set of objects and a path through them.
+    <br />
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/tree/main/Documents">View Demo</a>
+    ·
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/issues">Request Feature</a>
+  </p>
+</p>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="structure">Repo Structure</a>
+	    <ul>
+	    <li><a href="#directories">Top-Level Directories</li>
+	    <li><a href="#functions">Functions</li>
+	    </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+<!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
+
+MATLAB code implementation of functions that perform safety metric calculations given a set of objects and a path through them. These codes were originally developed to support the PennDOT ADS project in order to assess and compare "safety" of vehicles traversing an environment with obstacles, lane markers, etc.
+
+NOTE: This code is still in development (alpha testing)!
+
+<!-- GETTING STARTED -->
 ## Getting Started
 
-### Dependencies
+To get a local copy up and running follow these simple steps.
 
-* [Errata_Tutorials_DebugTools](https://github.com/ivsg-psu/Errata_Tutorials_DebugTools) - The DebugTools repo is used for the initial automated folder setup, and for input checking and general debugging calls within subfunctions. The repo can be found at: https://github.com/ivsg-psu/Errata_Tutorials_DebugTools
+### Installation
 
-* [PathPlanning_PathTools_PathClassLibrary](https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary) - the PathClassLibrary contains tools used to find intersections of the data with particular line segments, which is used to find start/end/excursion locations in the functions. The repo can be found at: https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary
+1. Clone the repo
+   ```sh
+   git clone https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass.git
+   ```
 
-Each should be installed in a folder called "Utilities" under the root
-folder, namely ./Utilities/DebugTools/ , ./Utilities/PathClassLibrary/ .
-If you wish to put these codes in different directories, the main call stack in script_demo_Laps can be easily modified with strings specifying the different location, but the user will have to make these edits directly.
+2. Create the utilities directories
 
-For ease of getting started, the zip files of the directories used - without the .git repo information, to keep them small - are included in this repo.
+    This code depends on the following repos
+
+    * [Errata_Tutorials_DebugTools](https://github.com/ivsg-psu/Errata_Tutorials_DebugTools) - The DebugTools repo is used for the initial automated folder setup, and for input checking and general debugging calls within subfunctions. The repo can be found at: https://github.com/ivsg-psu/Errata_Tutorials_DebugTools
+
+    * [PathPlanning_PathTools_PathClassLibrary](https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary) - the PathClassLibrary contains tools used to find intersections of the data with particular line segments, which is used to find start/end/excursion locations in the functions. The repo can be found at: https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary
+
+    Each should be installed in a folder called "Utilities" under the root folder, namely ./Utilities/DebugTools/ , ./Utilities/PathClassLibrary/ 
+
+    If you wish to put these codes in different directories, the main call stack in script_demo_Laps can be easily modified with strings specifying the different location, but the user will have to make these edits directly.
+
+    For ease of getting started, the zip files of the directories used - without the .git repo information, to keep them small - are included in this repo.
 
 
-### Installing
-* Make sure to run MATLAB 2020b or higher (the "digitspattern" command used in the DebugTools was released then).
-* Clone the repo to your working directory.
-* Unzip the zip files (DebugTools and PathClassLibrary) into a Utilities folder (.\Utilities), in locations .\Utilities\DebugTools and .\Utilities\PathClassLibrary
-* Run script_demo_Laps from the working directory root location
-* If the code works, the script should run without errors producing numerous example images.
+3. Check compatibility
+    * Make sure to run MATLAB 2020b or higher (the "digitspattern" command used in the DebugTools was released then).
+
+4. Run the code
+    * Run script_demo_Laps from the working directory root location
+    * If the code works, the script should run without errors producing numerous example images and results. As well, AFTER running this main script, the other scripts within the ./Functions folder should also work.
 
 
-### Executing program
-* All functions for this library are found in the Functions sub-folder, and each has an associated test script.
-* The main function to run is: fcn_Laps_breakDataIntoLaps.m, which can be tested by running script_test_fcn_Laps_breakDataIntoLaps.m
+<!-- STRUCTURE OF THE REPO -->
+## Structure
+All scripts start with "script_" and all functions start with "fcn_".
 
----
-## Help
+The main demo script is at the root directory. Running this script should initialize the directory structure, and thus it should always be run first. It will also illustrate key features in the code. Additional code details are found in the function scripts.
 
-### Documentation
+Functions specifically developed for this repo are in the /Functions directory. Each function has associated with it a test script.
 
-- Please look at the "LapsLibrary.pptx" for a detailed presentation on the code
+Supporting utilities (not edited in this repo, and supported in other repos) are in the utilities directory. 
+
+### Directories
+The following are the top level directories within the repository:
+<ul>
+	<li>Documents: Descriptions of the functionality and usage of the various MATLAB functions and scripts in the repository.</li>
+	<li>Functions: The majority of the code for this repo can be found in this directory. All functions as well as test scripts are provided.</li>
+	<li>Utilities: Dependencies that are utilized but not implemented in this repository are placed in the Utilities directory. These can be single files but are most often other cloned repositories kept as a zip file, with the git details stripped out to keep the zip small.</li>
+</ul>
+
+<!-- FUNCTION DEFINITIONS -->
+### Functions
+**Point-Set Association Functions**
+<ul>
+	<li>fcn_Points_checkInputsToFunctions: TEMPLATE function for checking arguments to functions, such as point sets, etc. to make sure the formatting and sizes are correct</li>
+	<li>fcn_Points_fillPointSampleSets: a function to load some sample data sets to use for testing the other functions</li>
+	<li>fcn_Points_fillPointSetViaUserInputs: a function that allows a user to create (X,Y) point sets by clicking in a figure with the mouse</li>
+	<li>fcn_Points_plotSetsXY: a function that plots (X,Y) point sets with various options</li>
+	<li>fcn_Points_pairXYdata: a function that associates the mutually closest points in two different point sets and returns the pairs as well as points which don't have an obvious mutual pair, in both directions</li>
+	<li>fcn_Points_calcPairStatistics: a function that calculates the statistics for paired sets of points, returning RMS deviation, variance in point locations, and the offset between the centroids of the two point sets (a measurement of the systematic "shift" between two point sets)</li>
+	<li>fcn_Points_adjustPointSetStatistics: a function to add 2D Gaussian noise and/or bias to a point set (e.g. to simulate sensor noise or bias) </li>
+</ul>
+
+**Patch Object Creation/Manipulation Functions**
+<ul>
+	<li>fcn_Patch_fillSamplePatches: a function to load a few sample patch objects of different sizes, shapes, and colors for testing the other patch object functions</li>
+	<li>fcn_Patch_fillPatchArrayViaUserInputs: a function that allows a user to create patch objects by choosing patch colors and then using a mouse to click in a figure window to define the vertices of the patch object</li>
+	<li>fcn_Patch_plotPatch: a function that plots patch a patch object or an array of patch objects, optionally choosing particular patch objects from the array and/or plotting into a particular figure</li>
+	<li>fcn_Patch_insertPoints: a function that allows the user to insert one or more (X,Y) points into a patch object to add vertices to the patch object</li>
+	<li>fcn_Patch_determineAABB: a function to determine the (X,Y) extremes of the patch object and store them in the patch object attributes</li>
+	<li>fcn_Patch_inferPrimitive: a function to test the fit of circular and rectangular shape primitives to the vertices of the patch object and store the best fit to the patch object attributes (or reject both fits and label the object as irregular)</li>
+	<li>fcn_Patch_checkCollisions: a function to test an array of patch objects to determine impact point and time or, for non-collisions, the closest point and time of closest approach with a rectangular object traveling in a circular trajectory of a given radius, center point, and initial heading</li>
+</ul>
+Each of the functions has an associated test script, using the convention
+	```sh
+	script_test_fcn_fcnname
+	```
+where fcnname is the function name starting with "Patch" or "Point" as listed above.
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+<!-- Use this space to show useful examples of how a project can be used.
+Additional screenshots, code examples and demos work well in this space. You may
+also link to more resources. -->
+
+1. Open MATLAB and navigate to the Functions directory
+
+2. Run any of the various test scripts, such as
+   ```sh
+   script_test_fcn_Points_pairXYdata
+   ```
+   or
+   ```sh
+   script_test_fcn_Patch_checkCollisions
+   ```
+_For more examples, please refer to the [Documentation] 
+
+https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/tree/main/Documents)_
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+
+<!-- CONTACT -->
+## Contact
+Prof. Sean Brennan - sbrennan@psu.edu 
+
+Project Link: [https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass)
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation.svg?style=for-the-badge
+[contributors-url]: https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation.svg?style=for-the-badge
+[forks-url]: https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/network/members
+[stars-shield]: https://img.shields.io/github/stars/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation.svg?style=for-the-badge
+[stars-url]: https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ivsg-psu/reFeatureExtraction_Association_PointToPointAssociationpo.svg?style=for-the-badge
+[issues-url]: https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/issues
+[license-shield]: https://img.shields.io/github/license/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation.svg?style=for-the-badge
+[license-url]: https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/blob/master/LICENSE.txt
+
+
+
+
 
 
 
