@@ -69,6 +69,7 @@
 	    </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <i><a href="#metrics">Metrics</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -188,7 +189,496 @@ _For more examples, please refer to the [Documentation]
 
 https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/tree/main/Documents)_
 
+<!-- Metrics -->
+# Hypothesis metrics
+Metrics are arranged by the PEP
+## Surrogate safety metrics
 
+### Time to collision (TTC)
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Post encroachment time
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Deceleration rate to avoid crash
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Speed differential
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Conflict severity index
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Relative lane position
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Time to lane departure
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Obstical avoidance measures
+
+### Mimimum clearance distance over all objects
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Smallest clearance to each object category
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### If impact, location of impact on the vehicle
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### If impact, location of  impact on object
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Compliance with traffic laws and speed limit compliance
+
+### Point speed
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Posted speed disparity
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Throughput 
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Stopping point, stopping time, or rolling-stop minimum speed/location
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Density
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Consistency of vehicle flow in a work zone remains the same
+
+### Consistencey measures
+
+#### AV point speed
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV lane choice
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV site-specifc speed disparity
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV follower-specific speed disparity
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV leader-specific speed disparity 
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Spacing between the AV and a lead vehicle
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Spacing between the AV and a follow vehicle
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV relative land position
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### AV total acceleratiopn vector
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### External Vehicle measures
+
+#### Throughput
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Density
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Imporoved recognition of work zone boundaries
+
+### Logitidunial metrics: Binary
+
+#### Presence or absence of workzone
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Binary confirmation of object presence
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Longitudinal metrics: Continous
+
+#### S-coordinate vector from AV declaration of boundary to actual work zone boundary.
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### S-coordinate vector from AV detection of a work zone object to actual work zone boundary.
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Tranverse coordinate vector from lane center of first work zone object detected by AV
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### S-coordinate vector from first complete AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed throught that raod way
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### S-coordinate vector from the start of AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed through that roadway
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Right lateral-boundary disparity vector
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+#### Left lateral-boundary disparity vector
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Connectivity is robust enough for data sharing, even in a typical work zone
+
+## Connectivity will improve AV function
+
+## Datagram definitions for V2X are suited for work zone map sharing
+
+### Binary flags indication data field usage
+
+## Work-zone-specific coating can impove object recognition by AVs
+
+### Range of first dection (in meters)
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Incidence angle of detection, measured in degrees of any flat objects (e.g., signs), relative to the incidence angel to the vehicle's sensor
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Projected area of the object in square meters ( the cross-sectional area of the object)
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Dimensions (height, width, and geometirc configuration such as shape, profile, etc.) of the object
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Coating pattern, namely striping, type and direction of stripes, etc
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Wear condition, which is the subjective evaluation of wear of the object as assessed by DOT personnel equivalent to deployment assessment (e.g., “new,” “normal wear,” or “out of service wear”)
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Object detection accuracy, the classification accuracy of the object according to the AV and/or mapping van sensor data workflow.
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+## Work-zone-specific coating will not change human-driving vehicle behavior
+
+## Work-zone-specific coating can improve work zone recognition by AVs
+
+## Enhanced coatings will improve AV safety
+
+## Enhanced mapping will improve AV safety
+
+## Enchanced mapping will reduce AV data errors
+
+### Object detection accuracy
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### Object prediction accuracy
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
 
 <!-- LICENSE -->
 ## License
