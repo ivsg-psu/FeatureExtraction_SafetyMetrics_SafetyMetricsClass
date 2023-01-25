@@ -199,7 +199,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The time from when an entity leaves a specific location (or conflict point) to the time another entity arrives at that location. </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -209,7 +209,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The time from when an entity leaves a specific location (or conflict point) to the time another entity arrives at that location.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -219,7 +219,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The minimum required deceleration rate a vehicle must apply to avoid a crash if the paths and speeds of all other entities are maintained.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -229,7 +229,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The difference in speed between a vehicle and a conflicting entity at the time/point of collision.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -239,7 +239,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: related to ratio of TTC^2 and perception-reaction time^2. This is a normalized value between 0 and 1, where 1 is the most severe conflict and 0 is the least severe.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -249,7 +249,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The location of the vehicle with respect to the lane edge and centerline. Note that this metric generally cannot be obtained from a microsimulation but can be obtained from the simulation of the AV. This metric can also be computed from real data.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -259,7 +259,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: : The time until the vehicle would depart the lane given its current trajectory. Note that this metric generally cannot be obtained from a microsimulation but can be obtained from the simulation of the AV. This metric can also be computed from real data.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -271,7 +271,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is calculated by determining, at each time point in a trajectory, the minimum radial distance between the closest boundary of the vehicle and an object that would result in a collision. The intent of this distance is to quantify, at each time point, possible near-misses of vehicles to surrounding objects where surrounding objects are perimeter-defined via either the AV’s sensor “map,” the mapping van-generated map, or instrumentation on the objects within the work zone to measure object positions. </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -281,7 +281,17 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is the same metric described previously, but also captured relative to different object types present in the near-range vicinity (e.g., sensor range) of the vehicle. The purpose of collecting this metric is that the severity of near-missing a cone is minor, whereas near-missing a pedestrian is of grave concern. The object categories expected, in approximate order of severity from least severe to most severe, might include the following: cones, barrels, barriers, roadside signs, poles, parked vehicles/equipment, moving work zone vehicles/equipment, and pedestrians.</li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+### If impact, relative velocity at impact
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: This is a metric that assumes a collision takes place, useful to estimate how much energy would be transferred from the vehicle to a roadside object.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -291,7 +301,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is a metric of the location that the impact would first take place, as measured in vehicle body-fixed coordinates. The purpose of this metric is to determine whether portions of the vehicle would either be damaged (for example, key sensors the AV needs to continue moving) or if the vehicle impact location might have mitigated the impact in some manner, such as an instance where a foldable mirror were the only point of contact.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -301,7 +311,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is a metric of the location that the impact would first take place, as measured in object’s body-fixed coordinates (assuming centroid of the object as the coordinate origin). The purpose of this metric is to determine what portions of the object would be damaged (i.e., signage) or if the vehicle impact location might have mitigated due to the object in some manner, such as if the “impact” was a vehicle tire riding up onto an A-type barrier—mitigating any damage to the vehicle and/or barrier.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -313,7 +323,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Speed of individual vehicle at a given location along the roadway.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -323,7 +333,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Speed of vehicle relative to posted speed limit, with positive values being over-speed conditions, negative values being under-speed conditions.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -333,7 +343,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The rate at which vehicles can clear the area of interest (at the downstream end) per unit time. This is used to evaluate anomalous behaviors that can result in safety concerns such as severe grouping of vehicles.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -343,7 +353,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This metric is provided in the situation that a stopping device or traffic light is indicated in the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -353,7 +363,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: : Spatial rate of vehicles within the area of interest (vehicles per unit length). This is used to evaluate anomalous behaviors that can result in safety concerns.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -367,7 +377,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Speed of individual vehicle at a given location along the roadway.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -377,7 +387,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The lane the AV chooses to use, if multiple lanes are available.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -387,7 +397,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The speed disparity of the AV relative to average vehicle (assuming human-driven, averaged over a long duration) at that station of the work zone. A positive disparity means the AV is faster than average; negative is less than average.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -397,7 +407,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The speed disparity of the AV relative to the vehicle ahead, if any are within sensor range, at that station of the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -407,7 +417,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The speed disparity of the AV relative to the vehicle behind, if any are within sensor range, at that station of the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -417,7 +427,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: : Like the TTC metric for safety, this is a metric of the distance between the AV and the nearest vehicle ahead within sensor range. </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -427,7 +437,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Like the TTC metric for safety for the follower vehicle, this is a metric of the distance between the AV and the nearest vehicle behind the AV, looking at whether the AV appears to cause other vehicles behind to “tailgate” the AV.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -437,7 +447,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: The location of the vehicle with respect to the lane edge and centerline. Note that this metric generally cannot be obtained from a traffic microsimulation but can be obtained from the simulation of the AV in more advanced vehicle simulation tools or can also be computed from real-world data.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -447,7 +457,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is the vector of the acceleration measured at the center-of-gravity (CG) of the vehicle, used to determine cornering, braking, and tractive forces. This is particularly useful to determine friction utilization of the AV at different locations within the work zone, and thus the remaining maneuvering envelope. For example, if the AV is measured with 0.5 g of lateral acceleration and the skid number of the pavement indicates a friction supply of 0.5 (e.g., a Skid Number of approximately 50), then this case indicates that the AV would not be able to swerve further to avoid work zone vehicles or pedestrians without skidding.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -459,7 +469,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Rate vehicles can clear the area of interest (at the downstream end). This is used to evaluate anomalous behaviors that can result in safety concerns.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -469,7 +479,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Spatial rate of vehicles within the area of interest (vehicles per unit length). This is used to evaluate anomalous behaviors that can result in safety concerns.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -483,20 +493,11 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is a binary flag, either 1 or 0, at each time point indicating whether an AV interprets that it is within a work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
 
-#### Binary confirmation of object presence
-
-<ul>
-	<li> Function name: </li>
-	<li> Diagram: </li>
-	<li> Description: </li>
-	<li> Methodology: </li>
-	<li> Example results: </li>
-</ul>
 
 ### Longitudinal metrics: Continous
 
@@ -555,7 +556,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is the difference in location, measured to the right, between the AV-provided data defining interpreted work zone boundaries vs. the denoted boundaries within the map. This vector is measured relative to the mapped work zone boundary as the origin, with positive values pointing inward, namely that a positive value indicates that the AV interprets the boundary to be farther into the work zone than the map indicates.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -565,10 +566,23 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: This is the difference in location, measured to the left, for the metric described previously.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
+
+## Lateral metrics: Binary
+
+### Binary confirmation of object presence
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: This is a binary 1 or 0 indicating agreement between AV-provided data showing objects detected, that these agree with those defined on the map.</li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
 
 ## Connectivity is robust enough for data sharing, even in a typical work zone
 
@@ -665,7 +679,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: Where possible, the classification accuracy of the object according to the AV and/or mapping van sensor data workflow will be determined by comparing AV object labeling, position information, etc., to that of the mapping van, instrumented RSE, instrumented pedestrians, etc.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
@@ -675,7 +689,7 @@ Metrics are arranged by the PEP
 <ul>
 	<li> Function name: </li>
 	<li> Diagram: </li>
-	<li> Description: </li>
+	<li> Description: For objects that have trajectories and are instrumented (for example, instrumented work zone worker vests), the AV-predicted path projections will be compared to the resulting path projections for small look-ahead intervals. The goal is to determine whether the errors decrease. This will be considered for 0.5-, 1.0-, 2.0-, and 4.0-second look-ahead predictions.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
 </ul>
