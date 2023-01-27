@@ -198,7 +198,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![Diagram of Time to collision](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/TTC.png)
+
+</li>
 	<li> Description: The time from when an entity leaves a specific location (or conflict point) to the time another entity arrives at that location. </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -228,7 +232,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram:
+	
+![Diagram of Speed differential](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Speed_differntal.png)
+	
+</li>
 	<li> Description: The difference in speed between a vehicle and a conflicting entity at the time/point of collision.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -300,7 +308,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![Diagram of If impact, location of impact on the vehicle](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/if_impact_location.png)
+	
+</li>
 	<li> Description: This is a metric of the location that the impact would first take place, as measured in vehicle body-fixed coordinates. The purpose of this metric is to determine whether portions of the vehicle would either be damaged (for example, key sensors the AV needs to continue moving) or if the vehicle impact location might have mitigated the impact in some manner, such as an instance where a foldable mirror were the only point of contact.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -310,7 +322,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![Diagram of If impact, location of impact on object](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/if_impact_location_object.png)
+
+</li>
 	<li> Description: This is a metric of the location that the impact would first take place, as measured in object’s body-fixed coordinates (assuming centroid of the object as the coordinate origin). The purpose of this metric is to determine what portions of the object would be damaged (i.e., signage) or if the vehicle impact location might have mitigated due to the object in some manner, such as if the “impact” was a vehicle tire riding up onto an A-type barrier—mitigating any damage to the vehicle and/or barrier.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -322,7 +338,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![Point Speed](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Point_speed.png)
+	
+</li>
 	<li> Description: Speed of individual vehicle at a given location along the roadway.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -332,7 +352,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![Point Speed Disparity](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Posted_speed_disparity.png)	
+	
+</li>
 	<li> Description: Speed of vehicle relative to posted speed limit, with positive values being over-speed conditions, negative values being under-speed conditions.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -352,7 +376,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of Stopping point, stopping time, or rolling-stop minimum speed/location](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Stopping_point.png)	
+	
+</li>
 	<li> Description: This metric is provided in the situation that a stopping device or traffic light is indicated in the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -376,7 +404,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of AV point speed](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/AV_point_speed.png)	
+	
+</li>
 	<li> Description: Speed of individual vehicle at a given location along the roadway.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -396,7 +428,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of AV site-specifc speed disparity](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/AV_leader_specific_speed_disparity.png)			
+
+</li>
 	<li> Description: The speed disparity of the AV relative to average vehicle (assuming human-driven, averaged over a long duration) at that station of the work zone. A positive disparity means the AV is faster than average; negative is less than average.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -406,7 +442,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of AV follower-specific speed disparity](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/AV_follower_specific_speed_disparity.png)		
+
+</li>
 	<li> Description: The speed disparity of the AV relative to the vehicle ahead, if any are within sensor range, at that station of the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -416,7 +456,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of AV follower-specific speed disparity](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/AV_leader_specific_speed_disparity.png)		
+	
+</li>
 	<li> Description: The speed disparity of the AV relative to the vehicle behind, if any are within sensor range, at that station of the work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -426,7 +470,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of Spacing between the AV and a lead vehicle](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Spacing_Between_the_AV_and_lead.png)	
+	
+</li>
 	<li> Description: : Like the TTC metric for safety, this is a metric of the distance between the AV and the nearest vehicle ahead within sensor range. </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -436,7 +484,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of Spacing between the AV and a follow vehicle](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Spacing_between_the_AV_follow.png)	
+	
+</li>
 	<li> Description: Like the TTC metric for safety for the follower vehicle, this is a metric of the distance between the AV and the nearest vehicle behind the AV, looking at whether the AV appears to cause other vehicles behind to “tailgate” the AV.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -452,7 +504,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV total acceleratiopn vector
+#### AV total acceleration vector
 
 <ul>
 	<li> Function name: </li>
@@ -492,7 +544,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+
+![ Diagram of Presence or absence of workzone](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Presence_or_absene_work_zone.png)
+	
+</li>
 	<li> Description: This is a binary flag, either 1 or 0, at each time point indicating whether an AV interprets that it is within a work zone.</li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -598,7 +654,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of Range of first dection (in meters)](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/range_of_first_detection.png)	
+	
+</li>
 	<li> Description: </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
@@ -628,7 +688,11 @@ Metrics are arranged by the PEP
 
 <ul>
 	<li> Function name: </li>
-	<li> Diagram: </li>
+	<li> Diagram: 
+	
+![ Diagram of Dimensions (height, width, and geometirc configuration such as shape, profile, etc.) of the object](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Dimensions_of_object.png)	
+	
+</li>
 	<li> Description: </li>
 	<li> Methodology: </li>
 	<li> Example results: </li>
