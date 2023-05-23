@@ -760,11 +760,15 @@ Metrics are arranged by the PEP
 
 # Space time graphs
 ## Lane change
+![Lane Change](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Lane_change_3d.png)	
 ## Stopping at Stop sign
+![Stopping at Stop sing](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Stop_sign_3d.png)
 ## Half-lane change with object
+![Half-lane change with object](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Half_turn_object_3d.png)
 ## Right turn
+![Right turn](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Right_turn_3d.png)
 ## Left turn
-
+![Left turn](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Left_turn.png)
 
 <!-- LICENSE -->
 ## License
