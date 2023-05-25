@@ -1,33 +1,32 @@
-function fcn_SafetyMetrics_plotTrajectoryXY( ...
-trajectory, ...
-vehicle_param, ...
-time_interval, ...
-flag_object,...
-flag_3d_plot, ...
-varargin...
-)
+function [fig_num]=fcn_SafetyMetrics_plotTrajectoryXY( ...
+    trajectory, ...
+    vehicle_param, ...
+    time_interval, ...
+    flag_3d_plot, ...
+    varargin...
+    )
 % fcn_SafetyMetrics_plotTrajectoryXY
 % Plotting vehicle using using custom time intervals on a XY cartesian coordinate
-% system. THis 
-% 
-% 
-% 
+% system. This function will plot the vehicle in a custom time interval in
+% either 2d or 3d, with the third axis being the time.
+%
+%
+%
 % FORMAT:
-% 
-% function fcn_SafetyMetrics_plotTrajectoryXY( ...
-% trajectory, ...
-% vehicle_param, ...
-% time_interval, ...
-% flag_object,...
-% flag_3d_plot, ...
-% varargin...
-% )
-% 
+%
+% function [fig_num]=fcn_SafetyMetrics_plotTrajectoryXY( ...
+%     trajectory, ...
+%     vehicle_param, ...
+%     time_interval, ...
+%     flag_3d_plot, ...
+%     varargin...
+%     )
+%
 % INPUTS:
-% 
+%
 %     trajectory: [time,x,y,yaw_angle] 4xn vector
-% 
-%     vehicle_param: sturcture containing 
+%
+%     vehicle_param: sturcture containing
 %       a: distance from origin to front axle (positive)
 %       b: distance from origin to rear axle (positive)
 %       Lf:Length from origin to front bumper
@@ -37,56 +36,55 @@ varargin...
 %       tire_width: width of one tire
 %       tire_length: diameter of one tire
 %
-%     time_interval: the interval to plot at. This should be a 
-%     
-%     flag_3d_plot: this is a flag: 1 plots in 3d, 0 plots in 2d 
-%       
-% 
+%     time_interval: the interval to plot at. This should be a
+%
+%     flag_3d_plot: this is a flag: 1 plots in 3d, 0 plots in 2d
+%
+%
 %     (optional inputs)
 %
-%     fig_num: any number that acts somewhat like a figure number output. 
-%     If given, this forces the variable types to be displayed as output 
+%     fig_num: any number that acts somewhat like a figure number output.
+%     If given, this forces the variable types to be displayed as output
 %     and as well makes the input check process verbose.
-% 
-% 
-% OUTPUTS:
-% 
 %
-% 
-% 
+%
+% OUTPUTS:
+%
+%
+%
+%
 % DEPENDENCIES:
 %   fcn_SafetyMetrics_plot_3D_vehicle
-%   fcn_SafetyMetrics_plot_2D_vehicle  
-% 
-% 
+%   fcn_SafetyMetrics_plot_2D_vehicle
+%
+%
 % EXAMPLES:
-% 
+%
 % See the script: script_test_fcn_plot_traj_custom_time_interval
 % for a full test suite.
-% 
+%
 % This function was written on 2023_05_19 by Marcus Putz
 % Questions or comments? contact sbrennan@psu.edu
-
-% 
+%
 % REVISION HISTORY:
-% 
+%
 % 2023_05_17 by Marcus Putz and Sean Brennan
 % -- first write of function
 %
 % TO DO:
-% 
+%
 % -- fill in to-do items here.
 
 %% Debugging and Input checks
-flag_check_inputs = 1; % Set equal to 1 to check the input arguments 
-flag_do_plot = 0;      % Set equal to 1 for plotting 
-flag_do_debug = 0;     % Set equal to 1 for debugging 
+flag_check_inputs = 1; % Set equal to 1 to check the input arguments
+flag_do_plot = 0;      % Set equal to 1 for plotting
+flag_do_debug = 0;     % Set equal to 1 for debugging
 
 if flag_do_debug
     fig_for_debug = 225;
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
-end 
+end
 
 %% check input arguments?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,23 +101,23 @@ end
 
 
 if 1 == flag_check_inputs
-
+    
     % Are there the right number of inputs?
-    narginchk(5,6)
-
-%     % Check the AABB input, make sure it is '4column_of_numbers' type
-%     fcn_MapGen_checkInputsToFunctions(...
-%         AABB, '4column_of_numbers',1);
-%  
-%     % Check the test_points input, make sure it is '2column_of_numbers' type
-%     fcn_MapGen_checkInputsToFunctions(...
-%         test_points, '2column_of_numbers');
- 
+    narginchk(4,5)
+    
+    %     % Check the AABB input, make sure it is '4column_of_numbers' type
+    %     fcn_MapGen_checkInputsToFunctions(...
+    %         AABB, '4column_of_numbers',1);
+    %
+    %     % Check the test_points input, make sure it is '2column_of_numbers' type
+    %     fcn_MapGen_checkInputsToFunctions(...
+    %         test_points, '2column_of_numbers');
+    
 end
 
 % Does user want to show the plots?
-if  6== nargin
-    fig_num = varargin{end};
+if  5== nargin
+    fig_num = varargin{end}; %#ok<NASGU>
 else
     if flag_do_debug
         fig = figure;
@@ -152,28 +150,45 @@ data_to_plot = [time_interval_xq;x_data_to_plot;y_data_to_plot;yaw_data_to_plot]
 % plot(data_to_plot(2,:),data_to_plot(3,:))
 % hold on
 
+fig_num = 485;
+figure(fig_num);
+clf;
+hold on
+grid on
+
+if flag_3d_plot
+    axis([data_to_plot(2,1)-10 data_to_plot(2,end)+10 min(data_to_plot(3,:))-5 max(data_to_plot(3,:))+5 data_to_plot(1,1)-5 data_to_plot(1,end)]);
+    view(-40,40);
+    set(gca,'DataAspectRatio',[50 round(max(abs(data_to_plot(3,:)))/10+1) 50])%
+    xlabel('x');
+    ylabel('y');
+    zlabel('t');
+end
 %% At each of the previously interpolated points plot the data.
 for i = 1:length(data_to_plot)
     traj = [data_to_plot(1,i),data_to_plot(2,i),data_to_plot(3,i),data_to_plot(4,i)];
     
     if flag_3d_plot
-    fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param)
-    axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 data_to_plot(3,i)-10 data_to_plot(3,i)+10 data_to_plot(1,i)-10 data_to_plot(1,i)+10 ]);
-    hold on
-    if flag_object
-        fcn_SafetyMetrics_add_and_plot_object(traj(1,1),[257,1.2]);
-        axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 data_to_plot(3,i)-10 data_to_plot(3,i)+10 data_to_plot(1,i)-10 data_to_plot(1,i)+10 ]);
-    end
-    hold on
+        % Plot the time-space trajectory in red
+        fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param,'r-',fig_num);
+
+        % Plot the time-space "shadow" in blue
+         % Set time equal to zero, keeping everything else
+        shadow = traj;
+        shadow(1) = 0;
+        fcn_SafetyMetrics_plot_3D_vehicle(shadow,vehicle_param,'b-',fig_num);
+        
+%         axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 data_to_plot(3,i)-10 data_to_plot(3,i)+10 data_to_plot(1,i)-10 data_to_plot(1,i)+10 ]);
+%         hold on
+
     else
         fcn_SafetyMetrics_plot_2D_vehicle(traj,vehicle_param)
         axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 -10 +10 ]);
     end
     drawnow
 end
-if flag_3d_plot
-axis([data_to_plot(2,1)+10 data_to_plot(2,end)+10 min(data_to_plot(3,:))-10 max(data_to_plot(3,:))+10 data_to_plot(1,1) data_to_plot(1,end)]);
-end
+
+
 %§
 %% Plot the results (for debugging)?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,13 +237,13 @@ end % Ends the function
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   ______                _   _                 
-%  |  ____|              | | (_)                
-%  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+%   ______                _   _
+%  |  ____|              | | (_)
+%  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 %  |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 %  | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 %  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-%                                               
+%
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 

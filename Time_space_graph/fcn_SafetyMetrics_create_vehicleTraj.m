@@ -3,19 +3,26 @@ traj_type,...
 traj_plot,...
 varargin...
 )
-% fcn_plot_2D_vehicle
+% fcn_SafetyMetrics_create_vehicleTraj
 % This code will plot a vehicle given the x,y,and angle.
 % 
 % 
 % 
 % FORMAT:
 % 
-% function [xtotal,ytotal] = fcn_SafetyMetrics_create_vehicleTraj( ...
+% function [time,xtotal,ytotal,yaw, flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
+% traj_type,...
+% traj_plot,...
 % varargin...
 % )
 % 
 % INPUTS:
 %       traj_type: a number 1 - 5 representing which trajectory is wanted
+%       1: Lane chagne
+%       2: Stop at stop sign
+%       3: Half-lane change around an object
+%       4: Right hand turn
+%       5: Left hand turn
 %       traj_plot: a boolean value if simple plotting is wanted. 1 = plot
 %    
 %
