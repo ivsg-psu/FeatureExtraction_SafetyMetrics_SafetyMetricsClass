@@ -1,6 +1,6 @@
 function fcn_SafetyMetrics_add_and_plot_object( ...
 time,...
-object_position, ...
+object_vertices, ...
 object_type,...
 varargin...
 )
@@ -13,22 +13,25 @@ varargin...
 % 
 % function fcn_SafetyMetrics_add_and_plot_object( ...
 % time,...
-% object_position, ...
-% (fig_num)
+% object_vertices, ...
+% object_type,...
+% varargin...
 % )
 % 
 % INPUTS:
 %   
-%     time: a 1xn matrix of all the times.
+%     time: a nx1 matrix of all the times.
 %
-%     object_position: Position of the object a 2x1 matrix of x and y
-%     coordinates
+%     object_vertices: a 2xn matix continaing the vertices of a polytope x
+%     and y data.
 %
-%     object_type: a number 1-2 representing what type of object plotting
-%     is wanted.
-%     1: a circle plotted at each time step 
-%     2: a cylindar with a radius specified by FWHA and height equal to
+%     object_type: a number with the number being the type of
+%     plot, one per time step or cylindar(3d object).
+%
+%     1: a 2d object plotted at each time step 
+%     2: a cylindar(or 3d object) with a radius specified by FWHA and height equal to
 %     time lenght
+%     
 %
 %     (optional inputs)
 %
@@ -134,45 +137,37 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 %% Generating the object
 if 1 == object_type
-    % x  and y position / centroid
-    x = object_position(1,1);
-    y = object_position(1,2);
-    
-    % generate the points of the object
-    % the example shown will be a barrel using dimesions from FHWA.
-    % DIA = 23"
-    
-    dia = 23/39.37; %[m];
-    r = dia/2;
-    theta = linspace(0,2*pi,50);
-    
-    x2 = r*sin(theta)+x;
-    y2 = r*cos(theta)+y;
-    
     for i = 1:length(time)
-        z = zeros(1,length(x2))+time(1,i);
-        plot3(x2,y2,z,'color',[0.8500 0.3250 0.0980],'LineWidth', 2);
+        z = zeros(1,length(object_vertices(1,:)))+time(i,1);
+        plot3(object_vertices(1,:),object_vertices(2,:),z,'color',[0.8500 0.3250 0.0980],'LineWidth', 2);
     end
 end
 
 if 2 == object_type
-    % the example shown will be a barrel using dimesions from FHWA.
-    % DIA = 23"
-    dia = 23/39.37; %[m];
-    r = dia/2;
     
-    %Cylinder 
-    [x,y,z] = cylinder(r);
+% Extracting the data
+
+t1 = time(1,1);
+t_end = time(1,end);
+
     
-        % x  and y position / centroid
-    x = object_position(1,1)+x;
-    y = object_position(1,2)+y;
-    
-    %calulate the height
-    z = time(end)*z;
-    
-    %plot everything
-    surf(x,y,z);
+%         % the example shown will be a barrel using dimesions from FHWA.
+%         % DIA = 23"
+%         dia = 23/39.37; %[m];
+%         r = dia/2;
+%         
+%         %Cylinder
+%         [x,y,z] = cylinder(r);
+%         
+%         % x  and y position / centroid
+%         x = object_position(1,1)+x;
+%         y = object_position(1,2)+y;
+%         
+%         %calulate the height
+%         z = time(end)*z;
+%         
+%         %plot everything
+%         surf(x,y,z);
 end
 
 %§

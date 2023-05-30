@@ -1,6 +1,5 @@
 %Test script for seftety metrics plot
 
-clear all;
 close all;
 clc;
 
@@ -29,9 +28,13 @@ vehicle_param.Lr = 1;% Length from origin to front bumper
 % vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
 
 %% Get the trajectory
-[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+
+clear trajectory
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+
+%[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 figure(455)
-plot3(trajectory(2,:),trajectory(3,:),trajectory(1,:));
+plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
 grid on;
 axis equal;
 %% Plot the data
@@ -39,8 +42,30 @@ time_interval = 5;
 [fig_num]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
 
 %% Plot objects
-if flag_object
-    fcn_SafetyMetrics_add_and_plot_object(trajectory(1,:),[257,1.2],1,fig_num);
-    fcn_SafetyMetrics_add_and_plot_object(trajectory(1,:),[300,1.2],1,fig_num);
+flag_barrel = 1;
+if flag_barrel
+    object_position = [257,1.2];
+    
+    x = object_position(1,1);
+    y = object_position(1,2);
+    
+    % generate the points of the object
+    % the example shown will be a barrel using dimesions from FHWA.
+    % DIA = 23"
+    
+    dia = 23/39.37; %[m];
+    r = dia/2;
+    theta = linspace(0,2*pi,50);
+    
+    x2 = r*sin(theta)+x;
+    y2 = r*cos(theta)+y;
+    object_vertices = [x2;y2];
 end
 
+if flag_object
+    fcn_SafetyMetrics_add_and_plot_object(trajectory(:,1),object_vertices,1,fig_num);
+end
+
+%% Calculate the unit vector for each point
+
+[u]=fcn_SafetyMetrics_unit_vector(trajectory);

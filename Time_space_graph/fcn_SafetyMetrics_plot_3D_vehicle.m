@@ -19,7 +19,7 @@ function fcn_SafetyMetrics_plot_3D_vehicle( ...
 %
 % INPUTS:
 %
-%     vehicle_position: [time,x,y,yaw_angle] 4x1 vector
+%     vehicle_position: [time,x,y,yaw_angle] 1x4 vector
 %
 %     vehicle_param: sturcture containing
 %       a: distnace from origin to front axel (positive)

@@ -24,7 +24,7 @@ function [fig_num]=fcn_SafetyMetrics_plotTrajectoryXY( ...
 %
 % INPUTS:
 %
-%     trajectory: [time,x,y,yaw_angle] 4xn vector
+%     trajectory: [time,x,y,yaw_angle] nx4 vector
 %
 %     vehicle_param: sturcture containing
 %       a: distance from origin to front axle (positive)
@@ -140,12 +140,12 @@ end
 
 %% Interpolate the data to the times that are specified in time_interval
 % Vq = interp1(X,V,Xq)
-time_interval_xq = trajectory(1,1):time_interval:trajectory(1,end);
-x_data_to_plot = interp1(trajectory(1,:),trajectory(2,:),time_interval_xq);
-y_data_to_plot = interp1(trajectory(1,:),trajectory(3,:),time_interval_xq);
-yaw_data_to_plot = interp1(trajectory(1,:),trajectory(4,:),time_interval_xq);
+time_interval_xq = trajectory(1,1):time_interval:trajectory(end,1);
+x_data_to_plot = interp1(trajectory(:,1),trajectory(:,2),time_interval_xq)';
+y_data_to_plot = interp1(trajectory(:,1),trajectory(:,3),time_interval_xq)';
+yaw_data_to_plot = interp1(trajectory(:,1),trajectory(:,4),time_interval_xq)';
 
-data_to_plot = [time_interval_xq;x_data_to_plot;y_data_to_plot;yaw_data_to_plot];
+data_to_plot = [time_interval_xq',x_data_to_plot,y_data_to_plot,yaw_data_to_plot];
 
 % plot(data_to_plot(2,:),data_to_plot(3,:))
 % hold on
@@ -157,16 +157,16 @@ hold on
 grid on
 
 if flag_3d_plot
-    axis([data_to_plot(2,1)-10 data_to_plot(2,end)+10 min(data_to_plot(3,:))-5 max(data_to_plot(3,:))+5 data_to_plot(1,1)-5 data_to_plot(1,end)]);
+    axis([data_to_plot(1,2)-10 data_to_plot(end,2)+10 min(data_to_plot(:,3))-5 max(data_to_plot(:,3))+5 data_to_plot(1,1)-5 data_to_plot(end,1)]);
     view(-40,40);
-    set(gca,'DataAspectRatio',[50 round(max(abs(data_to_plot(3,:)))/10+1) 50])%
+    set(gca,'DataAspectRatio',[10 round(max(abs(data_to_plot(:,3)))/10+1) 50])%
     xlabel('x');
     ylabel('y');
     zlabel('t');
 end
 %% At each of the previously interpolated points plot the data.
 for i = 1:length(data_to_plot)
-    traj = [data_to_plot(1,i),data_to_plot(2,i),data_to_plot(3,i),data_to_plot(4,i)];
+    traj = [data_to_plot(i,1),data_to_plot(i,2),data_to_plot(i,3),data_to_plot(i,4)];
     
     if flag_3d_plot
         % Plot the time-space trajectory in red
