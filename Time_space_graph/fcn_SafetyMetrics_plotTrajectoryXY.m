@@ -164,6 +164,7 @@ if flag_3d_plot
     ylabel('y');
     zlabel('t');
 end
+%gif('test.gif');
 %% At each of the previously interpolated points plot the data.
 for i = 1:length(data_to_plot)
     traj = [data_to_plot(i,1),data_to_plot(i,2),data_to_plot(i,3),data_to_plot(i,4)];
@@ -177,7 +178,7 @@ for i = 1:length(data_to_plot)
         shadow = traj;
         shadow(1) = 0;
         fcn_SafetyMetrics_plot_3D_vehicle(shadow,vehicle_param,'b-',fig_num);
-        
+        %gif
 %         axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 data_to_plot(3,i)-10 data_to_plot(3,i)+10 data_to_plot(1,i)-10 data_to_plot(1,i)+10 ]);
 %         hold on
 

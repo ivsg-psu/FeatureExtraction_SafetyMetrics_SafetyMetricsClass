@@ -27,9 +27,10 @@ varargin...
 %    
 %
 % OUTPUTS:
-%  xtotal:1000xn matrix of x coordinates
-%  ytotal:1000xn matrix of y coordinates
-% 
+%  time: 500x1 matrix of time
+%  xtotal:500x1 matrix of x coordinates
+%  ytotal:500x1 matrix of y coordinates
+%  yaw:500x1 matrix of yaw angles for each xy point
 % 
 % DEPENDENCIES:
 % 

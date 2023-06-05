@@ -26,7 +26,7 @@ function [u]=fcn_SafetyMetrics_unit_vector( ...
 %
 % OUTPUTS:
 %
-%   u: a matrix with the unit vectors of the trajectory. 
+%   u: a matrix with the unit vectors of the trajectory. [time,x,y]
 %
 %
 % DEPENDENCIES:
@@ -192,5 +192,10 @@ rowrange = max([rowrange min_value],[],2);
 quiver3(trajectory(rowrange,2),trajectory(rowrange,3),trajectory(rowrange,1),u(rowrange,2),u(rowrange,3),u(rowrange,1),0.10);
 view(-40,40);
 set(gca,'DataAspectRatio',[10 1 50])
+title('Unit vector plot');
+xlabel('X Axis');
+ylabel('Y Axis');
+zlabel('Time');
+
 
 end

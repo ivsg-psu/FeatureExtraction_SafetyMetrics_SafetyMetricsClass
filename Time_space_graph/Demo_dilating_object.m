@@ -12,14 +12,17 @@ object_2 = [0 0;0 vehicle_param.w_vehicle;0.01 vehicle_param.w_vehicle;0.01,0];
 % generate the unit square
 object_1 = [0 0;0 1; 1 1; 1 0]
 %translate to have center at orgin.
-object_1 = object_1 +[-.5 -.5];
-%rotate object
-theta = deg2rad(30);
-R = [cos(theta) -sin(theta); sin(theta) cos(theta)];
-object_1 = (R * object_1')';
 
-%Center the vehicle width object
+object_1 = object_1 +[-.5 -.5];
+    %Center the vehicle width object
 object_2 = object_2+[0,-vehicle_param.w_vehicle/2];
+
+%rotate object
+theta = deg2rad(2);
+R = [cos(theta) -sin(theta); sin(theta) cos(theta)];
+object_2 = (R * object_2')';
+
+object_1 = (R * object_1')';
 
 %prefrom minkowski sum to generate dialated objects
 test = minkowskiSum(object_1,object_2)
@@ -32,3 +35,4 @@ object2 = polyshape(object_2);
 object1 = polyshape(object_1);
 plot(object2);
 plot(object1);
+legend('Minkowski sum','Vehicle width','Object')
