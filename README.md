@@ -96,6 +96,17 @@
           <li><a href="#fcn_safetymetrics_plot_3d_vehicle">fcn_SafetyMetrics_plot_3D_vehicle</a></li>
         </ul>
         </li>
+		<li>
+        <a href="#laps-functions">Laps Functions</a>
+         <ul>
+         <li><a href="#fcn_laps_plotlapsxy">fcn_Laps_plotLapsXY</a></li>
+          <li><a href="#fcn_laps_plotpointzonedefinition">fcn_Laps_plotPointZoneDefinition</a></li>
+          <li><a href="#fcn_laps_plotsegmentzonedefinition">fcn_Laps_plotSegmentZoneDefinition</a></li>
+          <li><a href="#fcn_laps_plotzonedefinition">fcn_Laps_plotZoneDefinition</a></li>
+          <li><a href="#fcn_laps_findpointzonestartstopandminimum">fcn_Laps_findPointZoneStartStopAndMinimum</a></li>
+          <li><a href="#fcn_laps_breakdataintolaps">fcn_Laps_breakDataIntoLaps</a></li>
+        </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -425,6 +436,48 @@ and as well makes the input check process verbose.
 
 **OUTPUTS:**
 
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Laps Functions
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_plotLapsXY
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_plotPointZoneDefinition
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_plotSegmentZoneDefinition
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_plotZoneDefinition
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_findPointZoneStartStopAndMinimum
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_Laps_breakDataIntoLaps
 
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
