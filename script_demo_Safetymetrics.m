@@ -70,7 +70,7 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 %
 % % Fill in tire information
 % starter_tire = fcn_tire_initTire;
-% starter_tire.usage = [];
+% starter_tire.usage = []
 % for i_tire = 1:4
 %     vehicle_param.tire(i_tire)= starter_tire;
 % end

@@ -1,3 +1,4 @@
+# FeatureExtraction_SafetyMetrics_SafetyMetricsClass
 
 <!--
 *** The following documentation is based on the Best-README-Template.
@@ -36,17 +37,16 @@
   <p align="center">
     MATLAB code implementation of functions that perform safety metric calculations given a set of objects and a path through them.
     <br />
-    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/tree/main/Documents">View Demo</a>
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/tree/main/Documents">View Demo</a>
     ·
-    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/issues">Report Bug</a>
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/issues">Report Bug</a>
     ·
-    <a href="https://github.com/ivsg-psu/FeatureExtraction_Association_PointToPointAssociation/issues">Request Feature</a>
+    <a href="https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/issues">Request Feature</a>
   </p>
 </p>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -62,19 +62,48 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="structure">Repo Structure</a>
-	    <ul>
-	    <li><a href="#directories">Top-Level Directories</li>
-	    <li><a href="#functions">Functions</li>
-	    </ul>
+    <li>
+      <a href="#repo-structure">Repo Structure</a>
+      <ul>
+        <li><a href="#top-level-directories">Top-Level Directories</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+      </ul>
+    </li>
+    <li>
+    <a href="#functions">Functions</a>
+    <ul>
+        <li>
+        <a href="#point-set-association-functions">Point-Set Association Functions</a>
+         <ul>
+         <li><a href="#fcn_points_plotsetsxy">fcn_Points_plotSetsXY</a></li>
+          <li><a href="#fcn_points_fillpointsamplesets">fcn_Points_fillPointSampleSets</a></li>
+          <li><a href="#fcn_points_fillpointsetviauserinputs">fcn_Points_fillPointSetViaUserInputs</a></li>
+          <li><a href="#fcn_points_adjustpointsetstatistics">fcn_Points_adjustPointSetStatistics</a></li>
+          <li><a href="#fcn_points_addradialnoise">fcn_Points_addRadialNoise</a></li>
+          <li><a href="#fcn_points_calcpairstatistics">fcn_Points_calcPairStatistics</a></li>
+          <li><a href="#fcn_points_pairxydata">fcn_Points_pairXYdata</a></li>
+          <li><a href="#script_associatepointsincremental">script_AssociatePointsIncremental</a></li>
+        </ul>
+        </li>
+		<li>
+        <a href="#safety-metrics-functions">Safety Metrics Functions</a>
+         <ul>
+         <li><a href="#fcn_safetymetrics_create_vehicletraj">fcn_SafetyMetrics_create_vehicleTraj</a></li>
+          <li><a href="#fcn_safetymetrics_plottrajectoryxy">fcn_SafetyMetrics_plotTrajectoryXY</a></li>
+          <li><a href="#fcn_safetymetrics_add_and_plot_object">fcn_SafetyMetrics_add_and_plot_object</a></li>
+          <li><a href="#fcn_safetymetrics_unit_vector">fcn_SafetyMetrics_unit_vector</a></li>
+          <li><a href="#fcn_safetymetrics_plot_2d_vehicle">fcn_SafetyMetrics_plot_2D_vehicle</a></li>
+          <li><a href="#fcn_safetymetrics_plot_3d_vehicle">fcn_SafetyMetrics_plot_3D_vehicle</a></li>
+        </ul>
+        </li>
+      </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <i><a href="#metrics">Metrics</a></li>
+	<li><a href="#hypothesis-metrics">Hypothesis Metrics</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
-
 
 
 <!-- ABOUT THE PROJECT -->
@@ -85,6 +114,10 @@
 MATLAB code implementation of functions that perform safety metric calculations given a set of objects and a path through them. These codes were originally developed to support the PennDOT ADS project in order to assess and compare "safety" of vehicles traversing an environment with obstacles, lane markers, etc.
 
 NOTE: This code is still in development (alpha testing)!
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -120,9 +153,11 @@ To get a local copy up and running follow these simple steps.
     * Run script_demo_Laps from the working directory root location
     * If the code works, the script should run without errors producing numerous example images and results. As well, AFTER running this main script, the other scripts within the ./Functions folder should also work.
 
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
+***
 <!-- STRUCTURE OF THE REPO -->
-## Structure
+## Repo Structure
 All scripts start with "script_" and all functions start with "fcn_".
 
 The main demo script is at the root directory. Running this script should initialize the directory structure, and thus it should always be run first. It will also illustrate key features in the code. Additional code details are found in the function scripts.
@@ -131,7 +166,11 @@ Functions specifically developed for this repo are in the /Functions directory. 
 
 Supporting utilities (not edited in this repo, and supported in other repos) are in the utilities directory. 
 
-### Directories
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Top-Level Directories
 The following are the top level directories within the repository:
 <ul>
 	<li>Documents: Descriptions of the functionality and usage of the various MATLAB functions and scripts in the repository.</li>
@@ -139,9 +178,26 @@ The following are the top level directories within the repository:
 	<li>Utilities: Dependencies that are utilized but not implemented in this repository are placed in the Utilities directory. These can be single files but are most often other cloned repositories kept as a zip file, with the git details stripped out to keep the zip small.</li>
 </ul>
 
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Dependencies
+
+* [Errata_Tutorials_DebugTools](https://github.com/ivsg-psu/Errata_Tutorials_DebugTools) - The DebugTools repo is used for the initial automated folder setup, and for input checking and general debugging calls within subfunctions. The repo can be found at: <https://github.com/ivsg-psu/Errata_Tutorials_DebugTools>
+
+* [PathClass_v2023_02_01](https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary/blob/main/Releases/PathClass_v2023_02_01.zip?raw=true) - The PathClass repo is used for plotting lane markers and trajectory. The repo can be found at: <https://github.com/ivsg-psu/PathPlanning_PathTools_PathClassLibrary/blob/main/Releases/PathClass_v2023_02_01.zip?raw=true>
+
+The dependencies are automatically installed by running the root master script
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
 <!-- FUNCTION DEFINITIONS -->
-### Functions
-**Point-Set Association Functions**
+## Functions
+
+### Point-Set Association Functions
 <ul>
 	<li>fcn_Points_checkInputsToFunctions: TEMPLATE function for checking arguments to functions, such as point sets, etc. to make sure the formatting and sizes are correct</li>
 	<li>fcn_Points_fillPointSampleSets: a function to load some sample data sets to use for testing the other functions</li>
@@ -152,7 +208,11 @@ The following are the top level directories within the repository:
 	<li>fcn_Points_adjustPointSetStatistics: a function to add 2D Gaussian noise and/or bias to a point set (e.g. to simulate sensor noise or bias) </li>
 </ul>
 
-**Patch Object Creation/Manipulation Functions**
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Patch Object Creation/Manipulation Functions
 <ul>
 	<li>fcn_Patch_fillSamplePatches: a function to load a few sample patch objects of different sizes, shapes, and colors for testing the other patch object functions</li>
 	<li>fcn_Patch_fillPatchArrayViaUserInputs: a function that allows a user to create patch objects by choosing patch colors and then using a mouse to click in a figure window to define the vertices of the patch object</li>
@@ -168,6 +228,51 @@ Each of the functions has an associated test script, using the convention
 	```
 where fcnname is the function name starting with "Patch" or "Point" as listed above.
 
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Safety Metrics Functions
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_create_vehicleTraj
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_plotTrajectoryXY
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_add_and_plot_object
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_unit_vector
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_plot_2D_vehicle
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+#### fcn_SafetyMetrics_plot_3D_vehicle
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -189,12 +294,16 @@ _For more examples, please refer to the [Documentation]
 
 https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/tree/main/Documents)_
 
-<!-- Metrics -->
-# Hypothesis metrics
-Metrics are arranged by the PEP
-## Surrogate safety metrics
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Time to collision (TTC)
+***
+
+<!-- Metrics -->
+## Hypothesis Metrics
+Metrics are arranged by the PEP
+### Surrogate safety metrics
+
+#### Time to collision (TTC)
 
 <ul>
 	<li> Function name: </li>
@@ -208,7 +317,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Post encroachment time
+#### Post encroachment time
 
 <ul>
 	<li> Function name: </li>
@@ -218,7 +327,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Deceleration rate to avoid crash
+#### Deceleration rate to avoid crash
 
 <ul>
 	<li> Function name: </li>
@@ -228,7 +337,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Speed differential
+#### Speed differential
 
 <ul>
 	<li> Function name: </li>
@@ -242,7 +351,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Conflict severity index
+#### Conflict severity index
 
 <ul>
 	<li> Function name: </li>
@@ -252,7 +361,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Relative lane position
+#### Relative lane position
 
 <ul>
 	<li> Function name: </li>
@@ -262,7 +371,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Time to lane departure
+#### Time to lane departure
 
 <ul>
 	<li> Function name: </li>
@@ -272,9 +381,13 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Obstical avoidance measures
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Mimimum clearance distance over all objects
+***
+
+### Obstical avoidance measures
+
+#### Mimimum clearance distance over all objects
 
 <ul>
 	<li> Function name: </li>
@@ -284,7 +397,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Smallest clearance to each object category
+#### Smallest clearance to each object category
 
 <ul>
 	<li> Function name: </li>
@@ -294,7 +407,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### If impact, relative velocity at impact
+#### If impact, relative velocity at impact
 
 <ul>
 	<li> Function name: </li>
@@ -304,7 +417,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### If impact, location of impact on the vehicle
+#### If impact, location of impact on the vehicle
 
 <ul>
 	<li> Function name: </li>
@@ -318,7 +431,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### If impact, location of  impact on object
+#### If impact, location of  impact on object
 
 <ul>
 	<li> Function name: </li>
@@ -332,9 +445,13 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Compliance with traffic laws and speed limit compliance
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Point speed
+***
+
+### Compliance with traffic laws and speed limit compliance
+
+#### Point speed
 
 <ul>
 	<li> Function name: </li>
@@ -348,7 +465,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Posted speed disparity
+#### Posted speed disparity
 
 <ul>
 	<li> Function name: </li>
@@ -362,7 +479,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Throughput 
+#### Throughput 
 
 <ul>
 	<li> Function name: </li>
@@ -372,7 +489,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Stopping point, stopping time, or rolling-stop minimum speed/location
+#### Stopping point, stopping time, or rolling-stop minimum speed/location
 
 <ul>
 	<li> Function name: </li>
@@ -386,7 +503,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Density
+#### Density
 
 <ul>
 	<li> Function name: </li>
@@ -396,11 +513,15 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Consistency of vehicle flow in a work zone remains the same
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Consistencey measures
+***
 
-#### AV point speed
+### Consistency of vehicle flow in a work zone remains the same
+
+#### Consistencey measures
+
+##### AV point speed
 
 <ul>
 	<li> Function name: </li>
@@ -414,7 +535,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV lane choice
+##### AV lane choice
 
 <ul>
 	<li> Function name: </li>
@@ -424,7 +545,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV site-specifc speed disparity
+##### AV site-specifc speed disparity
 
 <ul>
 	<li> Function name: </li>
@@ -438,7 +559,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV follower-specific speed disparity
+##### AV follower-specific speed disparity
 
 <ul>
 	<li> Function name: </li>
@@ -452,7 +573,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV leader-specific speed disparity 
+##### AV leader-specific speed disparity 
 
 <ul>
 	<li> Function name: </li>
@@ -466,7 +587,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Spacing between the AV and a lead vehicle
+##### Spacing between the AV and a lead vehicle
 
 <ul>
 	<li> Function name: </li>
@@ -480,7 +601,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Spacing between the AV and a follow vehicle
+##### Spacing between the AV and a follow vehicle
 
 <ul>
 	<li> Function name: </li>
@@ -494,7 +615,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV relative land position
+##### AV relative land position
 
 <ul>
 	<li> Function name: </li>
@@ -504,7 +625,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### AV total acceleration vector
+##### AV total acceleration vector
 
 <ul>
 	<li> Function name: </li>
@@ -514,9 +635,13 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### External Vehicle measures
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-#### Throughput
+***
+
+#### External Vehicle measures
+
+##### Throughput
 
 <ul>
 	<li> Function name: </li>
@@ -526,7 +651,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Density
+##### Density
 
 <ul>
 	<li> Function name: </li>
@@ -536,11 +661,15 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Imporoved recognition of work zone boundaries
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Logitidunial metrics: Binary
+***
 
-#### Presence or absence of workzone
+### Imporoved recognition of work zone boundaries
+
+#### Logitidunial metrics: Binary
+
+##### Presence or absence of workzone
 
 <ul>
 	<li> Function name: </li>
@@ -555,19 +684,9 @@ Metrics are arranged by the PEP
 </ul>
 
 
-### Longitudinal metrics: Continous
+#### Longitudinal metrics: Continous
 
-#### S-coordinate vector from AV declaration of boundary to actual work zone boundary.
-
-<ul>
-	<li> Function name: </li>
-	<li> Diagram: </li>
-	<li> Description: </li>
-	<li> Methodology: </li>
-	<li> Example results: </li>
-</ul>
-
-#### S-coordinate vector from AV detection of a work zone object to actual work zone boundary.
+##### S-coordinate vector from AV declaration of boundary to actual work zone boundary.
 
 <ul>
 	<li> Function name: </li>
@@ -577,7 +696,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Tranverse coordinate vector from lane center of first work zone object detected by AV
+##### S-coordinate vector from AV detection of a work zone object to actual work zone boundary.
 
 <ul>
 	<li> Function name: </li>
@@ -587,7 +706,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### S-coordinate vector from first complete AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed throught that raod way
+##### Tranverse coordinate vector from lane center of first work zone object detected by AV
 
 <ul>
 	<li> Function name: </li>
@@ -597,7 +716,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### S-coordinate vector from the start of AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed through that roadway
+##### S-coordinate vector from first complete AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed throught that raod way
 
 <ul>
 	<li> Function name: </li>
@@ -607,7 +726,17 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Right lateral-boundary disparity vector
+##### S-coordinate vector from the start of AV communication reception of work zone data packet to actual work zone boundary, assuming a maximum vehicle speed through that roadway
+
+<ul>
+	<li> Function name: </li>
+	<li> Diagram: </li>
+	<li> Description: </li>
+	<li> Methodology: </li>
+	<li> Example results: </li>
+</ul>
+
+##### Right lateral-boundary disparity vector
 
 <ul>
 	<li> Function name: </li>
@@ -617,7 +746,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-#### Left lateral-boundary disparity vector
+##### Left lateral-boundary disparity vector
 
 <ul>
 	<li> Function name: </li>
@@ -627,9 +756,13 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Lateral metrics: Binary
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Binary confirmation of object presence
+***
+
+### Lateral metrics: Binary
+
+#### Binary confirmation of object presence
 
 <ul>
 	<li> Function name: </li>
@@ -639,18 +772,34 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-## Connectivity is robust enough for data sharing, even in a typical work zone
+***
 
-## Connectivity will improve AV function
+### Connectivity is robust enough for data sharing, even in a typical work zone
 
-## Datagram definitions for V2X are suited for work zone map sharing
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-### Binary flags indication data field usage
+***
 
-## Work-zone-specific coating can impove object recognition by AVs
+### Connectivity will improve AV function
 
-### Range of first dection (in meters)
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Datagram definitions for V2X are suited for work zone map sharing
+
+
+#### Binary flags indication data field usage
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Work-zone-specific coating can impove object recognition by AVs
+
+#### Range of first dection (in meters)
 
 <ul>
 	<li> Function name: </li>
@@ -664,7 +813,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Incidence angle of detection, measured in degrees of any flat objects (e.g., signs), relative to the incidence angel to the vehicle's sensor
+#### Incidence angle of detection, measured in degrees of any flat objects (e.g., signs), relative to the incidence angel to the vehicle's sensor
 
 <ul>
 	<li> Function name: </li>
@@ -674,7 +823,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Projected area of the object in square meters ( the cross-sectional area of the object)
+#### Projected area of the object in square meters ( the cross-sectional area of the object)
 
 <ul>
 	<li> Function name: </li>
@@ -684,7 +833,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Dimensions (height, width, and geometirc configuration such as shape, profile, etc.) of the object
+#### Dimensions (height, width, and geometirc configuration such as shape, profile, etc.) of the object
 
 <ul>
 	<li> Function name: </li>
@@ -698,7 +847,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Coating pattern, namely striping, type and direction of stripes, etc
+#### Coating pattern, namely striping, type and direction of stripes, etc
 
 <ul>
 	<li> Function name: </li>
@@ -708,7 +857,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Wear condition, which is the subjective evaluation of wear of the object as assessed by DOT personnel equivalent to deployment assessment (e.g., “new,” “normal wear,” or “out of service wear”)
+#### Wear condition, which is the subjective evaluation of wear of the object as assessed by DOT personnel equivalent to deployment assessment (e.g., “new,” “normal wear,” or “out of service wear”)
 
 <ul>
 	<li> Function name: </li>
@@ -718,7 +867,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Object detection accuracy, the classification accuracy of the object according to the AV and/or mapping van sensor data workflow.
+#### Object detection accuracy, the classification accuracy of the object according to the AV and/or mapping van sensor data workflow.
 
 <ul>
 	<li> Function name: </li>
@@ -728,17 +877,38 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-## Work-zone-specific coating will not change human-driving vehicle behavior
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-## Work-zone-specific coating can improve work zone recognition by AVs
+***
 
-## Enhanced coatings will improve AV safety
+### Work-zone-specific coating will not change human-driving vehicle behavior
 
-## Enhanced mapping will improve AV safety
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
-## Enchanced mapping will reduce AV data errors
+***
 
-### Object detection accuracy
+### Work-zone-specific coating can improve work zone recognition by AVs
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Enhanced coatings will improve AV safety
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Enhanced mapping will improve AV safety
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+### Enchanced mapping will reduce AV data errors
+
+
+#### Object detection accuracy
 
 <ul>
 	<li> Function name: </li>
@@ -748,7 +918,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-### Object prediction accuracy
+#### Object prediction accuracy
 
 <ul>
 	<li> Function name: </li>
@@ -758,22 +928,34 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-# Space time graphs
-## Lane change
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
+
+## Space time graphs
+
+### Lane change
 ![Lane Change](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Lane_change_3d.png)	
-## Stopping at Stop sign
+### Stopping at Stop sign
 ![Stopping at Stop sing](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Stop_sign_3d.png)
-## Half-lane change with object
+### Half-lane change with object
 ![Half-lane change with object](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Half_turn_object_3d.png)
-## Right turn
+### Right turn
 ![Right turn](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Right_turn_3d.png)
-## Left turn
+### Left turn
 ![Left turn](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass/blob/main/Images/Left_turn.png)
 
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
 
 
 
@@ -782,6 +964,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Prof. Sean Brennan - sbrennan@psu.edu 
 
 Project Link: [https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass](https://github.com/ivsg-psu/FeatureExtraction_SafetyMetrics_SafetyMetricsClass)
+
+<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
+
+***
 
 
 
