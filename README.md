@@ -240,6 +240,34 @@ where fcnname is the function name starting with "Patch" or "Point" as listed ab
 
 #### fcn_SafetyMetrics_create_vehicleTraj
 
+This code will plot a vehicle trajectory given the x,y,and angle.
+
+FORMAT: 
+```MATLAB
+    [time,xtotal,ytotal,yaw,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(traj_type,traj_plot,varargin)
+```
+**INPUTS:**
+
+traj_type: a number 1 - 5 representing which trajectory is wanted
+<ul>
+<li>1: Lane change </li>
+<li>2: Stop at stop sign</li>
+<li>3: Half-lane change around an object</li>
+<li>4: Right hand turn</li>
+<li>5: Left hand turn</li>
+</ul>
+traj_plot: a boolean value if simple plotting is wanted. 1 = plot
+
+**OUTPUTS:**
+
+time: 500x1 matrix of time
+
+xtotal: 500x1 matrix of x coordinates
+
+ytotal: 500x1 matrix of y coordinates
+
+yaw: 500x1 matrix of yaw angles for each xy point
+
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
 ***
@@ -252,11 +280,56 @@ where fcnname is the function name starting with "Patch" or "Point" as listed ab
 
 #### fcn_SafetyMetrics_add_and_plot_object
 
+This code will plot an object at the position given.
+
+FORMAT: 
+```MATLAB
+fcn_SafetyMetrics_add_and_plot_object(time,object_vertices,object_type,varargin)
+```
+**INPUTS:**
+
+time: a nx1 matrix of all the times.
+
+object_vertices: a 2xn matix continaing the vertices of a polytope x
+and y data.
+
+object_type: a number with the number being the type of
+plot, one per time step or cylindar(3d object).
+
+<ul>
+1: a 2d object plotted at each time step
+
+2: a cylindar(or 3d object) with a radius specified by FWHA and height equal to time length
+</ul>
+(optional inputs)
+
+fig_num: any number that acts somewhat like a figure number output.
+If given, this forces the variable types to be displayed as output
+and as well makes the input check process verbose.
+
+**OUTPUTS:**
+
+
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
 ***
 
 #### fcn_SafetyMetrics_unit_vector
+
+This code will caculate the unit vector of the the vehicle along a
+trajectory in space time.
+
+FORMAT: 
+```MATLAB 
+fcn_SafetyMetrics_unit_vector(trajectory, vehicle_param, varargin)
+```
+**INPUTS:**
+
+trajectory: [time,x,y,yaw_angle] 4x1 vector
+
+**OUTPUTS:**
+
+u: a matrix with the unit vectors of the trajectory. [time,x,y]
 
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
@@ -264,11 +337,94 @@ where fcnname is the function name starting with "Patch" or "Point" as listed ab
 
 #### fcn_SafetyMetrics_plot_2D_vehicle
 
+This code will plot a vehicle given the x,y,and angle.
+
+FORMAT: 
+```MATLAB 
+fcn_plot_2D_vehicle(vehicle_position,vehicle_param,time_interval,varargin)
+```
+**INPUTS:**
+
+vehicle_position: [time,x,y,yaw_angle] 4x1 vector
+
+vehicle_param: sturcture containing 
+<ul>
+
+a: distnace from origin to front axel (positive)
+
+b: distnace form origin to rear axel (positive)
+
+Lf:Length from origin to front bumper
+
+Lr:Length from origin to rear bumper
+
+w_tire_tire: width from center of tire to center of tire
+
+w_vehicle:width form outer most left side to outer most right side
+
+tire_width: width of one tire
+
+tire_length: diameter of one tire
+
+</ul>
+
+(optional inputs)
+
+fig_num: any number that acts somewhat like a figure number output. 
+If given, this forces the variable types to be displayed as output 
+and as well makes the input check process verbose.
+
+**OUTPUTS:**
+
+
+
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
 ***
 
 #### fcn_SafetyMetrics_plot_3D_vehicle
+
+This code will plot a vehicle given the x,y,t and angle.
+
+FORMAT: 
+```MATLAB 
+fcn_SafetyMetrics_plot_3D_vehicle(vehicle_position,vehicle_param,varargin)
+```
+**INPUTS:**
+
+vehicle_position: [time,x,y,yaw_angle] 4x1 vector
+
+vehicle_param: sturcture containing 
+<ul>
+
+a: distnace from origin to front axel (positive)
+
+b: distnace form origin to rear axel (positive)
+
+Lf:Length from origin to front bumper
+
+Lr:Length from origin to rear bumper
+
+w_tire_tire: width from center of tire to center of tire
+
+w_vehicle:width form outer most left side to outer most right side
+
+tire_width: width of one tire
+
+tire_length: diameter of one tire
+
+</ul>
+
+(optional inputs)
+
+plot_style: matlab input plotting style such as 'b-'
+
+fig_num: any number that acts somewhat like a figure number output. 
+If given, this forces the variable types to be displayed as output 
+and as well makes the input check process verbose.
+
+**OUTPUTS:**
+
 
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
