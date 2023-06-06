@@ -122,9 +122,9 @@ if 1 == traj_type
    
     
     y1 = zeros(1,100);
-    y2 = modify_sigmoid(x2,101,200,0,lane_width,17,1);
+    y2 = fcn_INTERNAL_modify_sigmoid(x2,101,200,0,lane_width,17,1);
     y3 = zeros(1,100)+lane_width;
-    y4 = modify_sigmoid(x4,301,400,lane_width,0,17,1);
+    y4 = fcn_INTERNAL_modify_sigmoid(x4,301,400,lane_width,0,17,1);
     y5 = zeros(1,100);
     
     ytotal = [y1,y2,y3,y4,y5];
@@ -132,7 +132,7 @@ if 1 == traj_type
     time = 1:1:500;
     
     % calculate the yaw
-    yaw = caculate_yaw(xtotal,ytotal);
+    yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     % flag for objects
     flag_object = 0;
@@ -161,7 +161,7 @@ if 2 == traj_type
     % Set up the time
     time = 1:1:500;
     %Calculate the Yaw
-    yaw = caculate_yaw(xtotal,ytotal);
+    yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     
     %flag for object
@@ -189,14 +189,14 @@ if 3 == traj_type
     xtotal = [x1,x2,x3];
     %Specify the first y segments
     y1 = zeros(1,200);
-    y2 = modify_sigmoid(x2,201,300,0,lane_width,17,1);
+    y2 = fcn_INTERNAL_modify_sigmoid(x2,201,300,0,lane_width,17,1);
     y3 = zeros(1,200)+lane_width;
     ytotal = [y1,y2,y3];
     
     time = 1:1:500;
     
     %caculate the yaw
-    yaw = caculate_yaw(xtotal,ytotal);
+    yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     %object flag
     flag_object = 1;
@@ -239,7 +239,7 @@ if 4 == traj_type
     time = 1:1:500;
     
     %Yaw
-    yaw = caculate_yaw(xtotal,ytotal);
+    yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     
     %object flag
@@ -283,7 +283,7 @@ if 5 == traj_type
     time = 1:1:500;
     
     %Yaw
-    yaw = caculate_yaw(xtotal,ytotal);
+    yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     
     %object flag
@@ -317,7 +317,7 @@ end
 % end
 
 
-    function y = modify_sigmoid(t, t0, t1, y0, y1, a_factor, b_factor)
+    function y = fcn_INTERNAL_modify_sigmoid(t, t0, t1, y0, y1, a_factor, b_factor)
         % MODIFY_SIGMOID computes a modified sigmoid function with adjustable parameters
         
         % Compute the adjusted parameters
@@ -328,7 +328,7 @@ end
         y = y0 + (y1 - y0) ./ (1 + exp(-a * (t - b)));
     end
 
-    function [yaw] = caculate_yaw(x,y)
+    function [yaw] = fcn_INTERNAL_caculate_yaw(x,y)
         %calulate the Yaw angle by taking the current point and the
         %previous point and calculating the atan of that line and the
         %origin

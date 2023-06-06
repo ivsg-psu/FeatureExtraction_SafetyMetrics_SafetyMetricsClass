@@ -49,7 +49,7 @@ function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
 %
 % DEPENDENCIES:
 %
-%
+%       fcn_PlotWZ_createPatchesFromNSegments
 %
 %
 % EXAMPLES:
