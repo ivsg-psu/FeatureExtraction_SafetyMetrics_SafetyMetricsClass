@@ -284,6 +284,46 @@ yaw: 500x1 matrix of yaw angles for each xy point
 ***
 
 #### fcn_SafetyMetrics_plotTrajectoryXY
+This function will plot the vehicle in a custom time interval in either 2d or 3d, with the third axis being the time.
+
+FORMAT: 
+```MATLAB
+    [fig_num]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicle_param, time_interval, flag_3d_plot, varargin)
+```
+**INPUTS:**
+<br>
+trajectory: [time,x,y,yaw_angle] nx4 vector
+
+vehicle_param: sturcture containing:
+<ul>
+<li>a: distance from origin to front axle (positive)
+<li>b: distance from origin to rear axle (positive)
+<li>Lf:Length from origin to front bumper
+<li>Lr:Length from origin to rear bumper
+<li>w_tire_tire: width from center of tire to center of tire
+<li>w_vehicle:width form outermost left side to outermost right side
+<li>tire_width: width of one tire
+<li>tire_length: diameter of one tire
+</ul>
+time_interval: the time interval to plot at. <br>
+flag_3d_plot: this is a flag: 1 plots in 3d, 0 plots in 2d <br>
+<br>
+Optional inputs: 
+
+fig_num: any number that acts somewhat like a figure number output.
+If given, this forces the variable types to be displayed as output
+and as well makes the input check process verbose.
+
+**OUTPUTS:**
+
+**DEPENDENCIES:**
+<br>
+fcn_SafetyMetrics_plot_3D_vehicle
+fcn_SafetyMetrics_plot_2D_vehicle
+
+**EXAMPLES:**
+<br>
+See the script: script_test_fcn_plot_traj_custom_time_interval for a full test suite.
 
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
