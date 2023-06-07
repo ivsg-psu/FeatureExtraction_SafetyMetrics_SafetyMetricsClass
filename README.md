@@ -111,6 +111,54 @@
     </li>
     <li><a href="#usage">Usage</a></li>
 	<li><a href="#hypothesis-metrics">Hypothesis Metrics</a></li>
+	<ul>
+	<li><a href="#surrogate-safety-metrics">Surrogate safety metrics</a></li>
+	<ul>
+	<li><a href="#time-to-collision-ttc">Time to collision (TTC)</a></li>
+	<li><a href="#post-encroachment-time">Post encroachment time</a></li>
+	<li><a href="#deceleration-rate-to-avoid-crash">Deceleration rate to avoid crash</a></li>
+	<li><a href="#speed-differential">Speed differential</a></li>
+	<li><a href="#conflict-severity-index">Conflict severity index</a></li>
+	<li><a href="#relative-lane-position">Relative lane position</a></li>
+	<li><a href="#time-to-lane-departure">Time to lane departure</a></li>
+	</ul>
+	<li><a href="#obstacle-avoidance-measures">Obstacle avoidance measures</a></li>
+	<ul>
+	<li><a href="#mimimum-clearance-distance-over-all-objects">Mimimum clearance distance over all objects</a></li>
+	<li><a href="#smallest-clearance-to-each-object-category">Smallest clearance to each object category</a></li>
+	<li><a href="#if-impact-relative-velocity-at-impact">If impact, relative velocity at impact</a></li>
+	<li><a href="#if-impact-location-of-impact-on-the-vehicle">If impact, location of impact on the vehicle</a></li>
+	<li><a href="#if-impact-location-of-impact-on-object">If impact, location of  impact on object</a></li>
+	</ul>
+	<li><a href="#compliance-with-traffic-laws-and-speed-limit-compliance">Compliance with traffic laws and speed limit compliance</a></li>
+	<ul>
+	<li><a href="#point-speed">Point speed</a></li>
+	<li><a href="#posted-speed-disparity">Posted speed disparity</a></li>
+	<li><a href="#throughput">Throughput</a></li>
+	<li><a href="#stopping-point-stopping-time-or-rolling-stop-minimum-speedlocation">Stopping point, stopping time, or rolling-stop minimum speed/location</a></li>
+	<li><a href="#density">Density</a></li>
+	</ul>
+	<li><a href="#consistency-of-vehicle-flow-in-a-work-zone-remains-the-same">Consistency of vehicle flow in a work zone remains the same</a></li>
+	<ul>
+	<li><a href="#consistency-measures">Consistency Measures</a></li>
+	<ul>
+	<li><a href="#av-point-speed">AV point speed</a></li>
+	<li><a href="#av-lane-choice">AV lane choice</a></li>
+	<li><a href="#av-site-specific-speed-disparity">AV site-specific speed disparity</a></li>
+	<li><a href="#av-follower-specific-speed-disparity">AV follower-specific speed disparity</a></li>
+	<li><a href="#av-leader-specific-speed-disparity">AV leader-specific speed disparity</a></li>
+	<li><a href="#spacing-between-the-av-and-a-lead-vehicle">Spacing between the AV and a lead vehicle</a></li>
+	<li><a href="#spacing-between-the-av-and-a-follow-vehicle">Spacing between the AV and a follow vehicle</a></li>
+	<li><a href="#av-relative-land-position">AV relative land position</a></li>
+	<li><a href="#av-total-acceleration-vector">AV total acceleration vector</a></li>
+	</ul>
+	<li><a href="#external-vehicle-measures">External Vehicle Measures</a></li>
+	<ul>
+	<li><a href="#throughput-evm">Throughput EVM</a></li>
+	<li><a href="#density-evm">Density EVM</a></li>
+	</ul>
+	</ul>
+	</ul>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -594,7 +642,7 @@ Metrics are arranged by the PEP
 
 ***
 
-### Obstical avoidance measures
+### Obstacle avoidance measures
 
 #### Mimimum clearance distance over all objects
 
@@ -728,7 +776,7 @@ Metrics are arranged by the PEP
 
 ### Consistency of vehicle flow in a work zone remains the same
 
-#### Consistencey measures
+#### Consistency measures
 
 ##### AV point speed
 
@@ -754,7 +802,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-##### AV site-specifc speed disparity
+##### AV site-specific speed disparity
 
 <ul>
 	<li> Function name: </li>
@@ -850,7 +898,7 @@ Metrics are arranged by the PEP
 
 #### External Vehicle measures
 
-##### Throughput
+##### Throughput EVM
 
 <ul>
 	<li> Function name: </li>
@@ -860,7 +908,7 @@ Metrics are arranged by the PEP
 	<li> Example results: </li>
 </ul>
 
-##### Density
+##### Density EVM
 
 <ul>
 	<li> Function name: </li>
