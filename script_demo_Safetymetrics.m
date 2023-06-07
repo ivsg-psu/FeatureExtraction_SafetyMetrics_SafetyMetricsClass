@@ -82,8 +82,12 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 %% Get the trajectory
 
 clear trajectory
+<<<<<<< HEAD
 traj_type = 1; % Range can be 1-5
 [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(traj_type,1);
+=======
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+>>>>>>> 335b769... work in progress
 
 %[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 figure(455)
@@ -121,13 +125,14 @@ end
 
 %% Calculate the unit vector for each point
 
-[u]=fcn_SafetyMetrics_unit_vector(trajectory);
+[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param);
 patch(object)
-
+% %% Calculate teh Rear Axle Location for each point.
+% [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
 %% Using the unit vector project out two rays off set from the center line representing the vehicle length
 for i = 1:length(u)
     dir = [u(i,2),u(i,3),u(i,1)];
-    pos = [trajectory(i,2),trajectory(i,3),trajectory(i,1)];
+    pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
     
     vert1 = object.Vertices(object.Faces(:,1),:);
     vert2 = object.Vertices(object.Faces(:,2),:);
@@ -137,7 +142,7 @@ for i = 1:length(u)
     xcoor = rmmissing(xcoor);
     if isempty(xcoor) == 0
         xcoor_1(i,:) = xcoor;
-        dis_1(i,:)  = dis;
+        dis_1(i,:)  = dis(find(intersect));
         plot3([trajectory(i,2) xcoor(1)],[trajectory(i,3) xcoor(2)],[trajectory(i,1) xcoor(3)])
         hold on
     end
@@ -181,10 +186,7 @@ view(2)
 %% CSI - Conflict Serverity Index - 
 %
 %% RLP - Reltive Lane Position - 
-% Can be calulated all the time, distance from centerline
-
-
-
+% Can be calulated all the time, distance from centerline just the Y axis.
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,5 +1,6 @@
-function [u]=fcn_SafetyMetrics_unit_vector( ...
+function [u,rear_axle]=fcn_SafetyMetrics_unit_vector( ...
     trajectory, ...
+    vehicle_param,...
     varargin...
     )
 % fcn_SafetyMetrics_unit_vector
@@ -11,9 +12,9 @@ function [u]=fcn_SafetyMetrics_unit_vector( ...
 %
 % FORMAT:
 %
-% function fcn_SafetyMetrics_unit_vector( ...
+% function [u,rear_axle]=fcn_SafetyMetrics_unit_vector( ...
 %     trajectory, ...
-%     vehicle_param, ...
+%     vehicle_param,...
 %     varargin...
 %     )
 %
@@ -27,7 +28,8 @@ function [u]=fcn_SafetyMetrics_unit_vector( ...
 % OUTPUTS:
 %
 %   u: a matrix with the unit vectors of the trajectory. [time,x,y]
-%
+%   rear_axle: a matrix containing the points of where the center of the
+%   rear axle is. [x,y,z];
 %
 % DEPENDENCIES:
 %
@@ -80,7 +82,7 @@ end
 if 1 == flag_check_inputs
     
     % Are there the right number of inputs?
-    narginchk(1,2)
+    narginchk(2,3)
     
     %     % Check the AABB input, make sure it is '4column_of_numbers' type
     %     fcn_MapGen_checkInputsToFunctions(...
@@ -95,7 +97,7 @@ end
 
 % Does user want to show the plots?
 fig_num = [];
-if  2== nargin
+if  3== nargin
     temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;
@@ -147,6 +149,15 @@ unit_vector_changes = change_in_trajectory(:,1:3)./mags;
 
 u = unit_vector_changes;
 
+%Calculate the rear axle point
+for i = 1:length(trajectory)
+theta = trajectory(i,4);
+
+
+% Create the rotation matrix
+R = [cos(theta) -sin(theta); sin(theta) cos(theta)];
+rear_axle(i,:) = [trajectory(i,2) trajectory(i,3)] -[vehicle_param.b 0]*R';
+end
 % The above code does EXACTLY the same as the following, but avoids the
 % for-loop (which is slow)
 %
