@@ -82,12 +82,9 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 %% Get the trajectory
 
 clear trajectory
-<<<<<<< HEAD
-traj_type = 1; % Range can be 1-5
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(traj_type,1);
-=======
+
 [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
->>>>>>> 335b769... work in progress
+
 
 %[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 figure(455)
