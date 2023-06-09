@@ -119,13 +119,22 @@ end
 if flag_object
     [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
 end
-
+%% Plot the lanes
+num_of_lanes = size(lanes,2)
+flag_plot_lanes = 1;
+if flag_plot_lanes
+    for j = 1:num_of_lanes
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),fig_num);
+    end
+end
 %% Calculate the unit vector for each point
 
 [u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param);
 patch(object)
 % %% Calculate teh Rear Axle Location for each point.
 % [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
+
+
 %% Using the unit vector project out two rays off set from the center line representing the vehicle length
 for i = 1:length(u)
     dir = [u(i,2),u(i,3),u(i,1)];

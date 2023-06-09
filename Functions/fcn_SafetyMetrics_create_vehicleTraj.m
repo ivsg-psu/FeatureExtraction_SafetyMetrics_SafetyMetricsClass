@@ -146,7 +146,7 @@ if 1 == traj_type
     left_lane = [x_lane',y_lane_L'];
     left_left_lane = [x_lane',y_lane_L_L'];
     right_lane = [x_lane',y_lane_R'];
-    lanes = [left_left_lane,left_lane,right_lane];
+    lanes = {left_left_lane,left_lane,right_lane};
     
     % Plot the modified sigmoid function
     if traj_plot
@@ -189,7 +189,7 @@ if 2 == traj_type
     
     left_lane = [x_lane',y_lane_L'];
     right_lane = [x_lane',y_lane_R'];
-    lanes = [left_lane,right_lane];
+    lanes = {left_lane,right_lane};
     
     % Plot the trajectory
     if traj_plot
@@ -236,7 +236,7 @@ if 3 == traj_type
     left_lane = [x_lane',y_lane_L'];
     left_left_lane = [x_lane',y_lane_L_L'];
     right_lane = [x_lane',y_lane_R'];
-    lanes = [left_left_lane,left_lane,right_lane];
+    lanes = {left_left_lane,left_lane,right_lane};
     
     % Plot the trajectory
     if traj_plot
@@ -287,7 +287,7 @@ if 4 == traj_type
     traj = [xtotal',ytotal'];
     left_lane = traj + [lane_width/2, lane_width/2];
     right_lane = traj - [lane_width/2, lane_width/2];
-    lanes = [left_lane,right_lane];
+    lanes = {left_lane,right_lane};
     
     
     
@@ -342,7 +342,7 @@ if 5 == traj_type
     traj = [xtotal',ytotal'];
     left_lane = traj + [lane_width/2, -lane_width/2];
     right_lane = traj + [-lane_width/2, lane_width/2];
-    lanes = [left_lane,right_lane];
+    lanes = {left_lane,right_lane};
     
     
     %object flag
