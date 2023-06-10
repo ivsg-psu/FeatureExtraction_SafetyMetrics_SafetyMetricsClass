@@ -1,4 +1,4 @@
-function [time,xtotal,ytotal,yaw, flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
+function [time,xtotal,ytotal,yaw,lanes,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
 traj_type,...
 traj_plot,...
 varargin...
@@ -137,9 +137,24 @@ if 1 == traj_type
     % flag for objects
     flag_object = 0;
     
+    %Create the lanes
+    x_lane = 1:1:xtotal(end);
+    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width;
+    y_lane_L = zeros(1,xtotal(end))+lane_width/2;
+    y_lane_R = zeros(1,xtotal(end))-lane_width/2;
+    
+    left_lane = [x_lane',y_lane_L'];
+    left_left_lane = [x_lane',y_lane_L_L'];
+    right_lane = [x_lane',y_lane_R'];
+    lanes = {left_left_lane,left_lane,right_lane};
+    
     % Plot the modified sigmoid function
     if traj_plot
         plot(xtotal, ytotal);
+        hold on
+        plot(x_lane, y_lane_R);
+        plot(x_lane, y_lane_L_L);
+        plot(x_lane, y_lane_L);
         axis([-1 xtotal(end) -2*lane_width 2*lane_width]);
         xlabel('x');
         ylabel('y');
@@ -167,9 +182,21 @@ if 2 == traj_type
     %flag for object
     flag_object = 0;
     
+    %Creating lanes
+    x_lane = 1:1:xtotal(end);
+    y_lane_L = zeros(1,xtotal(end))+lane_width/2;
+    y_lane_R = zeros(1,xtotal(end))-lane_width/2;
+    
+    left_lane = [x_lane',y_lane_L'];
+    right_lane = [x_lane',y_lane_R'];
+    lanes = {left_lane,right_lane};
+    
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
+        hold on
+        plot(x_lane, y_lane_R);
+        plot(x_lane, y_lane_L);
         axis([-1 xtotal(end) -2*lane_width 2*lane_width]);
         xlabel('x');
         ylabel('y');
@@ -200,10 +227,24 @@ if 3 == traj_type
     yaw(isnan(yaw)) = 0;
     %object flag
     flag_object = 1;
-    % Plot the modified sigmoid function
+    %Creating the lanes
+    x_lane = 1:1:xtotal(end);
+    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width;
+    y_lane_L = zeros(1,xtotal(end))+lane_width/2;
+    y_lane_R = zeros(1,xtotal(end))-lane_width/2;
+    
+    left_lane = [x_lane',y_lane_L'];
+    left_left_lane = [x_lane',y_lane_L_L'];
+    right_lane = [x_lane',y_lane_R'];
+    lanes = {left_left_lane,left_lane,right_lane};
+    
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
+        hold on
+        plot(x_lane, y_lane_R);
+        plot(x_lane, y_lane_L_L);
+        plot(x_lane, y_lane_L);
         axis([-1 xtotal(end) -2*lane_width 2*lane_width]);
         xlabel('x');
         ylabel('y');
@@ -242,12 +283,23 @@ if 4 == traj_type
     yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     
+    %Lane
+    traj = [xtotal',ytotal'];
+    left_lane = traj + [lane_width/2, lane_width/2];
+    right_lane = traj - [lane_width/2, lane_width/2];
+    lanes = {left_lane,right_lane};
+    
+    
+    
     %object flag
     flag_object = 0;
     
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
+        hold on
+        plot(left_lane(:,1),left_lane(:,2));
+        plot(right_lane(:,1),right_lane(:,2));
         %axis([-1, xtotal(end)+20, 10, ytotal(end)-10]);
         xlabel('x');
         ylabel('y');
@@ -286,12 +338,22 @@ if 5 == traj_type
     yaw = fcn_INTERNAL_caculate_yaw(xtotal,ytotal);
     yaw(isnan(yaw)) = 0;
     
+    %lanes
+    traj = [xtotal',ytotal'];
+    left_lane = traj + [lane_width/2, -lane_width/2];
+    right_lane = traj + [-lane_width/2, lane_width/2];
+    lanes = {left_lane,right_lane};
+    
+    
     %object flag
     flag_object = 0;
     
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
+        hold on
+        plot(left_lane(:,1),left_lane(:,2));
+        plot(right_lane(:,1),right_lane(:,2));
         %axis([-1, xtotal(end)+20, 10, ytotal(end)-10]);
         xlabel('x');
         ylabel('y');

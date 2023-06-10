@@ -82,8 +82,9 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 %% Get the trajectory
 
 clear trajectory
-traj_type = 1; % Range can be 1-5
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(traj_type,1);
+
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+
 
 %[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 figure(455)
@@ -118,27 +119,37 @@ end
 if flag_object
     [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
 end
-
+%% Plot the lanes
+num_of_lanes = size(lanes,2)
+flag_plot_lanes = 1;
+if flag_plot_lanes
+    for j = 1:num_of_lanes
+        [lane_patches(j)]=(lanes(1,j),fig_num);
+    end
+end
 %% Calculate the unit vector for each point
 
-[u]=fcn_SafetyMetrics_unit_vector(trajectory);
+[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param);
 patch(object)
+% %% Calculate teh Rear Axle Location for each point.
+% [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
+
 
 %% Using the unit vector project out two rays off set from the center line representing the vehicle length
 for i = 1:length(u)
     dir = [u(i,2),u(i,3),u(i,1)];
-    pos = [trajectory(i,2),trajectory(i,3),trajectory(i,1)];
+    pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
     
-    vert1 = object.Vertices(object.Faces(:,1),:);
-    vert2 = object.Vertices(object.Faces(:,2),:);
-    vert3 = object.Vertices(object.Faces(:,3),:);
+    vert1_ob = object.Vertices(object.Faces(:,1),:);
+    vert2_ob = object.Vertices(object.Faces(:,2),:);
+    vert3_ob = object.Vertices(object.Faces(:,3),:);
     
-    [intersect, dis, y, v, xcoor] = TriangleRayIntersection(pos,dir, vert1, vert2, vert3,'planeType','one sided');
-    xcoor = rmmissing(xcoor);
-    if isempty(xcoor) == 0
-        xcoor_1(i,:) = xcoor;
-        dis_1(i,:)  = dis;
-        plot3([trajectory(i,2) xcoor(1)],[trajectory(i,3) xcoor(2)],[trajectory(i,1) xcoor(3)])
+    [intersect_ob, dis_ob, y, v, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
+    xcoor_ob = rmmissing(xcoor_ob);
+    if isempty(xcoor_ob) == 0
+        xcoor_1(i,:) = xcoor_ob;
+        dis_1(i,:)  = dis_ob(find(intersect_ob));
+        plot3([trajectory(i,2) xcoor_ob(1)],[trajectory(i,3) xcoor_ob(2)],[trajectory(i,1) xcoor_ob(3)])
         hold on
     end
 end
@@ -165,7 +176,7 @@ view(2)
 %% TTC - Time To Collision - 
 % If there is a ray cast take the distance and the slope(speed) to
 % calculate TTC as distance/speed.
-
+distance_to_object_front = dis_1 - 
 
 %% TLC - Time to Lane Crossing - 
 % If there is a ray cast to the lane, prefrom similar calculation as TTC
@@ -181,10 +192,7 @@ view(2)
 %% CSI - Conflict Serverity Index - 
 %
 %% RLP - Reltive Lane Position - 
-% Can be calulated all the time, distance from centerline
-
-
-
+% Can be calulated all the time, distance from centerline just the Y axis.
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

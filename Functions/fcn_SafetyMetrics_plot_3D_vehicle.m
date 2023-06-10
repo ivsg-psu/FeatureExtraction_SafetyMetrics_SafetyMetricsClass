@@ -41,7 +41,7 @@ function fcn_SafetyMetrics_plot_3D_vehicle( ...
 %
 %
 % OUTPUTS:
-%
+%rear_axle : the current position of the rear axle.
 %
 %
 %
@@ -159,11 +159,11 @@ hold on % allow multiple plot calls
 
 % Calculate the rectangle vertices
 vertices = [
-    -(vehicle_param.w_vehicle/2), -vehicle_param.Lr,vehicle_position(1,1); %bottom left
-    (vehicle_param.w_vehicle/2), -vehicle_param.Lr,vehicle_position(1,1); %top left
-    (vehicle_param.w_vehicle/2), vehicle_param.Lf,vehicle_position(1,1); %top right
-    -(vehicle_param.w_vehicle/2), vehicle_param.Lf,vehicle_position(1,1); %bottom right
-    -(vehicle_param.w_vehicle/2), -vehicle_param.Lr,vehicle_position(1,1)%bottom left
+    -vehicle_param.Lr,-(vehicle_param.w_vehicle/2),vehicle_position(1,1); %bottom left
+     -vehicle_param.Lr,(vehicle_param.w_vehicle/2),vehicle_position(1,1); %top left
+     vehicle_param.Lf,(vehicle_param.w_vehicle/2),vehicle_position(1,1); %top right
+     vehicle_param.Lf,-(vehicle_param.w_vehicle/2),vehicle_position(1,1); %bottom right
+     -vehicle_param.Lr,-(vehicle_param.w_vehicle/2),vehicle_position(1,1)%bottom left
     ];
 
 % Connect the vertices to form the rectangle edges
@@ -189,6 +189,7 @@ rotated_translated_rect = (R * vertices')';
 rotated_rect = rotated_translated_rect + [vehicle_position(1,2) vehicle_position(1,3) 0];
 
 plot3(rotated_rect(edges(:,1), 1), rotated_rect(edges(:,1), 2),rotated_rect(edges(:,1), 3), plot_style, 'LineWidth', 2);
+
 %plot3(rotated_rect(edges(:,2),1), rotated_rect(edges(:,2),2), rotated_rect(edges(:,2),3), 'r', 'LineWidth', 2);
 %§
 end
