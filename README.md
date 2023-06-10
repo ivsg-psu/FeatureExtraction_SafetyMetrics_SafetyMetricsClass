@@ -299,7 +299,7 @@ where fcnname is the function name starting with "Patch" or "Point" as listed ab
 
 #### fcn_SafetyMetrics_create_vehicleTraj
 
-This code will plot a vehicle trajectory given the x,y,and angle.
+This code will plot a vehicle trajectory given the tranjectory type. The types of the trajectories are mentioned in the inputs. 
 
 FORMAT: 
 ```MATLAB
