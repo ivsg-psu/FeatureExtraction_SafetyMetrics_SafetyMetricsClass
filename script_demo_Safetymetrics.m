@@ -124,7 +124,7 @@ num_of_lanes = size(lanes,2)
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
-        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),fig_num);
+        [lane_patches(j)]=(lanes(1,j),fig_num);
     end
 end
 %% Calculate the unit vector for each point
@@ -140,16 +140,16 @@ for i = 1:length(u)
     dir = [u(i,2),u(i,3),u(i,1)];
     pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
     
-    vert1 = object.Vertices(object.Faces(:,1),:);
-    vert2 = object.Vertices(object.Faces(:,2),:);
-    vert3 = object.Vertices(object.Faces(:,3),:);
+    vert1_ob = object.Vertices(object.Faces(:,1),:);
+    vert2_ob = object.Vertices(object.Faces(:,2),:);
+    vert3_ob = object.Vertices(object.Faces(:,3),:);
     
-    [intersect, dis, y, v, xcoor] = TriangleRayIntersection(pos,dir, vert1, vert2, vert3,'planeType','one sided');
-    xcoor = rmmissing(xcoor);
-    if isempty(xcoor) == 0
-        xcoor_1(i,:) = xcoor;
-        dis_1(i,:)  = dis(find(intersect));
-        plot3([trajectory(i,2) xcoor(1)],[trajectory(i,3) xcoor(2)],[trajectory(i,1) xcoor(3)])
+    [intersect_ob, dis_ob, y, v, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
+    xcoor_ob = rmmissing(xcoor_ob);
+    if isempty(xcoor_ob) == 0
+        xcoor_1(i,:) = xcoor_ob;
+        dis_1(i,:)  = dis_ob(find(intersect_ob));
+        plot3([trajectory(i,2) xcoor_ob(1)],[trajectory(i,3) xcoor_ob(2)],[trajectory(i,1) xcoor_ob(3)])
         hold on
     end
 end
@@ -176,7 +176,7 @@ view(2)
 %% TTC - Time To Collision - 
 % If there is a ray cast take the distance and the slope(speed) to
 % calculate TTC as distance/speed.
-
+distance_to_object_front = dis_1 - 
 
 %% TLC - Time to Lane Crossing - 
 % If there is a ray cast to the lane, prefrom similar calculation as TTC
