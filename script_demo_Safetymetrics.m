@@ -124,7 +124,7 @@ num_of_lanes = size(lanes,2)
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
-        [lane_patches(j)]=(lanes(1,j),fig_num);
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),fig_num);
     end
 end
 %% Calculate the unit vector for each point
@@ -158,6 +158,7 @@ figure(675)
 for j = 1:length(xcoor_1)
     plot3([trajectory(j,2) xcoor_1(j,1)],[trajectory(j,3) xcoor_1(j,2)],[trajectory(j,1) xcoor_1(j,3)])
     hold on
+%     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
 end
 patch(object)
 set(gca,'DataAspectRatio',[.5 .01 50])
@@ -175,11 +176,17 @@ view(2)
 
 %% TTC - Time To Collision - 
 % If there is a ray cast take the distance and the slope(speed) to
-% calculate TTC as distance/speed.
-distance_to_object_front = dis_1 - 
+% calculate TTC as distance/speed. It's been proven, in thesis, that TTC is
+% equal to the vertical height.
+ TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
+figure(789)
+plot(TTC)
+title('TTC');
 
 %% TLC - Time to Lane Crossing - 
 % If there is a ray cast to the lane, prefrom similar calculation as TTC
+
+
 %% PET - Post Enchroachment Time - 
 % 
 %% DRAC - Deceleration Rate to Avoid Crash - 
