@@ -144,7 +144,7 @@ for i = 1:length(u)
     vert2_ob = object.Vertices(object.Faces(:,2),:);
     vert3_ob = object.Vertices(object.Faces(:,3),:);
     
-    [intersect_ob, dis_ob, y, v, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
+    [intersect_ob, dis_ob, ~, ~, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
     xcoor_ob = rmmissing(xcoor_ob);
     if isempty(xcoor_ob) == 0
         xcoor_1(i,:) = xcoor_ob;
@@ -185,7 +185,38 @@ title('TTC');
 
 %% TLC - Time to Lane Crossing - 
 % If there is a ray cast to the lane, prefrom similar calculation as TTC
+for i = 1:length(u)
+    dir = [u(i,2),u(i,3),u(i,1)];
+    pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
+    
+    for i_1  = 1:length(lane_patches)
+        vert1_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,1),:);
+        vert2_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,2),:);
+        vert3_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,3),:);
+        
+        [intersect_lane, dis_lane, ~, ~, xcoor_lane] = TriangleRayIntersection(pos,dir, vert1_lane, vert2_lane, vert3_lane,'planeType','one sided');
+        xcoor_lane = rmmissing(xcoor_lane);
+        if isempty(xcoor_lane) == 0
+            xcoor_lane1{i_1,:}(i,:) = xcoor_lane;
+            %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+        else
+            xcoor_lane1{i_1,1}(i,:) = [0,0,0];
+        end
+    end
+end
 
+
+for i = 1:length(u)
+    figure(485)
+    if xcoor_lane1{1,1}(i,1) ~= 0 && trajectory(i,3) > 1.9
+        plot3([trajectory(i,2) xcoor_lane1{1,1}(i,1)],[trajectory(i,3) xcoor_lane1{1,1}(i,2)],[trajectory(i,1) xcoor_lane1{1,1}(i,3)],'b')
+        hold on
+    end
+    if xcoor_lane1{2,1}(i,1) ~= 0
+        plot3([trajectory(i,2) xcoor_lane1{2,1}(i,1)],[trajectory(i,3) xcoor_lane1{2,1}(i,2)],[trajectory(i,1) xcoor_lane1{2,1}(i,3)],'g')
+        hold on
+    end
+end
 
 %% PET - Post Enchroachment Time - 
 % 
