@@ -1,4 +1,4 @@
-function [time,xtotal,ytotal,yaw,lanes,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
+function [time,xtotal,ytotal,yaw,lanes,centerline,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
 traj_type,...
 traj_plot,...
 varargin...
@@ -143,10 +143,16 @@ if 1 == traj_type
     y_lane_L = zeros(1,xtotal(end))+lane_width/2;
     y_lane_R = zeros(1,xtotal(end))-lane_width/2;
     
+    centerline_L = zeros(1,xtotal(end))+lane_width;
+    centerline_R = zeros(1,xtotal(end))-lane_width;
+    
     left_lane = [x_lane',y_lane_L'];
     left_left_lane = [x_lane',y_lane_L_L'];
     right_lane = [x_lane',y_lane_R'];
+    centerline_left = [x_lane',centerline_L'];
+    centerline_right = [x_lane',centerline_R'];
     lanes = {left_left_lane,left_lane,right_lane};
+    centerline = {centerline_left,centerline_right}
     
     % Plot the modified sigmoid function
     if traj_plot
@@ -189,8 +195,9 @@ if 2 == traj_type
     
     left_lane = [x_lane',y_lane_L'];
     right_lane = [x_lane',y_lane_R'];
+    centerlane = [x_lane',ytotal'];
     lanes = {left_lane,right_lane};
-    
+    centerline = centerlane;
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
@@ -233,11 +240,18 @@ if 3 == traj_type
     y_lane_L = zeros(1,xtotal(end))+lane_width/2;
     y_lane_R = zeros(1,xtotal(end))-lane_width/2;
     
+    centerline_L = zeros(1,xtotal(end))+lane_width;
+    centerline_R = zeros(1,xtotal(end));
+    
     left_lane = [x_lane',y_lane_L'];
     left_left_lane = [x_lane',y_lane_L_L'];
     right_lane = [x_lane',y_lane_R'];
-    lanes = {left_left_lane,left_lane,right_lane};
     
+    centerline_left = [x_lane',centerline_L'];
+    centerline_right = [x_lane',centerline_R'];
+    
+    lanes = {left_left_lane,left_lane,right_lane};
+    centerline = {centerline_left,centerline_right}
     % Plot the trajectory
     if traj_plot
         plot(xtotal, ytotal);
@@ -287,6 +301,9 @@ if 4 == traj_type
     traj = [xtotal',ytotal'];
     left_lane = traj + [lane_width/2, lane_width/2];
     right_lane = traj - [lane_width/2, lane_width/2];
+    
+    
+    
     lanes = {left_lane,right_lane};
     
     

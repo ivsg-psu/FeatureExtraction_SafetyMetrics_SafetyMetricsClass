@@ -1,4 +1,4 @@
-function [fig_num,rear_axle]=fcn_SafetyMetrics_plotTrajectoryXY( ...
+function [fig_num,layers]=fcn_SafetyMetrics_plotTrajectoryXY( ...
     trajectory, ...
     vehicle_param, ...
     time_interval, ...
@@ -171,8 +171,8 @@ for i = 1:length(data_to_plot)
     
     if flag_3d_plot
         % Plot the time-space trajectory in red
-        fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param,'r-',fig_num);
-
+        [layers(i).data]=fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param,'r-',fig_num);
+        layers(i).color = [1 0 0];
         % Plot the time-space "shadow" in blue
          % Set time equal to zero, keeping everything else
         shadow = traj;

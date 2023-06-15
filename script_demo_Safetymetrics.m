@@ -23,6 +23,7 @@
 %% Prep the workspace
 close all
 clc
+clear all
 %% Dependencies and Setup of the Code
 % The code requires several other libraries to work, namely the following
 % 
@@ -83,7 +84,7 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 
 clear trajectory
 
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 
 
 %[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
@@ -93,8 +94,8 @@ grid on;
 axis equal;
 %% Plot the data
 time_interval = 5;
-[fig_num]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
-
+[fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
+car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers)
 %% Plot objects
 flag_barrel = 1;
 if flag_barrel
@@ -130,7 +131,9 @@ end
 %% Calculate the unit vector for each point
 
 [u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param);
-patch(object)
+if flag_object
+    patch(object)
+end
 % %% Calculate teh Rear Axle Location for each point.
 % [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
 
@@ -148,7 +151,7 @@ for i = 1:length(u)
     xcoor_ob = rmmissing(xcoor_ob);
     if isempty(xcoor_ob) == 0
         xcoor_1(i,:) = xcoor_ob;
-        dis_1(i,:)  = dis_ob(find(intersect_ob));
+        %dis_1(i,:)  = dis_ob(find(intersect_ob));
         plot3([trajectory(i,2) xcoor_ob(1)],[trajectory(i,3) xcoor_ob(2)],[trajectory(i,1) xcoor_ob(3)])
         hold on
     end
@@ -175,13 +178,15 @@ view(2)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                         
 
 %% TTC - Time To Collision - 
-% If there is a ray cast take the distance and the slope(speed) to
-% calculate TTC as distance/speed. It's been proven, in thesis, that TTC is
-% equal to the vertical height.
- TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
+% It's been proven, in thesis, that TTC is equal to the vertical height.
+
+TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
 figure(789)
 plot(TTC)
 title('TTC');
+grid on
+xlabel('Time');
+ylabel('TTC');
 
 %% TLC - Time to Lane Crossing - 
 % If there is a ray cast to the lane, prefrom similar calculation as TTC
@@ -194,43 +199,129 @@ for i = 1:length(u)
         vert2_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,2),:);
         vert3_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,3),:);
         
+        
         [intersect_lane, dis_lane, ~, ~, xcoor_lane] = TriangleRayIntersection(pos,dir, vert1_lane, vert2_lane, vert3_lane,'planeType','one sided');
         xcoor_lane = rmmissing(xcoor_lane);
         if isempty(xcoor_lane) == 0
             xcoor_lane1{i_1,:}(i,:) = xcoor_lane;
             %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
         else
-            xcoor_lane1{i_1,1}(i,:) = [0,0,0];
+            xcoor_lane1{i_1,1}(i,:) = [NaN,NaN,NaN];
         end
     end
 end
 
-
-for i = 1:length(u)
-    figure(485)
-    if xcoor_lane1{1,1}(i,1) ~= 0 && trajectory(i,3) > 1.9
-        plot3([trajectory(i,2) xcoor_lane1{1,1}(i,1)],[trajectory(i,3) xcoor_lane1{1,1}(i,2)],[trajectory(i,1) xcoor_lane1{1,1}(i,3)],'b')
-        hold on
-    end
-    if xcoor_lane1{2,1}(i,1) ~= 0
-        plot3([trajectory(i,2) xcoor_lane1{2,1}(i,1)],[trajectory(i,3) xcoor_lane1{2,1}(i,2)],[trajectory(i,1) xcoor_lane1{2,1}(i,3)],'g')
-        hold on
+flag_plot_lane_intersect = 1;
+if flag_plot_lane_intersect == 1
+    for i = 1:length(u)
+        figure(485)
+        if xcoor_lane1{1,1}(i,1) ~= 0 && trajectory(i,3) > 1.9
+            plot3([trajectory(i,2) xcoor_lane1{1,1}(i,1)],[trajectory(i,3) xcoor_lane1{1,1}(i,2)],[trajectory(i,1) xcoor_lane1{1,1}(i,3)],'b')
+            hold on
+            TLC2(i) = xcoor_lane1{1,1}(i,3) - trajectory(i,1); 
+        end
+        if xcoor_lane1{2,1}(i,1) ~= 0
+            plot3([trajectory(i,2) xcoor_lane1{2,1}(i,1)],[trajectory(i,3) xcoor_lane1{2,1}(i,2)],[trajectory(i,1) xcoor_lane1{2,1}(i,3)],'g')
+            hold on
+            TLC1(i) = xcoor_lane1{2,1}(i,3) - trajectory(i,1); 
+        end
     end
 end
 
+figure(848)
+plot(TLC1)
+title('TLC of the middle lane');
+grid on
+xlabel('Time');
+ylabel('TLC');
+
+figure(936)
+plot(TLC2)
+title('TLC of the outside lane');
+grid on
+xlabel('Time');
+ylabel('TLC');
+
+
 %% PET - Post Enchroachment Time - 
-% 
+% Plot another vehicle, going in a straight line over top of the old one.
+% ray cast below to determine the time. Y = 3.657
+flag_car2 =1;
+if flag_car2 == 1
+    car2_x =1:1:500;
+    car2_y = zeros(1,500)+3.657;
+    car2_t = 500:1:999;
+    car2_yaw = zeros(1,500)';
+    
+    car2_traj = [car2_t',flip(car2_x'),car2_y',car2_yaw];
+    [u2,rear_axle2]=fcn_SafetyMetrics_unit_vector(car2_traj,vehicle_param);
+    
+    
+    for i = 1:length(u2)
+        dir = [0,0,-1];
+        pos = [rear_axle2(i,1),rear_axle2(i,2),car2_traj(i,1)];
+        
+        vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+        vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+        vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+        
+        [intersect_car1, dis_car1, ~, ~, xcoor_car1] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+        xcoor_car1 = rmmissing(xcoor_car1);
+        if isempty(xcoor_car1) == 0
+            xcoor_car1_points(i,:) = xcoor_car1;
+            %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+        else
+            xcoor_car1_points(i,:) = [NaN,NaN,NaN];
+        end
+    end
+    figure(36363)
+    for i = 1:length(xcoor_car1_points)
+        %if xcoor_car1_points(i,1) ~=0
+            plot3([car2_traj(i,2) xcoor_car1_points(i,1)],[car2_traj(i,3) xcoor_car1_points(i,2)],[car2_traj(i,1) xcoor_car1_points(i,3)],'b')
+            hold on
+        %end
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+    patch(car1_patch)
+    set(gca,'DataAspectRatio',[10 1 50])
+    view(-40,40);
+    
+    PET = car2_traj(:,1)- xcoor_car1_points(:,3)
+    figure(578)
+    plot(PET)
+    title('PET')
+    grid on
+    xlabel('Time');
+    ylabel('PET');
+end
+
 %% DRAC - Deceleration Rate to Avoid Crash - 
 % If there is a ray cast to an entinty, take the current slope, preform
 % newtons equation of montion to calculate how much deceleration is needed
 % to not crash
+
+slope_V = (xcoor_1(:,3)-trajectory(1:length(xcoor_1),1))./(xcoor_1(:,1)-trajectory(1:length(xcoor_1),2))
+DRAC = slope_V./TTC;
+figure(5438)
+plot(DRAC);
+title('DRAC');
+grid on
+xlabel('Time');
+ylabel('DRAC');
+
+
 %% SD - Speed Disparity - 
 % If there is a ray cast take the slope of both objects and then subtract
 % eachother to get the SD
+
+
 %% CSI - Conflict Serverity Index - 
-%
+
+
 %% RLP - Reltive Lane Position - 
-% Can be calulated all the time, distance from centerline just the Y axis.
+% Can be calulated all the time, distance from centerline
+ RLP1 = trajectory(:,3) - centerline{1,1}(:,2);
+ RLP2 = trajectory(:,3) - centerline{1,2}(:,2);
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
