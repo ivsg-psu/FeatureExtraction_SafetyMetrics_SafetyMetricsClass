@@ -60,7 +60,7 @@ flag_check_inputs = 1; % Set equal to 1 to check the input arguments
 flag_do_debug = 0;     % Set equal to 1 for debugging
 
 if flag_do_debug
-    fig_for_debug = 225;
+    fig_for_debug = 36363;
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
 end
@@ -188,7 +188,7 @@ end
 % end
 %§
 
-figure(36363);
+figure(fig_num);
 clf;
 hold on;
 grid on;

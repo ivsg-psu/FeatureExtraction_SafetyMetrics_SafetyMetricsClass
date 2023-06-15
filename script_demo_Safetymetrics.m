@@ -95,7 +95,7 @@ axis equal;
 %% Plot the data
 time_interval = 5;
 [fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
-car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers)
+car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers);
 %% Plot objects
 flag_barrel = 1;
 if flag_barrel
@@ -121,7 +121,7 @@ if flag_object
     [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
 end
 %% Plot the lanes
-num_of_lanes = size(lanes,2)
+num_of_lanes = size(lanes,2);
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
@@ -130,7 +130,7 @@ if flag_plot_lanes
 end
 %% Calculate the unit vector for each point
 
-[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param);
+[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param,36363);
 if flag_object
     patch(object)
 end
@@ -254,7 +254,7 @@ if flag_car2 == 1
     car2_yaw = zeros(1,500)';
     
     car2_traj = [car2_t',flip(car2_x'),car2_y',car2_yaw];
-    [u2,rear_axle2]=fcn_SafetyMetrics_unit_vector(car2_traj,vehicle_param);
+    [u2,rear_axle2]=fcn_SafetyMetrics_unit_vector(car2_traj,vehicle_param,36363);
     
     
     for i = 1:length(u2)
@@ -286,7 +286,7 @@ if flag_car2 == 1
     set(gca,'DataAspectRatio',[10 1 50])
     view(-40,40);
     
-    PET = car2_traj(:,1)- xcoor_car1_points(:,3)
+    PET = car2_traj(:,1)- xcoor_car1_points(:,3);
     figure(578)
     plot(PET)
     title('PET')
@@ -299,21 +299,71 @@ end
 % If there is a ray cast to an entinty, take the current slope, preform
 % newtons equation of montion to calculate how much deceleration is needed
 % to not crash
-
-slope_V = (xcoor_1(:,3)-trajectory(1:length(xcoor_1),1))./(xcoor_1(:,1)-trajectory(1:length(xcoor_1),2))
-DRAC = slope_V./TTC;
-figure(5438)
-plot(DRAC);
-title('DRAC');
-grid on
-xlabel('Time');
-ylabel('DRAC');
-
+if flag_object
+    slope_V = (xcoor_1(:,3)-trajectory(1:length(xcoor_1),1))./(xcoor_1(:,1)-trajectory(1:length(xcoor_1),2));
+    DRAC = slope_V./TTC;
+    figure(5438)
+    plot(DRAC);
+    title('DRAC');
+    grid on
+    xlabel('Time');
+    ylabel('DRAC');
+end
 
 %% SD - Speed Disparity - 
 % If there is a ray cast take the slope of both objects and then subtract
 % eachother to get the SD
 
+%First create a car that is slightly behind the main one, but it is going
+%faster. 
+car3_x =1:1:500;
+car3_y = zeros(1,500);
+car3_t = linspace(50,425,500);
+car3_yaw = zeros(1,500)';
+
+car3_traj = [car3_t',car3_x',car3_y',car3_yaw];
+
+[u3,rear_axle3]=fcn_SafetyMetrics_unit_vector(car3_traj,vehicle_param,687);
+
+for i = 1:length(u3)
+    dir = [u3(i,2),u3(i,3),u3(i,1)];
+    pos = [rear_axle3(i,1),rear_axle3(i,2),car3_traj(i,1)];
+    
+    vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+    vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+    vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+    
+    [intersect_car1_2, dis_car1_2, ~, ~, xcoor_car1_2] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+    xcoor_car1_2 = rmmissing(xcoor_car1_2);
+    if isempty(xcoor_car1_2) == 0
+        xcoor_car1_2_points(i,:) = xcoor_car1_2;
+        %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+    else
+        xcoor_car1_2_points(i,:) = [NaN,NaN,NaN];
+    end
+end
+
+  for i = 1:length(xcoor_car1_2_points)
+        %if xcoor_car1_points(i,1) ~=0
+        figure(687)
+            plot3([car3_traj(i,2) xcoor_car1_2_points(i,1)],[car3_traj(i,3) xcoor_car1_2_points(i,2)],[car3_traj(i,1) xcoor_car1_2_points(i,3)],'b')
+            hold on
+        %end
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+
+figure(687)
+patch(car1_patch)
+set(gca,'DataAspectRatio',[10 1 50])
+view(-40,40);
+hold on
+
+slope_V_car3 = (xcoor_car1_2_points(:,3)-car3_traj(1:length(xcoor_car1_2_points),1))./(xcoor_car1_2_points(:,1)-car3_traj(1:length(xcoor_car1_2_points),2));
+slope_V = (-trajectory(1,1)+trajectory(end,1))/(-trajectory(1,2)+trajectory(end,2));
+
+SD = slope_V_car3.^-1 - slope_V.^-1;
+% plot3(car3_traj(:,2),car3_traj(:,3),car3_traj(:,1));
+% grid on
 
 %% CSI - Conflict Serverity Index - 
 
