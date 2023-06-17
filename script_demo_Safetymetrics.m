@@ -348,7 +348,7 @@ end
         figure(687)
             plot3([car3_traj(i,2) xcoor_car1_2_points(i,1)],[car3_traj(i,3) xcoor_car1_2_points(i,2)],[car3_traj(i,1) xcoor_car1_2_points(i,3)],'b')
             hold on
-        %end
+         TA(i) = xcoor_car1_2_points(i,3) - car3_traj(i,1);
         %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
     end
 
@@ -366,6 +366,48 @@ SD = slope_V_car3.^-1 - slope_V.^-1;
 % grid on
 
 %% CSI - Conflict Serverity Index - 
+% Using the SD information, the TA(time to accident) and CS(conflict speed)
+% calulate the CSI. 
+% CSI = TA/CS
+CS = slope_V_car3.*3.6;
+
+CSI =TA'./slope_V_car3
+figure(908)
+plot(TA',CS);
+title('CSI');
+grid on
+xlabel('TA');
+ylabel('CS');
+
+% Version II
+
+for i = 1:length(u3)
+    dir = [0,0,-1];
+    pos = [rear_axle3(i,1),rear_axle3(i,2),car3_traj(i,1)];
+    
+    vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+    vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+    vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+    
+    [~, ~, ~, ~, xcoor_car1_3] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+    xcoor_car1_3 = rmmissing(xcoor_car1_3);
+    if isempty(xcoor_car1_3) == 0
+        xcoor_car1_3_points(i,:) = xcoor_car1_3;
+        %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+    else
+        xcoor_car1_3_points(i,:) = [NaN,NaN,NaN];
+    end
+end
+
+    figure(687)
+    for i = 1:length(xcoor_car1_3_points)
+        %if xcoor_car1_points(i,1) ~=0
+            plot3([car3_traj(i,2) xcoor_car1_3_points(i,1)],[car3_traj(i,3) xcoor_car1_3_points(i,2)],[car3_traj(i,1) xcoor_car1_3_points(i,3)],'b')
+            hold on
+        %end
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+
 
 
 %% RLP - Reltive Lane Position - 
