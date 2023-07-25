@@ -10,7 +10,7 @@
 % Author: Wushuang Bai
 % Revision history: 
 % 20230721 first write of code 
-function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID)
+function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID,figNum)
     
     % Find the rows corresponding to the AV
     avRows = strcmp(fcdData.vehicle_id, avID);
@@ -42,4 +42,8 @@ function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID)
             spacing(i) = NaN;
         end
     end
+    figure(figNum);
+    plot(avTime,spacing,'.','LineWidth',2);
+    xlabel('Time (sec)');
+    ylabel('Spacing (m)');
 end

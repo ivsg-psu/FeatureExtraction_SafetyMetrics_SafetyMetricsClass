@@ -6,8 +6,8 @@
 % 20230723 first write of code
 
 % read in data
-data = readtable('result.csv');
-% input vehicle id to query
+data = readtable('fcdTestData.csv');
+% input vehicle id to query 
 vehID = 'f_0.10';
 % run the function 
-[simTime,spacing] = fcn_spacingBtwAVNFollowVeh(data,vehID);
+[simTime,spacing] = fcn_spacingBtwAVNFollowVeh(data,vehID,30);
