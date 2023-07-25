@@ -4,7 +4,7 @@
 
 % INPUTS:
 % fcdData: this is the read-in FCD data, usually in table format
-% vehicleID: the vehicle ID you want to queri
+% vehicleID: the vehicle ID you want to query
 
 % OUTPUTS:
 % vehicleSpeed: the queried vehicle speed
