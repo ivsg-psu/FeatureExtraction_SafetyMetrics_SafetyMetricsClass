@@ -125,7 +125,7 @@ num_of_lanes = size(lanes,2);
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
-        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),fig_num);
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),490);
     end
 end
 %% Calculate the unit vector for each point

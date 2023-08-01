@@ -10,7 +10,7 @@
 % Author: Wushuang Bai
 % Revision history: 
 % 20230721 first write of code 
-function [avTime,spacing] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,figNum)
+function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,figNum)
 
     % Find the rows corresponding to the AV
     avRows = strcmp(fcdData.vehicle_id, avID);
@@ -24,19 +24,23 @@ function [avTime,spacing] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,figNum)
     
     % For each time step...
     for i = 1:length(avTime)
-        % Find the positions of all vehicles at this time step
-        allPositionsAtThisTime = fcdData.vehicle_pos(fcdData.timestep_time == avTime(i));
-        
+        % selected data
+        selectedData = fcdData(fcdData.timestep_time == avTime(i),:);
+
+
         % Find the positions of the vehicles that are ahead of the AV
-        positionsAhead = allPositionsAtThisTime(allPositionsAtThisTime > avPosition(i));
+        positionDiff = selectedData.vehicle_pos - avPosition(i);
+      
+        minPositive = min(positionDiff(positionDiff > 0));
         
         % If there are any vehicles ahead...
-        if ~isempty(positionsAhead)
-            % Find the position of the nearest lead vehicle
-            nearestLeadPosition = min(positionsAhead);
+        if ~isempty(minPositive)
             
+            ind = find(positionDiff ==minPositive);            
             % Calculate the spacing to the nearest lead vehicle
-            spacing(i) = nearestLeadPosition - avPosition(i);
+            spacing(i) = positionDiff(ind);
+            nearestVehID{i} = selectedData.vehicle_id(ind);
+
         else
             % If there are no vehicles ahead, set the spacing to NaN
             spacing(i) = NaN;
