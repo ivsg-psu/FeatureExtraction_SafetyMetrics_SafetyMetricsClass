@@ -81,7 +81,7 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 % vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
 
 %% Get the trajectory
-
+% Trajectory has to be in the form of time, x, y, yaw angle, 
 clear trajectory
 
 [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
