@@ -21,7 +21,15 @@ function [u,rear_axle]=fcn_SafetyMetrics_unit_vector( ...
 % INPUTS:
 %
 %     trajectory: [time,x,y,yaw_angle] 4x1 vector
-%
+%     vehicle_param: sturcture containing
+%       a: distance from origin to front axle (positive)
+%       b: distance from origin to rear axle (positive)
+%       Lf:Length from origin to front bumper
+%       Lr:Length from origin to rear bumper
+%       w_tire_tire: width from center of tire to center of tire
+%       w_vehicle:width form outermost left side to outermost right side
+%       tire_width: width of one tire
+%       tire_length: diameter of one tire
 %     (optional inputs)
 %
 %
@@ -192,15 +200,16 @@ figure(fig_num);
 clf;
 hold on;
 grid on;
-
+% Reduce the amount of points
 N_points = length(trajectory(:,1));
 rowrange = round(linspace(1,N_points,100)');
 min_value = ones(length(rowrange),1);
 max_value = min_value*N_points;
 rowrange = min([rowrange max_value],[],2);
 rowrange = max([rowrange min_value],[],2);
-
+% Arrow plot for the unit vectors
 quiver3(trajectory(rowrange,2),trajectory(rowrange,3),trajectory(rowrange,1),u(rowrange,2),u(rowrange,3),u(rowrange,1),0.10);
+% Making the needed changes to allow the user to see the plots. 
 view(-40,40);
 set(gca,'DataAspectRatio',[10 1 50])
 title('Unit vector plot');

@@ -93,14 +93,14 @@ plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
 grid on;
 axis equal;
 %% Plot the data
-time_interval = 5;
+time_interval = 5; % How many points to plot. 1 means every point, 2 every other point 
 [fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
-car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers);
+car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers); % Creates the 3d object of the car to use in SSMs that require a car infront
 %% Plot objects
-flag_barrel = 1;
+flag_barrel = 1; % Flag if a barrel will be used for the object
 if flag_barrel
     %object_position = [257,1.2];
-    object_position = [257,0];
+    object_position = [257,0]; % X, Y location of the object [m]
     x = object_position(1,1);
     y = object_position(1,2);
     
@@ -110,7 +110,7 @@ if flag_barrel
     
     dia = 23/39.37; %[m];
     r = dia/2;
-    theta = linspace(0,2*pi,50);
+    theta = linspace(0,2*pi,50); % Createing the points along the circumference of a circle. 50 total points. 
     
     x2 = r*sin(theta)+x;
     y2 = r*cos(theta)+y;
@@ -118,6 +118,8 @@ if flag_barrel
 end
 
 if flag_object
+    % Plot the object with a choice for slices or 3d Mesh. 1 being mesh, 2
+    % being slices with that number being the 4th input.
     [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
 end
 %% Plot the lanes
@@ -132,6 +134,7 @@ end
 
 [u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param,36363);
 if flag_object
+    % Plot the object in the unit vector plot
     patch(object)
 end
 % %% Calculate teh Rear Axle Location for each point.
@@ -139,19 +142,32 @@ end
 
 
 %% Using the unit vector project out two rays off set from the center line representing the vehicle length
+% These rays will be used to determine distances between the vehicle and
+% the object. 
 for i = 1:length(u)
+    % Use the unit vector to determine the direction of the ray 
     dir = [u(i,2),u(i,3),u(i,1)];
+    % The orgin of the ray. Middle of the rear axel
     pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
     
+    %Combine the vertices and the faces for use in the
+    %'TriangleRayIntersection' function
     vert1_ob = object.Vertices(object.Faces(:,1),:);
     vert2_ob = object.Vertices(object.Faces(:,2),:);
     vert3_ob = object.Vertices(object.Faces(:,3),:);
     
+    %Use 'TriangleRayIntersection' to determine if there is an intersection
+    %between the mesh and the ray. 
     [intersect_ob, dis_ob, ~, ~, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
+    % Delete the rows that don't have any data
     xcoor_ob = rmmissing(xcoor_ob);
     if isempty(xcoor_ob) == 0
+        % Collect the points that contain the data
         xcoor_1(i,:) = xcoor_ob;
         %dis_1(i,:)  = dis_ob(find(intersect_ob));
+        
+        % Plot the data by creating a line from center of rear axel to
+        % intersection point
         plot3([trajectory(i,2) xcoor_ob(1)],[trajectory(i,3) xcoor_ob(2)],[trajectory(i,1) xcoor_ob(3)])
         hold on
     end
@@ -163,6 +179,7 @@ for j = 1:length(xcoor_1)
     hold on
 %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
 end
+%Add in object to ray plot while scaling the axes
 patch(object)
 set(gca,'DataAspectRatio',[.5 .01 50])
 view(2)
@@ -181,6 +198,7 @@ view(2)
 % It's been proven, in thesis, that TTC is equal to the vertical height.
 
 TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
+% Plot the TTC result vs time
 figure(789)
 plot(TTC)
 title('TTC');
@@ -202,6 +220,7 @@ for i = 1:length(u)
         
         [intersect_lane, dis_lane, ~, ~, xcoor_lane] = TriangleRayIntersection(pos,dir, vert1_lane, vert2_lane, vert3_lane,'planeType','one sided');
         xcoor_lane = rmmissing(xcoor_lane);
+        % If there is data in the Xcoor_lane save it, if not save NaN.
         if isempty(xcoor_lane) == 0
             xcoor_lane1{i_1,:}(i,:) = xcoor_lane;
             %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
@@ -210,11 +229,15 @@ for i = 1:length(u)
         end
     end
 end
-
+% Plotting the TLC rays and calculating it. 
 flag_plot_lane_intersect = 1;
 if flag_plot_lane_intersect == 1
     for i = 1:length(u)
         figure(485)
+        % The following if statments make sure to only use the rays that
+        % make sense for each lane. (The 'TriangleRayIntersection' shoots
+        % rays off and will continue returning intersections for all lanes
+        % even if the lane is on the other side of another lane.)
         if xcoor_lane1{1,1}(i,1) ~= 0 && trajectory(i,3) > 1.9
             plot3([trajectory(i,2) xcoor_lane1{1,1}(i,1)],[trajectory(i,3) xcoor_lane1{1,1}(i,2)],[trajectory(i,1) xcoor_lane1{1,1}(i,3)],'b')
             hold on
@@ -227,7 +250,7 @@ if flag_plot_lane_intersect == 1
         end
     end
 end
-
+% Plot the TLC vs time.
 figure(848)
 plot(TLC1)
 title('TLC of the middle lane');
@@ -254,9 +277,10 @@ if flag_car2 == 1
     car2_yaw = zeros(1,500)';
     
     car2_traj = [car2_t',flip(car2_x'),car2_y',car2_yaw];
+    % Find the unit vector for this second vehicle
     [u2,rear_axle2]=fcn_SafetyMetrics_unit_vector(car2_traj,vehicle_param,36363);
     
-    
+    % Go through the same procedure to use 'TriangleRayIntersection'
     for i = 1:length(u2)
         dir = [0,0,-1];
         pos = [rear_axle2(i,1),rear_axle2(i,2),car2_traj(i,1)];
@@ -282,11 +306,14 @@ if flag_car2 == 1
         %end
         %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
     end
+    % Plot first car 3d mesh
     patch(car1_patch)
     set(gca,'DataAspectRatio',[10 1 50])
     view(-40,40);
-    
+    % Calculate the PET use the thesis definition proving that PET is just
+    % the height between the intersection point and the orgin of the ray
     PET = car2_traj(:,1)- xcoor_car1_points(:,3);
+    % Plot PET vs time
     figure(578)
     plot(PET)
     title('PET')
@@ -325,6 +352,7 @@ car3_traj = [car3_t',car3_x',car3_y',car3_yaw];
 
 [u3,rear_axle3]=fcn_SafetyMetrics_unit_vector(car3_traj,vehicle_param,687);
 
+% Using procedure as other SSMs to carry out ray casting
 for i = 1:length(u3)
     dir = [u3(i,2),u3(i,3),u3(i,1)];
     pos = [rear_axle3(i,1),rear_axle3(i,2),car3_traj(i,1)];
@@ -358,6 +386,8 @@ set(gca,'DataAspectRatio',[10 1 50])
 view(-40,40);
 hold on
 
+%Calculating the velocity of the vehicles by calculating the slope. current
+%point and previous point.
 slope_V_car3 = (xcoor_car1_2_points(:,3)-car3_traj(1:length(xcoor_car1_2_points),1))./(xcoor_car1_2_points(:,1)-car3_traj(1:length(xcoor_car1_2_points),2));
 slope_V = (-trajectory(1,1)+trajectory(end,1))/(-trajectory(1,2)+trajectory(end,2));
 

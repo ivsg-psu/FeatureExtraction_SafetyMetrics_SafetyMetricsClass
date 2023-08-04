@@ -33,7 +33,7 @@ function [lane3]=fcn_SafetyMetrics_plot_lanes(...
 %
 %
 % DEPENDENCIES:
-%fcn_PlotWZ_createPatchesFromNSegments
+% fcn_PlotWZ_createPatchesFromNSegments
 %
 % EXAMPLES:
 %
@@ -133,6 +133,7 @@ lane_marker3 = [lane_marker,zeros(length(lane_marker),1)];
 z_height = zeros(length(lane_marker),1)+length(lanes);
 top_lane_marker = [lane_marker,z_height];
 
+% Adding light red to the lanes
 color_layer = [255 0 0]/255;
 layers(1).data = lane_marker3;
  layers(1).color = color_layer;
@@ -140,8 +141,8 @@ layers(2).data = top_lane_marker;
  layers(2).color = color_layer;
 
 lane3=fcn_PlotWZ_createPatchesFromNSegments(layers)
-lane3.FaceAlpha = 0.1;
-lane3.LineWidth = 0.001;
+lane3.FaceAlpha = 0.1; % Making the lane semi-transparent
+lane3.LineWidth = 0.001; % Making the lines in the mesh very thin to aid in the transparency of the lanes
 fcn_PlotWZ_plotPatches(lane3,fig_num)
 %patch(lane3);
 end
