@@ -14,6 +14,9 @@
 % figNum: the figure number
 
 % OUTPUTS: 
+% time_vector: the simulation time
+% acceleration_x: magnitude of acceleration in x direction  
+% acceleration_y:  magnitude of acceleration in y direction  
 
 function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data,figNum)
     % Load data from CSV file
