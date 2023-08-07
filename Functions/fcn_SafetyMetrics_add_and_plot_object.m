@@ -13,12 +13,14 @@ function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
 %
 % FORMAT:
 %
-% function fcn_SafetyMetrics_add_and_plot_object( ...
-% time,...
-% object_vertices, ...
-% object_type,...
-% varargin...
-% )
+% function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
+%     time,...
+%     object_vertices, ...
+%     object_position,...
+%     object_type,...
+%     vehicle_param,...
+%     varargin...
+%     )
 %
 % INPUTS:
 %
@@ -26,13 +28,15 @@ function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
 %
 %     object_vertices: a 2xn matix continaing the vertices of a polytope x
 %     and y data.
+%       
+%     object_position: 2x1 matrix containing the coordnates of         
 %
 %     object_type: a number with the number being the type of
 %     plot, one per time step or cylindar(3d object).
 %
 %     1: a 2d object plotted at each time step
-%     2: a cylindar(or 3d object) with a radius specified by FWHA and height equal to
-%     time lenght
+%     2: a cylinder(or 3d object) with a radius specified by FWHA and height equal to
+%     time length
 %
 %
 %     (optional inputs)
@@ -43,7 +47,8 @@ function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
 %
 %
 % OUTPUTS:
-%
+%   object : 1x1 stuct with Vertices, Faces, FacesVertexCData, Facecolor,
+%   Edgecolor, LineWidth
 %
 %
 %
@@ -140,6 +145,8 @@ end
 %% Plotting the object
 if 1 == object_type
     for i = 1:length(time)
+        % use only the first layer then whenever there is a change, and
+        % then the last layer. (Reasoning is mentioned in the thesis.
         if time(i,4) ~= 0 || time(i,1) == 1 || time(i,1) == time(end,1)
             
             vehicle_rep = [0 0;0 vehicle_param.w_vehicle;0.01 vehicle_param.w_vehicle;0.01,0];
@@ -169,11 +176,15 @@ if 1 == object_type
         end
     end
 end
-out = layers(all(~cellfun(@isempty,struct2cell(layers))));
 
+out = layers(all(~cellfun(@isempty,struct2cell(layers))));
+% Create the object 3d mesh
 object_patch = fcn_PlotWZ_createPatchesFromNSegments(out);
+% Plot 3d object
 patch(object_patch);
 object = object_patch;
+
+
 if 2 == object_type
     
     % Extracting the data

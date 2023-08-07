@@ -31,7 +31,8 @@ varargin...
 %  xtotal:500x1 matrix of x coordinates
 %  ytotal:500x1 matrix of y coordinates
 %  yaw:500x1 matrix of yaw angles for each xy point
-% 
+%  centerline: 500xN matrix of x and y coordinates of the centerlines
+%  flag_object: a boolean value of if to plot an object. 1 = plot object
 % DEPENDENCIES:
 % 
 %     
@@ -83,13 +84,6 @@ if 1 == flag_check_inputs
     % Are there the right number of inputs?
     narginchk(3,4)
 
-%     % Check the AABB input, make sure it is '4column_of_numbers' type
-%     fcn_MapGen_checkInputsToFunctions(...
-%         AABB, '4column_of_numbers',1);
-%  
-%     % Check the test_points input, make sure it is '2column_of_numbers' type
-%     fcn_MapGen_checkInputsToFunctions(...
-%         test_points, '2column_of_numbers');
  
 end
 
@@ -139,7 +133,7 @@ if 1 == traj_type
     
     %Create the lanes
     x_lane = 1:1:xtotal(end);
-    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width;
+    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width; %L_L means the most left lane
     y_lane_L = zeros(1,xtotal(end))+lane_width/2;
     y_lane_R = zeros(1,xtotal(end))-lane_width/2;
     
@@ -236,7 +230,7 @@ if 3 == traj_type
     flag_object = 1;
     %Creating the lanes
     x_lane = 1:1:xtotal(end);
-    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width;
+    y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width; % L_L furthest left lane
     y_lane_L = zeros(1,xtotal(end))+lane_width/2;
     y_lane_R = zeros(1,xtotal(end))-lane_width/2;
     

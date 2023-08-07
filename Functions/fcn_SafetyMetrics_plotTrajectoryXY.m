@@ -50,7 +50,10 @@ function [fig_num,layers]=fcn_SafetyMetrics_plotTrajectoryXY( ...
 %
 % OUTPUTS:
 %
-%
+%  fig_num: Figure number 
+%  layers: Stuct array with first column being the data for the point of
+%  the square representation and the second column being the color of that
+%  layer.
 %
 %
 % DEPENDENCIES:
@@ -157,9 +160,11 @@ hold on
 grid on
 
 if flag_3d_plot
+    % Sets up the axis so that no matter what the trajectory is the plot
+    % shows all the data
     axis([data_to_plot(1,2)-10 data_to_plot(end,2)+10 min(data_to_plot(:,3))-5 max(data_to_plot(:,3))+5 data_to_plot(1,1)-5 data_to_plot(end,1)]);
     view(-40,40);
-    set(gca,'DataAspectRatio',[10 round(max(abs(data_to_plot(:,3)))/10+1) 50])%
+    set(gca,'DataAspectRatio',[10 round(max(abs(data_to_plot(:,3)))/10+1) 50]) % Scales the axes so that the viewer can understand what is going on
     xlabel('x');
     ylabel('y');
     zlabel('t');
@@ -171,7 +176,7 @@ for i = 1:length(data_to_plot)
     
     if flag_3d_plot
         % Plot the time-space trajectory in red
-        [layers(i).data]=fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param,'r-',fig_num);
+        [layers(i).data]=fcn_SafetyMetrics_plot_3D_vehicle(traj,vehicle_param,'r-',fig_num); % extract the current layer and keep track of it in layers struct
         layers(i).color = [1 0 0];
         % Plot the time-space "shadow" in blue
          % Set time equal to zero, keeping everything else
@@ -183,6 +188,7 @@ for i = 1:length(data_to_plot)
 %         hold on
 
     else
+        % Plots the data but only in 2d. Doesn't return the car layers 
         fcn_SafetyMetrics_plot_2D_vehicle(traj,vehicle_param)
         axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 -10 +10 ]);
     end
