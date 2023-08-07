@@ -16,7 +16,7 @@ function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,
     avRows = strcmp(fcdData.vehicle_id, avID);
     
     % Extract the positions and times of the AV
-    avPosition = fcdData.vehicle_pos(avRows);
+    avPosition = fcdData.totalStation(avRows);
     avTime = fcdData.timestep_time(avRows);
     
     % Initialize the spacing array
@@ -29,7 +29,7 @@ function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,
 
 
         % Find the positions of the vehicles that are ahead of the AV
-        positionDiff = selectedData.vehicle_pos - avPosition(i);
+        positionDiff = selectedData.totalStation - avPosition(i);
       
         minPositive = min(positionDiff(positionDiff > 0));
         
@@ -47,7 +47,13 @@ function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,
         end
     end
     figure(figNum);
-    plot(avTime,spacing,'.','LineWidth',2);
+    subplot(2,1,1)
+    plot(avPosition,spacing,'LineWidth',2);
+    xlabel('Station (m)');
+    ylabel('Spacing (m)');
+
+    subplot(2,1,2)
+    plot(avTime,spacing,'LineWidth',2);
     xlabel('Time (sec)');
     ylabel('Spacing (m)');
 

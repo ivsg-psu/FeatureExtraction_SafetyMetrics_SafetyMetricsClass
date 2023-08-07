@@ -10,39 +10,35 @@
 % without skidding.
 
 % INPUTS: 
+% data: SUMO fcd data
+% figNum: the figure number
 
-function [accelerationMagnitude, accelerationAngle] = fcn_acceleVector(fcdData, avID, figNum)
-    
-    % Find the rows corresponding to the AV
-    avRows = strcmp(fcdData.vehicle_id, avID);
-    
-    % Extract the speed, angle, and time of the AV
-    avSpeed = fcdData.vehicle_speed(avRows);
-    avAngle = deg2rad(fcdData.vehicle_angle(avRows)); % Convert angle from degrees to radians
-    avTime = fcdData.timestep_time(avRows);
-    
-    % Calculate the velocity vector of the AV at each time step
-    avVelocityX = avSpeed .* cos(avAngle);
-    avVelocityY = avSpeed .* sin(avAngle);
-    
-    % Calculate the change in velocity and time
-    deltaVelocityX = diff(avVelocityX);
-    deltaVelocityY = diff(avVelocityY);
-    deltaTime = diff(avTime);
-    
-    % Calculate the acceleration vector of the AV at each time step
-    accelerationX = deltaVelocityX ./ deltaTime;
-    accelerationY = deltaVelocityY ./ deltaTime;
-    
-    % Calculate the magnitude and angle of the acceleration vector
-    accelerationMagnitude = sqrt(accelerationX.^2 + accelerationY.^2);
-    accelerationAngle = atan2(accelerationY, accelerationX);
-    
-    % Plot the acceleration vector as a function of time
+% OUTPUTS: 
+
+function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data,figNum)
+    % Load data from CSV file
+    %data = readtable(file_path);
+    vehicle_x = data.vehicle_x;
+    vehicle_y = data.vehicle_y;
+    timestep_time = data.timestep_time;
+
+    % Calculate differences in X, Y, and time
+    dx = diff(vehicle_x);
+    dy = diff(vehicle_y);
+    dt = diff(timestep_time);
+
+    % Calculate the components of acceleration in the X and Y directions
+    acceleration_x = dx ./ dt;
+    acceleration_y = dy ./ dt;
+
+    % Time vector matching the size of the acceleration vectors
+    time_vector = timestep_time(2:end);
+
+    % Create a quiver plot
     figure(figNum);
-    quiver(avTime(2:end), zeros(size(accelerationX)), accelerationX, accelerationY);
-    xlabel('Time');
-    ylabel('Acceleration');
-    title('Total acceleration vector of the AV as a function of time');
+    quiver(time_vector, zeros(size(acceleration_x)), acceleration_x, acceleration_y, 'AutoScale', 'on');
+    xlabel('Time (sec)');
+    ylabel('Total Acceleration (m/s^2)');
+    title('Total Acceleration Vector of the Vehicle (Aligned with X and Y Directions)');
+    grid on;
 end
-

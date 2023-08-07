@@ -2,7 +2,7 @@
 % For more details, see fcn_getAVData.m
 
 % read in data
-data = readtable('result.csv');
+data = readtable('fcdTestData_laneclosure.csv');
 % input vehicle id to query
 vehID = 'f_0.10';
 % run the function 

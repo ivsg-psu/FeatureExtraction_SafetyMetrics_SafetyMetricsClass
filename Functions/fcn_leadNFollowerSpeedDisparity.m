@@ -50,8 +50,14 @@ function [avTime,avPosition,nearestVehID,speedDisparity] = fcn_leadNFollowerSpee
         end
     end
     figure(figNum);
+    subplot(2,1,1)
     plot(avPosition,speedDisparity,'LineWidth',2);
     xlabel('Station (m)');
+    ylabel('Speed disparity (m/s)');
+
+    subplot(2,1,2)
+    plot(avTime,speedDisparity,'LineWidth',2);
+    xlabel('Time (sec)');
     ylabel('Speed disparity (m/s)');
 
 end

@@ -7,7 +7,10 @@
 
 % read in data
 data = readtable('fcdTestData_laneClosure.csv');
+% update data
+data = fcn_addStation(data);
 % input vehicle id to query
 vehID = 'f_0.10';
+
 % run the function 
 [simTime,spacing,a] = fcn_spacingBtwAVNLeadVeh(data,vehID,20);
