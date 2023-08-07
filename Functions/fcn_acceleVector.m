@@ -27,18 +27,23 @@ function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data,f
     dy = diff(vehicle_y);
     dt = diff(timestep_time);
 
+    % Calculate the components of velocity in the X and Y directions
+    velocity_x = dx ./ dt;
+    velocity_y = dy ./ dt;
+
     % Calculate the components of acceleration in the X and Y directions
-    acceleration_x = dx ./ dt;
-    acceleration_y = dy ./ dt;
+    acceleration_x = diff(velocity_x) ./ dt(2:end);
+    acceleration_y = diff(velocity_y) ./ dt(2:end);
 
     % Time vector matching the size of the acceleration vectors
-    time_vector = timestep_time(2:end);
+    time_vector = timestep_time(3:end);
 
     % Create a quiver plot
     figure(figNum);
     quiver(time_vector, zeros(size(acceleration_x)), acceleration_x, acceleration_y, 'AutoScale', 'on');
-    xlabel('Time (sec)');
+    xlabel('Time (s)');
     ylabel('Total Acceleration (m/s^2)');
     title('Total Acceleration Vector of the Vehicle (Aligned with X and Y Directions)');
     grid on;
 end
+
