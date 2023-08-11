@@ -29,7 +29,8 @@ function [lane3]=fcn_SafetyMetrics_plot_lanes(...
 %
 % OUTPUTS:
 %
-%
+% lane3: 1xn struct contaning data for lanes: Vertices, Faces,
+% FaceVertexCData, FaceColor, EdgeColor, LineWidth, FaceAlpha
 %
 %
 % DEPENDENCIES:

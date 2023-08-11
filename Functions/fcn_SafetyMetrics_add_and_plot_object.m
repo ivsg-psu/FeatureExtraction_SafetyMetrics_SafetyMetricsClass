@@ -48,7 +48,7 @@ function [object]=fcn_SafetyMetrics_add_and_plot_object( ...
 %
 % OUTPUTS:
 %   object : 1x1 stuct with Vertices, Faces, FacesVertexCData, Facecolor,
-%   Edgecolor, LineWidth
+%   Edgecolor, LineWidth fo the object
 %
 %
 %
