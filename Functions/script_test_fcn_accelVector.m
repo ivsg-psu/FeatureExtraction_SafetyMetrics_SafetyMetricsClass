@@ -8,10 +8,11 @@
 
 % read in data
 data = readtable('fcdTestData_laneClosure.csv');
+data = fcn_addStation(data);
 % input vehicle id to query
 avID = 'f_0.9';
-avData = fcn_getAVData(data,avID);
+avData = fcn_getAVData(data,avID,55);
 % figure number
 figNum = 10;
 % run the function 
-[time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(avData,figNum);
+[time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(avData);

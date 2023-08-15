@@ -21,7 +21,7 @@ function [avTime,avPosition,nearestVehID,speedDisparity] = fcn_leadNFollowerSpee
     avSpeed = fcdData.vehicle_speed(avRows);
     % Initialize the array
     speedDisparity = zeros(size(avPosition));
-    
+    nearestVehID = cell(length(avTime),1);
     % For each time step...
     for i = 1:length(avTime)
         % selected data

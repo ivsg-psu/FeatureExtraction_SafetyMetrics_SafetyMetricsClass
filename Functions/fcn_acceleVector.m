@@ -18,7 +18,7 @@
 % acceleration_x: magnitude of acceleration in x direction  
 % acceleration_y:  magnitude of acceleration in y direction  
 
-function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data,figNum)
+function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data)
     % Load data from CSV file
     %data = readtable(file_path);
     vehicle_x = data.vehicle_x;
@@ -42,7 +42,7 @@ function [time_vector, acceleration_x, acceleration_y] = fcn_acceleVector(data,f
     time_vector = timestep_time(3:end);
 
     % Create a quiver plot
-    figure(figNum);
+    figure();
     quiver(time_vector, zeros(size(acceleration_x)), acceleration_x, acceleration_y, 'AutoScale', 'on');
     xlabel('Time (s)');
     ylabel('Total Acceleration (m/s^2)');

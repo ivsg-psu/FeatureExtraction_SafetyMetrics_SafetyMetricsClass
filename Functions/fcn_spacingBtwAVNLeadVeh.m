@@ -21,7 +21,7 @@ function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,
     
     % Initialize the spacing array
     spacing = zeros(size(avPosition));
-    
+    nearestVehID = cell(length(avTime),1);
     % For each time step...
     for i = 1:length(avTime)
         % selected data
@@ -44,6 +44,7 @@ function [avTime,spacing,nearestVehID] = fcn_spacingBtwAVNLeadVeh(fcdData, avID,
         else
             % If there are no vehicles ahead, set the spacing to NaN
             spacing(i) = NaN;
+            nearestVehID{i} = NaN;
         end
     end
     figure(figNum);

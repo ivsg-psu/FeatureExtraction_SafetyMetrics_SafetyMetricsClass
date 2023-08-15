@@ -10,7 +10,7 @@
 % Author: Wushuang Bai
 % Revision history: 
 % 20230721 first write of code 
-function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID,figNum)
+function [avTime,spacing, nearestVehID] = fcn_spacingBtwAVNFollowVeh(fcdData, avID,figNum)
     
     % Find the rows corresponding to the AV
     avRows = strcmp(fcdData.vehicle_id, avID);
@@ -21,7 +21,7 @@ function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID,figNum)
     
     % Initialize the spacing array
     spacing = zeros(size(avPosition));
-    
+    nearestVehID = cell(length(avTime),1);
     % For each time step...
     for i = 1:length(avTime)
         % Find the positions of all vehicles at this time step
@@ -37,9 +37,11 @@ function [avTime,spacing] = fcn_spacingBtwAVNFollowVeh(fcdData, avID,figNum)
             
             % Calculate the spacing to the nearest follower vehicle
             spacing(i) = avPosition(i) - nearestFollowerPosition;
+            nearestVehID{i} = selectedData.vehicle_id(ind);
         else
             % If there are no vehicles behind, set the spacing to NaN
             spacing(i) = NaN;
+            nearestVehID{i} = NaN;
         end
     end
     figure(figNum);

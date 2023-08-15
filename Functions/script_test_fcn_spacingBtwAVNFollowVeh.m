@@ -12,4 +12,4 @@ data = fcn_addStation(data);
 % input vehicle id to query 
 vehID = 'f_0.10';
 % run the function 
-[simTime,spacing] = fcn_spacingBtwAVNFollowVeh(data,vehID,30);
+[simTime,spacing,nearestVehID] = fcn_spacingBtwAVNFollowVeh(data,vehID,30);

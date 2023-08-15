@@ -16,7 +16,7 @@ fcdData = fcn_addStation(fcdData);
 avID = 'f_0.10';
 % sensor range
 sensorRange = 100; 
-relativeTo = 'lead';
+relativeTo = 'lead'; % check the speed disparity between the AV and the vehicle ahead 
 figNum = 10;
 [avTime,avPosition,nearestVehID,speedDisparity] = fcn_leadNFollowerSpeedDisparity(fcdData, sensorRange, avID, relativeTo,figNum);
 
