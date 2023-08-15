@@ -39,6 +39,7 @@ data = readtable('TestData_laneclosure.csv'); % please see fcn_getAVData.m for d
 data = fcn_addStation(data);
 % input vehicle id to query
 vehID = 'f_0.9';
+% figure number
 fignum = 55;
 % run the function 
 vehData = fcn_getAVData(data,vehID,fignum);
