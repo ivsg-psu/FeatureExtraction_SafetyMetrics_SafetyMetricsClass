@@ -37,7 +37,7 @@ function [u,rear_axle]=fcn_SafetyMetrics_unit_vector( ...
 %
 %   u: a matrix with the unit vectors of the trajectory. [time,x,y]
 %   rear_axle: a matrix containing the points of where the center of the
-%   rear axle is. [x,y,z];
+%   rear axle is. [x,y,z]
 %
 % DEPENDENCIES:
 %
