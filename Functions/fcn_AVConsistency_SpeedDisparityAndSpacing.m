@@ -18,7 +18,6 @@ function [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  fcn_AVConsis
 %                   'follow': it means the result is calculated based on the
 %                   AV and the follow vehicle
 %
-%       (optional):
 %     (OPTIONAL INPUTS)
 %      fig_num: a figure number to plot results.
 %
@@ -109,7 +108,7 @@ end
 avRows = strcmp(data.vehicle_id, avID);
 
 % Extract the positions, times, speeds, and lane of the AV
-avPosition = data.totalStation(avRows);
+avPosition = data.snapStation(avRows);
 avTime = data.timestep_time(avRows);
 avSpeed = data.vehicle_speed(avRows);
 avLane = data.vehicle_lane(avRows); % Added this line to extract lane information
@@ -120,20 +119,20 @@ spacing = zeros(size(avPosition));
 nearestVehID = cell(length(avTime),1);
 
 % For each time step...
-for i = 1:length(avTime)
+for ii = 1:length(avTime)
     % selected data
-    selectedData = data(data.timestep_time == avTime(i),:);
+    selectedData = data(data.timestep_time == avTime(ii),:);
 
     % Filter the selectedData to only vehicles in the same lane as the AV at that time step
-    sameLaneVehicles = selectedData(strcmp(selectedData.vehicle_lane, avLane(i)), :); % Added this line
+    sameLaneVehicles = selectedData(strcmp(selectedData.vehicle_lane, avLane(ii)), :); % Added this line
 
     if strcmp(relativeTo,'follow')
         % Find the positions of the vehicles that are following of the AV
-        positionDiff =  avPosition(i) - sameLaneVehicles.totalStation; % Modified this line to use sameLaneVehicles
+        positionDiff =  avPosition(ii) - sameLaneVehicles.snapStation; % Modified this line to use sameLaneVehicles
 
     elseif strcmp(relativeTo,'lead')
         % Find the positions of the vehicles that are leading of the AV
-        positionDiff = sameLaneVehicles.totalStation - avPosition(i); % Modified this line to use sameLaneVehicles
+        positionDiff = sameLaneVehicles.snapStation - avPosition(ii); % Modified this line to use sameLaneVehicles
     end
 
     minPositive = min(positionDiff(positionDiff > 0));
@@ -142,14 +141,14 @@ for i = 1:length(avTime)
     if ~isempty(minPositive) && minPositive <= sensorRange
 
         ind = find(positionDiff == minPositive);
-        nearestVehID{i} = sameLaneVehicles.vehicle_id(ind); % Modified this line to use sameLaneVehicles
-        speedDisparity(i) = avSpeed(i) - sameLaneVehicles.vehicle_speed(ind); % Modified this line to use sameLaneVehicles
-        spacing(i) = positionDiff(ind);
+        nearestVehID{ii} = sameLaneVehicles.vehicle_id(ind); % Modified this line to use sameLaneVehicles
+        speedDisparity(ii) = avSpeed(ii) - sameLaneVehicles.vehicle_speed(ind); % Modified this line to use sameLaneVehicles
+        spacing(ii) = positionDiff(ind);
     else
         % If there are no vehicles ahead, set the speed disparity to NaN
-        speedDisparity(i) = NaN;
-        spacing(i) = NaN; % Modified to set to NaN instead of using ind which might not be defined
-        nearestVehID{i} = NaN;
+        speedDisparity(ii) = NaN;
+        spacing(ii) = NaN; % Modified to set to NaN instead of using ind which might not be defined
+        nearestVehID{ii} = NaN;
     end
 end
 %% Any debugging?
@@ -164,15 +163,16 @@ end
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if flag_do_plots
-figure(figNum);
+figure(fig_num);
 subplot(2,1,1)
 plot(avPosition,speedDisparity,'LineWidth',2);
 xlabel('Station (m)');
 ylabel('Speed disparity (m/s)');
-
+xlim([0 2300]);
 subplot(2,1,2)
 plot(avPosition,spacing,'LineWidth',2);
 xlabel('Station (m)');
 ylabel('Spacing');
+xlim([0 2300]);
 end
 end
