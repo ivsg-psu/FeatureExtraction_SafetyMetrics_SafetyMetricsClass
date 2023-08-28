@@ -119,11 +119,11 @@ Fs = 10; % Hz
 % Define cutoff frequency for the low-pass filter
 Fc = 0.1; % Hz (adjust this value based on desired smoothness)
 % Design a Butterworth low-pass filter 
-[N, Wn] = buttord(Fc/(Fs/2), 1.5*Fc/(Fs/2), 3, 20);
-[b, a] = butter(N, Wn, 'low');
+%[N, Wn] = buttord(Fc/(Fs/2), 1.5*Fc/(Fs/2), 3, 20);
+[b, a] = butter(1, 0.1/(Fs/2));
 
-vehicleData.vehicle_x_filtered = filter(b,a,vehicleData.vehicle_x);
-vehicleData.vehicle_y_filtered = filter(b,a,vehicleData.vehicle_y);
+vehicleData.vehicle_x_filtered = filtfilt(b,a,vehicleData.vehicle_x);
+vehicleData.vehicle_y_filtered = filtfilt(b,a,vehicleData.vehicle_y);
 
 
 %% Any debugging?

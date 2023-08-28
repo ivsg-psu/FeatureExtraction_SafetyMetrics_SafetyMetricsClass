@@ -101,8 +101,8 @@ target_vehicle = data(strcmp(data.vehicle_id, vehID), :);
 h2 = plot(target_vehicle.snapStation, target_vehicle.vehicle_speed, 'r-');
 
 % Label the axes of the plot
-xlabel('SnapStation');
-ylabel('Speed');
+xlabel('SnapStation (m)');
+ylabel('Speed (m/s)');
 
 % Add a legend to the plot to distinguish between target vehicle and others
 legend([h1,h2],'Human driven Vehicles', 'AV');
