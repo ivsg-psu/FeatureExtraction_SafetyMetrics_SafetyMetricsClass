@@ -113,18 +113,6 @@ vehicleRows = strcmp(Data.vehicle_id,vehicleID);
 % Extract the data of the given vehicle
 vehicleData  = Data(vehicleRows,:);
 
-% Design a Butterworth low-pass filter
-% Define sampling frequency 
-Fs = 10; % Hz
-% Define cutoff frequency for the low-pass filter
-Fc = 0.1; % Hz (adjust this value based on desired smoothness)
-% Design a Butterworth low-pass filter 
-%[N, Wn] = buttord(Fc/(Fs/2), 1.5*Fc/(Fs/2), 3, 20);
-[b, a] = butter(1, 0.1/(Fs/2));
-
-vehicleData.vehicle_x_filtered = filtfilt(b,a,vehicleData.vehicle_x);
-vehicleData.vehicle_y_filtered = filtfilt(b,a,vehicleData.vehicle_y);
-
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,9 +128,12 @@ vehicleData.vehicle_y_filtered = filtfilt(b,a,vehicleData.vehicle_y);
 if 1==flag_do_plots
 figure(fig_num);
 subplot(2,1,1);
-plot(vehicleData.snapStation, vehicleData.vehicle_speed,'linewidth',2);
+plot(vehicleData.snapStation, vehicleData.vehicle_speed,'k','linewidth',2);
+hold on;
+plot(vehicleData.snapStation, vehicleData.speed_filtered,'b--','linewidth',2)
 xlabel('Station (m)');
 ylabel('Speed (m/s)');
+legend('raw','filtered');
 subplot(2,1,2);
 plot(vehicleData.vehicle_x,vehicleData.vehicle_y,'k','linewidth',2);
 hold on;

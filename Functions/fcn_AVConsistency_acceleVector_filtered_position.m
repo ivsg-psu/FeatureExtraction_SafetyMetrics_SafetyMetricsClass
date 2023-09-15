@@ -134,9 +134,16 @@ end
 if 1==flag_do_plots
     % Create a quiver plot to visualize the acceleration vectors
     figure(fig_num);
-    quiver(station, zeros(size(acceleration_x)), acceleration_x, acceleration_y, 'AutoScale', 'on');
-    xlabel('Time (s)');
-    ylabel('Total Acceleration (m/s^2)');
+    subplot(2,1,1);
+
+    plot(station,acceleration_x);
+    xlabel('Station (m)');
+    ylabel('Acceleration in X direction (m/s^2)');
+    subplot(2,1,2);
+
+    plot(station,acceleration_y);  
+    xlabel('Station (m)');
+    ylabel('Acceleration in Y direction (m/s^2)');
     if 1 == filterFlag
     title('Acceleration using filtered position');
     elseif 0 == filterFlag

@@ -99,7 +99,7 @@ end
         vehicle_x = vehData.vehicle_x;
         vehicle_y = vehData.vehicle_y;
     end
-    vehicle_speed = vehData.vehicle_speed;
+    vehicle_speed = vehData.speed_filtered;
     timestep_time = vehData.timestep_time;
 
     % Compute the differences in position, time, and speed to derive acceleration
@@ -136,14 +136,14 @@ end
 if 1==flag_do_plots
     % Create a quiver plot to visualize the acceleration vectors
     figure(fig_num);
-    quiver(station, zeros(size(acceleration_x)), acceleration_x, acceleration_y);
+    subplot(2,1,1);
+    plot(station,acceleration_x,'k','LineWidth',2);
     xlabel('Station (m)');
-    ylabel('Total Acceleration (m/s^2)');
-    if 1 == filterFlag
-    title('Acceleration using filtered position based on speed');
-    elseif 0 == filterFlag
-    title('Acceleration using nonfiltered position based on speed');
-    end
-    grid on;
+    ylabel('Acceleration in X direction (m/s^2)');
+    subplot(2,1,2);
+    plot(station,acceleration_y,'k','LineWidth',2);  
+    xlabel('Station (m)');
+    ylabel('Acceleration in Y direction (m/s^2)');
+
 end
 end

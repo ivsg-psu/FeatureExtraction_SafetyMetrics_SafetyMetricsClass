@@ -47,7 +47,7 @@
 %% Prep the workspace
 close all
 clc
-
+clear; 
 %% Dependencies and Setup of the Code
 % The code requires several other libraries to work, namely the following
 %
@@ -138,11 +138,7 @@ fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,f
 
 %% Compute AV's total acceleration vector under different conditions
 filterFlag = 1;
-nonFilterFlag = 0;
-[station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_position(vehData,filterFlag);
-[station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_position(vehData,nonFilterFlag);
 [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,filterFlag);
-[station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,nonFilterFlag);
 
 
 %% Functions follow

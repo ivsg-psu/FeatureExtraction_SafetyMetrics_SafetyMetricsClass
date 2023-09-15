@@ -80,6 +80,10 @@ data = fcn_AVConsistency_addDisTravel(data);
 % Snap the vehicle's station to the centerline
 data = fcn_AVConsistency_addSnapStation(data,pathXY); 
 
+% filter the vehicle speed and position using low pass filter
+data = fcn_AVConsistency_filterSpeedAndPosition(data);
+
+
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
