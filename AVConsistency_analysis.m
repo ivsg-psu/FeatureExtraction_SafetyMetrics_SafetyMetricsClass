@@ -107,7 +107,9 @@ end
 
 %% Start the data processing
 % Read in the data
-data = readtable('offpeak_res_Arterial_Site_1136_seed0.csv'); % See fcn_getAVData.m for details
+data = readtable(['C:\Users\ccctt\OneDrive - The Pennsylvania State University\Documents\GitHub\' ...
+    'TrafficSimulators_Project_SUMOSimulationForADSProject\Scenarios\Scenario1_1\' ...
+    'res\res_highway_Site_1180_seed0.xml\res_highway_Site_1180_seed0.csv']); % See fcn_getAVData.m for details
 
 % Check for NaN values
 data = rmmissing(data);
@@ -119,7 +121,7 @@ pathXY = [pathXY.Var1,pathXY.Var2];
 data = fcn_AVConsistency_preProcessData(data,pathXY);
 
 %% Retrieve data specific to the AV
-avID = 'f_lane0_308.0'; % Specify vehicle id to query, assume it's av
+avID = 'f_lane1_344.0'; % Specify vehicle id to query, assume it's av
 fignum = 1;      % Figure number
 vehData = fcn_AVConsistency_getAVData(data,avID,fignum);
 
@@ -135,7 +137,7 @@ fignum = 3;
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
 %% Calculate and plot follow spacing and speed disparity
-sensorRange = 100;
+sensorRange = 1000;
 relativeTo = 'follow';
 fignum = 4;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...

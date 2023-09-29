@@ -128,9 +128,9 @@ vehicleData  = Data(vehicleRows,:);
 if 1==flag_do_plots
 figure(fig_num);
 subplot(2,1,1);
-plot(vehicleData.snapStation, vehicleData.vehicle_speed,'k','linewidth',2);
+plot(vehicleData.snapStation, vehicleData.vehicle_speed,'k.','linewidth',2);
 hold on;
-plot(vehicleData.snapStation, vehicleData.speed_filtered,'b--','linewidth',2)
+plot(vehicleData.snapStation, vehicleData.speed_filtered,'b.','linewidth',2)
 xlabel('Station (m)');
 ylabel('Speed (m/s)');
 legend('raw','filtered');
