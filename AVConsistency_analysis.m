@@ -107,6 +107,7 @@ end
 
 %% Start the data processing
 % Read in the data
+<<<<<<< HEAD
 data = readtable('res_highway_Site_1180_peak_seed0.csv'); % See fcn_getAVData.m for details
 
 % Check for NaN values
@@ -119,6 +120,7 @@ pathXY = [pathXY.Var1,pathXY.Var2];
 data = fcn_AVConsistency_preProcessData(data,pathXY);
 
 %% Retrieve data specific to the AV
+<<<<<<< HEAD
 avID = 'AV'; % Specify vehicle id to query, assume it's av
 fignum = 1;      % Figure number
 vehData = fcn_AVConsistency_getAVData(data,avID,fignum);
@@ -135,7 +137,7 @@ fignum = 3;
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
 %% Calculate and plot follow spacing and speed disparity
-sensorRange = 100;
+sensorRange = 1000;
 relativeTo = 'follow';
 fignum = 4;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...

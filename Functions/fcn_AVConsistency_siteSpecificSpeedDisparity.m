@@ -91,14 +91,14 @@ for i = 1:length(unique_vehicles)
     % Extract data specific to the current vehicle ID
     vehicle_data = data(strcmp(data.vehicle_id, unique_vehicles{i}), :);
     % Plot speed vs. snapStation for the current vehicle in black
-    h1 = plot(vehicle_data.snapStation, vehicle_data.speed_filtered, 'k-');
+    h1 = plot(vehicle_data.snapStation, vehicle_data.speed_filtered, 'k.');
 end
 
 % Extract data specific to the target vehicle (specified by vehID)
 target_vehicle = data(strcmp(data.vehicle_id, vehID), :);
 
 % Plot speed vs. snapStation for the target vehicle in red
-h2 = plot(target_vehicle.snapStation, target_vehicle.speed_filtered, 'r-');
+h2 = plot(target_vehicle.snapStation, target_vehicle.speed_filtered, 'ro');
 
 % Label the axes of the plot
 xlabel('Station (m)');
