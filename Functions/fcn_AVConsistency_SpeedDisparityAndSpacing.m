@@ -52,7 +52,9 @@ function [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  fcn_AVConsis
 %
 % TO DO:
 %
-% -- change the total station to snaped s coordinate
+% -- change the total station to snaped s coordinate done
+% -- 20231025 : changed speed from filtered speed to raw speed
+
 flag_do_debug = 1; % Flag to show function info in UI
 flag_do_plots = 0; % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
@@ -110,7 +112,7 @@ avRows = strcmp(data.vehicle_id, avID);
 % Extract the positions, times, speeds, and lane of the AV
 avPosition = data.snapStation(avRows);
 avTime = data.timestep_time(avRows);
-avSpeed = data.speed_filtered(avRows);
+avSpeed = data.vehicle_speed(avRows);
 avLane = data.vehicle_lane(avRows); % Added this line to extract lane information
 
 % Initialize the array
@@ -142,7 +144,7 @@ for ii = 1:length(avTime)
 
         ind = find(positionDiff == minPositive);
         nearestVehID{ii} = sameLaneVehicles.vehicle_id(ind); % Modified this line to use sameLaneVehicles
-        speedDisparity(ii) = avSpeed(ii) - sameLaneVehicles.speed_filtered(ind); % Modified this line to use sameLaneVehicles
+        speedDisparity(ii) = avSpeed(ii) - sameLaneVehicles.vehicle_speed(ind); % Modified this line to use sameLaneVehicles
         spacing(ii) = positionDiff(ind);
     else
         % If there are no vehicles ahead, set the speed disparity to NaN
@@ -168,11 +170,11 @@ subplot(2,1,1)
 plot(avPosition,speedDisparity,'k','LineWidth',2);
 xlabel('Station (m)');
 ylabel('Speed disparity (m/s)');
-xlim([0 2300]);
+%xlim([1200 1500]);
 subplot(2,1,2)
 plot(avPosition,spacing,'k','LineWidth',2);
 xlabel('Station (m)');
 ylabel('Spacing');
-xlim([0 2300]);
+%xlim([1200 1500]);
 end
 end

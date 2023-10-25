@@ -107,7 +107,7 @@ end
 
 %% Start the data processing
 % Read in the data
-<<<<<<< HEAD
+
 data = readtable('res_highway_Site_1180_peak_seed0.csv'); % See fcn_getAVData.m for details
 
 % Check for NaN values
@@ -118,9 +118,14 @@ pathXY = [pathXY.Var1,pathXY.Var2];
 
 % Pre-process the data by adding total station
 data = fcn_AVConsistency_preProcessData(data,pathXY);
+% Cut the ending part of the vehicle trajectory, where it is snaped
+% backwards from the first road segment
+data = data(data.snapStation>0,:);
+
+
 
 %% Retrieve data specific to the AV
-<<<<<<< HEAD
+
 avID = 'AV'; % Specify vehicle id to query, assume it's av
 fignum = 1;      % Figure number
 vehData = fcn_AVConsistency_getAVData(data,avID,fignum);
@@ -130,21 +135,21 @@ fignum = 2;
 fcn_AVConsistency_siteSpecificSpeedDisparity(data,avID,fignum);
 
 %% Calculate and plot lead spacing and speed disparity
-sensorRange = 1000;
+sensorRange = 200;
 relativeTo = 'lead';
 fignum = 3;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
 %% Calculate and plot follow spacing and speed disparity
-sensorRange = 1000;
+sensorRange = 200;
 relativeTo = 'follow';
 fignum = 4;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
 %% Compute AV's total acceleration vector under different conditions
-filterFlag = 1;
+filterFlag = 0;
 [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,filterFlag);
 
 

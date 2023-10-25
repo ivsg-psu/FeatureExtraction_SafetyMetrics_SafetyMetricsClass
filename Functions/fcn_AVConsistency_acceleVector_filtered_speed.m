@@ -137,13 +137,15 @@ if 1==flag_do_plots
     % Create a quiver plot to visualize the acceleration vectors
     figure(fig_num);
     subplot(2,1,1);
-    plot(station,acceleration_x,'k.','LineWidth',2);
+    plot(station,acceleration_x,'k','LineWidth',2);
     xlabel('Station (m)');
     ylabel('Acceleration in X direction (m/s^2)');
+    %xlim([1200 1500]);
     subplot(2,1,2);
-    plot(station,acceleration_y,'k.','LineWidth',2);  
+    plot(station,acceleration_y,'k','LineWidth',2);  
     xlabel('Station (m)');
     ylabel('Acceleration in Y direction (m/s^2)');
+    %xlim([1200 1500]);
 
 end
 end

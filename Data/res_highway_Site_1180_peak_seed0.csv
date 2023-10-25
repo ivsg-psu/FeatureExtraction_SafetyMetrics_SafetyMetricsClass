@@ -1,3 +1,4 @@
+sep=;
 timestep_time;vehicle_angle;vehicle_id;vehicle_lane;vehicle_pos;vehicle_slope;vehicle_speed;vehicle_type;vehicle_x;vehicle_y
 0.00;316.69;f_lane_390.0;-0_0;5.10;0.00;0.00;type_krauss;562.13;387.13
 1.00;316.69;f_lane_390.0;-0_0;7.13;0.00;2.03;type_krauss;560.74;388.61
