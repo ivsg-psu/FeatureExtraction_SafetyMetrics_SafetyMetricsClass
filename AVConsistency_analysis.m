@@ -107,19 +107,19 @@ end
 
 %% Start the data processing
 % Read in the data
-data = readtable('offpeak_res_Arterial_Site_1136_seed0.csv'); % See fcn_getAVData.m for details
+data = readtable('res_highway_Site_1180_peak_seed0.csv'); % See fcn_getAVData.m for details
 
 % Check for NaN values
 data = rmmissing(data);
 
-pathXY = readtable('OSM_snap_centerline_outerTrack.csv');
+pathXY = readtable('referenceline_20231016.csv');
 pathXY = [pathXY.Var1,pathXY.Var2];
 
 % Pre-process the data by adding total station
 data = fcn_AVConsistency_preProcessData(data,pathXY);
 
 %% Retrieve data specific to the AV
-avID = 'f_lane0_308.0'; % Specify vehicle id to query, assume it's av
+avID = 'AV'; % Specify vehicle id to query, assume it's av
 fignum = 1;      % Figure number
 vehData = fcn_AVConsistency_getAVData(data,avID,fignum);
 

@@ -8,6 +8,7 @@ vehicleRows = strcmp(data.vehicle_id,uniqueVehID(ii));
 
 % Extract the data of the given vehicle
 vehicleData  = data(vehicleRows,:);
+%fprintf('Data length: %d\n', size(vehicleData));
 
 % Design a Butterworth low-pass filter
 % Define sampling frequency 
