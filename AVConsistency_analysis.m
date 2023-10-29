@@ -141,12 +141,23 @@ fignum = 3;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
+% Animation
+otherVehData = fcn_AVConsistency_getAVData(data,'f_lane_404.23');
+roadcenterline = readtable('referenceline_20231016.csv');
+roadcenterline = [roadcenterline.Var1,roadcenterline.Var2];
+numOfLanes= 1;
+fignum = 100;
+fcn_AVConsistency_Animate(vehData, otherVehData,roadcenterline,numoflanes,fignum,'test1')
+
 %% Calculate and plot follow spacing and speed disparity
 sensorRange = 200;
 relativeTo = 'follow';
 fignum = 4;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
+
+% Animation
+% fcn_AVConsistency_Animate()
 
 %% Compute AV's total acceleration vector under different conditions
 filterFlag = 0;
