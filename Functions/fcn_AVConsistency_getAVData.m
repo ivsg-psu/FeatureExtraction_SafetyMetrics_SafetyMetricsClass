@@ -53,7 +53,7 @@ function vehicleData = fcn_AVConsistency_getAVData(Data, vehicleID, varargin)
 % TO DO:
 %
 % -- fill in to-do items here.
-flag_do_debug = 1; % Flag to show function info in UI
+flag_do_debug = 0; % Flag to show function info in UI
 flag_do_plots = 0; % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
 
@@ -125,25 +125,25 @@ vehicleData  = Data(vehicleRows,:);
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if 1==flag_do_plots
-figure(fig_num);
-subplot(2,1,1);
-plot(vehicleData.snapStation, vehicleData.vehicle_speed,'k.-','linewidth',2,'MarkerSize',30);
-% hold on;
-% plot(vehicleData.snapStation, vehicleData.speed_filtered,'b','linewidth',2)
-xlabel('Station (m)');
-ylabel('Speed (m/s)');
-%legend('raw','filtered');
-%legend('raw');
-
-subplot(2,1,2);
-plot(vehicleData.vehicle_x,vehicleData.vehicle_y,'k','linewidth',2);
-% hold on;
-% plot(vehicleData.vehicle_x_filtered,vehicleData.vehicle_y_filtered,'b--','linewidth',2);
-xlabel('X position (m)');
-ylabel('Y position (m)');
-%legend('raw','filtered');
-end
+% if 1==flag_do_plots
+% figure(fig_num);
+% subplot(2,1,1);
+% plot(vehicleData.snapStation, vehicleData.vehicle_speed,'k.-','linewidth',2,'MarkerSize',30);
+% % hold on;
+% % plot(vehicleData.snapStation, vehicleData.speed_filtered,'b','linewidth',2)
+% xlabel('Station (m)');
+% ylabel('Speed (m/s)');
+% %legend('raw','filtered');
+% %legend('raw');
+% 
+% subplot(2,1,2);
+% plot(vehicleData.vehicle_x,vehicleData.vehicle_y,'k','linewidth',2);
+% % hold on;
+% % plot(vehicleData.vehicle_x_filtered,vehicleData.vehicle_y_filtered,'b--','linewidth',2);
+% xlabel('X position (m)');
+% ylabel('Y position (m)');
+% %legend('raw','filtered');
+% end
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file); 
 end

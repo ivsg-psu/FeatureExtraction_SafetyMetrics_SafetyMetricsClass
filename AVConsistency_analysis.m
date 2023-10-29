@@ -105,6 +105,155 @@ if ~exist('flag_SafetyMetrics_Folders_Initialized','var')
     flag_SafetyMetrics_Folders_Initialized = 1;
 end
 
+%% ensemble all seeds for fig3 and fig4
+% Define the number of seeds
+num_seeds = 10;
+
+% Initialize arrays to accumulate results from all seeds
+% for following
+all_avPosition = [];
+all_speedDisparity = [];
+all_spacing = [];
+% for lead
+all_avPosition_lead = [];
+all_speedDisparity_lead = [];
+all_spacing_lead = [];
+
+for seed = 0:num_seeds-1
+    % Read data for the current seed
+    data = readtable(['res_highway_Site_1180_peak_seed', num2str(seed), '.csv']);
+    
+    % Check for NaN values
+    data = rmmissing(data);
+
+    % Check for NaN values
+    data = rmmissing(data);
+    
+    pathXY = readtable('referenceline_20231016.csv');
+    pathXY = [pathXY.Var1,pathXY.Var2];
+    
+    % Pre-process the data by adding total station
+    data = fcn_AVConsistency_preProcessData(data,pathXY);
+    % Cut the ending part of the vehicle trajectory, where it is snaped
+    % backwards from the first road segment
+    data = data(data.snapStation>0,:);
+    
+    avID = 'AV'; % Specify vehicle id to query, assume it's av
+    
+    sensorRange = 100;
+    relativeTo = 'lead';
+    fignum = 3;
+    % Calculate and plot lead spacing and speed disparity for the current seed
+    [avTime, avPosition, nearestVehID, speedDisparity, spacing] = ...
+        fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo, fignum);
+    
+    % lead array res
+    all_avPosition_lead = [all_avPosition; avPosition];
+    all_speedDisparity_lead = [all_speedDisparity; speedDisparity];
+    all_spacing_lead = [all_spacing; spacing];
+
+    relativeTo = 'follow';
+    fignum = 4;
+    [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
+    fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
+    
+    % Accumulate results from the current seed, following array res
+    all_avPosition = [all_avPosition; avPosition];
+    all_speedDisparity = [all_speedDisparity; speedDisparity];
+    all_spacing = [all_spacing; spacing];
+end
+
+% Create plots containing results from all seeds
+fig_num = 3;
+figure(fig_num);
+subplot(2, 1, 1)
+plot(all_avPosition_lead, all_speedDisparity_lead, 'k', 'LineWidth', 0.1);
+hold on; % Hold the current plot to add more data
+xlabel('Station (m)');
+ylabel('Speed disparity (m/s)');
+
+work_start = 1067; % work zone start point
+work_end = 1387; % work zone end point
+% Create a vertical line at the specified x-coordinate
+xline(work_start, 'b', 'LineWidth', 2); 
+hold on; % Hold the current plot to add more data
+% Create a vertical line at the specified x-coordinate
+xline(work_end, 'b', 'LineWidth', 2);
+
+title('Speed disparity-Vehicle ahead AV vs AV');
+% Add a legend to the plot
+legend('speed disparity','Work zone starts at x = 1067', 'Work zone ends at x = 1387'); 
+grid on;
+set(gca, 'GridAlpha', 0.2); % Set grid alpha to 1 for the current axes
+
+
+subplot(2, 1, 2)
+
+plot(all_avPosition_lead, all_spacing_lead, 'k', 'LineWidth', 0.1);
+xlabel('Station (m)');
+ylabel('Spacing (m)');
+hold on; % Hold the current plot to add more data
+
+work_start = 1067; % work zone start point
+work_end = 1387; % work zone end point
+% Create a vertical line at the specified x-coordinate
+xline(work_start, 'b', 'LineWidth', 2); 
+hold on; % Hold the current plot to add more data
+% Create a vertical line at the specified x-coordinate
+xline(work_end, 'b', 'LineWidth', 2);
+
+title('Spacing-Vehicle ahead AV vs AV');
+% Add a legend to the plot
+legend('Spacing','Work zone starts at x = 1067', 'Work zone ends at x = 1387'); 
+grid on;
+set(gca, 'GridAlpha', 0.2); % Set grid alpha to 1 for the current axes
+
+
+fig_num = 4;
+figure(fig_num);
+
+subplot(2, 1, 1)
+plot(all_avPosition, all_speedDisparity, 'k', 'LineWidth', 0.1);
+xlabel('Station (m)');
+ylabel('Speed disparity (m/s)');
+hold on; % Hold the current plot to add more data
+
+work_start = 1067; % work zone start point
+work_end = 1387; % work zone end point
+% Create a vertical line at the specified x-coordinate
+xline(work_start, 'b', 'LineWidth', 2); 
+hold on; % Hold the current plot to add more data
+% Create a vertical line at the specified x-coordinate
+xline(work_end, 'b', 'LineWidth', 2);
+title('Speed disparity-Vehicle behind AV vs AV');
+% Add a legend to the plot
+legend('Speed disparity','Work zone starts at x = 1067', 'Work zone ends at x = 1387'); 
+grid on;
+set(gca, 'GridAlpha', 0.2); % Set grid alpha to 1 for the current axes
+
+
+subplot(2, 1, 2)
+
+plot(all_avPosition, all_spacing, 'k', 'LineWidth', 0.1);
+xlabel('Station (m)');
+ylabel('Spacing (m)');
+hold on; % Hold the current plot to add more data
+
+work_start = 1067; % work zone start point
+work_end = 1387; % work zone end point
+% Create a vertical line at the specified x-coordinate
+xline(work_start, 'b', 'LineWidth', 2); 
+hold on; % Hold the current plot to add more data
+% Create a vertical line at the specified x-coordinate
+xline(work_end, 'b', 'LineWidth', 2);
+title('Spacing-Vehicle behind AV vs AV');
+% Add a legend to the plot
+legend('Spacing','Work zone starts at x = 1067', 'Work zone ends at x = 1387'); 
+grid on;
+set(gca, 'GridAlpha', 0.2); % Set grid alpha to 1 for the current axes
+
+
+
 %% Start the data processing
 % Read in the data
 
@@ -122,26 +271,28 @@ data = fcn_AVConsistency_preProcessData(data,pathXY);
 % backwards from the first road segment
 data = data(data.snapStation>0,:);
 
-
-
 %% Retrieve data specific to the AV
 
 avID = 'AV'; % Specify vehicle id to query, assume it's av
 fignum = 1;      % Figure number
-vehData = fcn_AVConsistency_getAVData(data,avID,fignum);
+vehData = fcn_AVConsistency_getAVData(data,avID,fignum);% only for AV
 
 %% Compute and plot site-specific speed disparity for AV
 fignum = 2;
-fcn_AVConsistency_siteSpecificSpeedDisparity(data,avID,fignum);
+speed_distribution = 1 % generate speed distribution plot across 100 increments snapstation
+fcn_AVConsistency_siteSpecificSpeedDisparity(data,avID,fignum,speed_distribution);
 
-%% Calculate and plot lead spacing and speed disparity
+
+%% Calculate and plot lead spacing and speed disparity, av and leading veh
 sensorRange = 200;
 relativeTo = 'lead';
 fignum = 3;
 [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  ...
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
-%% Calculate and plot follow spacing and speed disparity
+
+
+%% Calculate and plot follow spacing and speed disparity, av and following veh
 sensorRange = 200;
 relativeTo = 'follow';
 fignum = 4;
@@ -149,7 +300,7 @@ fignum = 4;
 fcn_AVConsistency_SpeedDisparityAndSpacing(data, sensorRange, avID, relativeTo,fignum);
 
 %% Compute AV's total acceleration vector under different conditions
-filterFlag = 0;
+filterFlag = 0; % not filtered data
 [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,filterFlag);
 
 

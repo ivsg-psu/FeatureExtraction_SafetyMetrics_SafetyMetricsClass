@@ -103,20 +103,27 @@ end
     timestep_time = vehData.timestep_time;
 
     % Compute the differences in position, time, and speed to derive acceleration
-    dx = diff(vehicle_x);
-    dy = diff(vehicle_y);
+    % It calculates the differences between consecutive position values in the x and y directions (dx and dy).
+    dx = diff(vehicle_x); % x sped differences
+    dy = diff(vehicle_y); % y speed differences
     dt = diff(timestep_time);
-    dv = diff(vehicle_speed);
+    dv = diff(vehicle_speed); % filtered speed
 
     % Determine the acceleration magnitude (first derivative of speed)
+    % It computes the acceleration magnitude by dividing the differences in speed (dv) by the differences in time (dt). 
     acceleration_magnitude = dv ./ dt;
 
     % Normalize the position changes to get the direction of movement
+    % It calculates the magnitude of position changes by computing the Euclidean distance (sqrt(dx^2 + dy^2)).
+    % It computes the direction of movement in the x and y directions (dir_x and dir_y) by dividing the changes in 
+    % position by the magnitude.
     magnitude = sqrt(dx.^2 + dy.^2);
     dir_x = dx ./ magnitude;
     dir_y = dy ./ magnitude;
 
     % Compute acceleration components in x and y directions
+    % It calculates the acceleration components in the x and y directions by multiplying the acceleration magnitude 
+    % by the direction vectors (dir_x and dir_y) for each time step.
     acceleration_x = acceleration_magnitude(2:end) .* dir_x(2:end);
     acceleration_y = acceleration_magnitude(2:end) .* dir_y(2:end);
 

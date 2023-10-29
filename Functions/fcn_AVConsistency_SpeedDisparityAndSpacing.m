@@ -55,7 +55,7 @@ function [avTime,avPosition,nearestVehID,speedDisparity,spacing] =  fcn_AVConsis
 % -- change the total station to snaped s coordinate done
 % -- 20231025 : changed speed from filtered speed to raw speed
 
-flag_do_debug = 1; % Flag to show function info in UI
+flag_do_debug = 0; % Flag to show function info in UI
 flag_do_plots = 0; % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
 
@@ -128,9 +128,10 @@ for ii = 1:length(avTime)
     % Filter the selectedData to only vehicles in the same lane as the AV at that time step
     sameLaneVehicles = selectedData(strcmp(selectedData.vehicle_lane, avLane(ii)), :); % Added this line
 
+
     if strcmp(relativeTo,'follow')
-        % Find the positions of the vehicles that are following of the AV
-        positionDiff =  avPosition(ii) - sameLaneVehicles.snapStation; % Modified this line to use sameLaneVehicles
+        % Find the positions of the vehicles on the same lane, at the same timestep, which are following of the AV
+        positionDiff =  avPosition(ii) - sameLaneVehicles.snapStation; % Modified this line to use sameLaneVehicles, array of several positions
 
     elseif strcmp(relativeTo,'lead')
         % Find the positions of the vehicles that are leading of the AV
@@ -164,17 +165,21 @@ end
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if flag_do_plots
-figure(fig_num);
-subplot(2,1,1)
-plot(avPosition,speedDisparity,'k','LineWidth',2);
-xlabel('Station (m)');
-ylabel('Speed disparity (m/s)');
-%xlim([1200 1500]);
-subplot(2,1,2)
-plot(avPosition,spacing,'k','LineWidth',2);
-xlabel('Station (m)');
-ylabel('Spacing');
-%xlim([1200 1500]);
-end
+% if flag_do_plots
+% figure(fig_num);
+% subplot(2,1,1)
+% plot(avPosition,speedDisparity,'k','LineWidth',2);
+% xlabel('Station (m)');
+% ylabel('Speed disparity (m/s)');
+% % Enable the grid for both X and Y axes
+% grid on;
+% %xlim([1200 1500]);
+% subplot(2,1,2)
+% plot(avPosition,spacing,'k','LineWidth',2);
+% xlabel('Station (m)');
+% ylabel('Spacing (m)');
+% %xlim([1200 1500]);
+% % Enable the grid for both X and Y axes
+% grid on;
+% end
 end
