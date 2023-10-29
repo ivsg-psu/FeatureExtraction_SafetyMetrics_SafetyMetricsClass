@@ -147,7 +147,7 @@ roadcenterline = readtable('referenceline_20231016.csv');
 roadcenterline = [roadcenterline.Var1,roadcenterline.Var2];
 numOfLanes= 1;
 fignum = 100;
-fcn_AVConsistency_Animate(vehData, otherVehData,roadcenterline,numoflanes,fignum,'test1')
+fcn_AVConsistency_Animate(vehData, otherVehData,roadcenterline,numOfLanes,fignum,'test1')
 
 %% Calculate and plot follow spacing and speed disparity
 sensorRange = 200;
