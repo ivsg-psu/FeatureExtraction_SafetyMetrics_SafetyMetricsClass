@@ -4,9 +4,12 @@ mkdir('./Fig');
 end
 directory = ['C:\Users\ccctt\OneDrive - The Pennsylvania State University\Documents\GitHub\' ...
     'TrafficSimulators_Project_SUMOSimulationForADSProject\Scenarios\Scenario1_1\res'];
-fileRegExp = {'res_highway_Site_1180_peak_seed*.csv','res_highway_Site_1180_off-peak_seed*.csv',...
-    'res_Arterial_Site_1136_peak_seed*.csv','res_Arterial_Site_1136_off-peak_seed*.csv',...
-    'res_Urban_Site_1135_peak_seed*.csv','res_Urban_Site_1135_off-peak_seed*.csv'};
+fileRegExp = {'res_highway_Site_1180_peak_seed*.csv',...
+    'res_highway_Site_1180_off-peak_seed*.csv',...
+    'res_Arterial_Site_1136_peak_seed*.csv',...
+    'res_Arterial_Site_1136_off-peak_seed*.csv',...
+    'res_Urban_Site_1135_peak_seed*.csv',...
+    'res_Urban_Site_1135_off-peak_seed*.csv'};
 
 
 pathXY = readtable('referenceline_20231016.csv');
@@ -15,21 +18,44 @@ sensorRange = 100;
 wzstart = 1067;
 wzend = 1387; 
 
-for kk = 1
+for kk = 2:6
 files = dir(fullfile(directory, fileRegExp{kk}));
 currentRegExp = fileRegExp{kk};
 pattern = 'res_(.*?)_seed.*\.csv';
 % Extract the matching substring
 token = regexp(currentRegExp, pattern, 'tokens');
 sim_name = token{1}{1};
+
+pattern2 = 'res_(.*?)_Site_';
+% Extract the matching substring
+token2 = regexp(currentRegExp, pattern2, 'tokens');
+modality1 = token2{1}{1};
+if strcmp(modality1,'highway')
+fileRegExp_1AV = 'res_highway_Site_1180_seed*_AV_1veh.csv';
+fileRegExp_1HV = 'res_highway_Site_1180_seed*_human_1veh.csv';
+elseif strcmp(modality1,'Arterial')
+fileRegExp_1AV = 'res_Arterial_Site_1136_seed*_AV_1veh.csv';
+fileRegExp_1HV = 'res_Arterial_Site_1136_seed*_human_1veh.csv';
+                  
+elseif strcmp(modality1,'Urban')
+fileRegExp_1AV = 'res_Urban_Site_1135_seed*_AV_1veh.csv';
+fileRegExp_1HV = 'res_Urban_Site_1135_seed*_human_1veh.csv';
+
+end
+
+files_1AV = dir(fullfile(directory, fileRegExp_1AV));
+files_1HV =  dir(fullfile(directory, fileRegExp_1HV));
+
+
 for ii = 1:length(files)
     tic;
     filePath = fullfile(directory, files(ii).name);
-
     data = readtable(filePath);
 
     % Check for NaN values
     data = rmmissing(data);
+
+
 
     % Pre-process the data by adding total station
     data = fcn_AVConsistency_preProcessData(data,pathXY);
@@ -44,10 +70,14 @@ for ii = 1:length(files)
     outputData(ii).avData = avData;
     outputData(ii).otherVehData =  otherVehData;
 
+    uniqVehID = unique(outputData(1).otherVehData.vehicle_id);
+    
 
     % pick one human driven vehicle
-    hvID = 'f_lane_397.22';
-
+    %hvID = 'f_lane_397.22';
+    ind = floor(length(uniqVehID)/4);
+    hvID = uniqVehID{ind};
+    
     [hvData,otherData2]= fcn_AVConsistency_getAVData(data,hvID);% only for AV
 
     outputData(ii).hvData = hvData;
@@ -126,6 +156,46 @@ for ii = 1:length(files)
     outputData(ii).hvaccel.acceleration_x=acceleration_x;
     outputData(ii).hvaccel.acceleration_y=acceleration_y;
 end
+%%
+
+for k1 = 1:length(files_1AV)
+    filePath_1AV = fullfile(directory, files_1AV(k1).name);
+    filePath_1HV = fullfile(directory, files_1HV(k1).name);
+    data1 = rmmissing(readtable(filePath_1AV));
+    % Pre-process the data by adding total station
+    data1 = fcn_AVConsistency_preProcessData(data1,pathXY);
+    % Cut the ending part of the vehicle trajectory, where it is snaped
+    % backwards from the first road segment
+    data1 = data1(data1.snapStation>0,:);
+    oneAV(k1).data = data1; 
+
+    data2 = rmmissing(readtable(filePath_1HV));
+    % Pre-process the data by adding total station
+    data2 = fcn_AVConsistency_preProcessData(data2,pathXY);
+    % Cut the ending part of the vehicle trajectory, where it is snaped
+    % backwards from the first road segment
+    data2 = data2(data2.snapStation>0,:);
+    oneHV(k1).data = data2;
+
+
+    filterFlag = 0; % not filtered data
+    [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(data1,filterFlag);
+
+    oneAV(k1).accel.snapStation = station;
+    oneAV(k1).accel.acceleration_x=acceleration_x;
+    oneAV(k1).accel.acceleration_y=acceleration_y;
+
+    [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(data2,filterFlag);
+
+    oneHV(k1).accel.snapStation = station;
+    oneHV(k1).accel.acceleration_x=acceleration_x;
+    oneHV(k1).accel.acceleration_y=acceleration_y;
+
+end
+
+
+
+
 %% resample speed 
 resampleStation = [0:10:1500,wzstart,wzend];
 resampleStation = sort(resampleStation);
@@ -138,17 +208,25 @@ columns.accel = {'acceleration_x','acceleration_y'};
 for ii = 1:length(files)
    temp.avresample{ii}= fcn_AVConsistency_resampleVehData(outputData(ii).avData,columns.veh,resampleStation);
    temp.othervehresample{ii} = fcn_AVConsistency_resampleVehData(outputData(ii).otherVehData,columns.veh,resampleStation);
-
 end
 avResampled = vertcat(temp.avresample{:});
 othervehResampled = vertcat(temp.othervehresample{:});
+
+
+for ii = 1:length(files_1AV)
+   temp.oneAV{ii} = fcn_AVConsistency_resampleVehData(oneAV(ii).data,columns.veh,resampleStation);
+   temp.oneHV{ii} = fcn_AVConsistency_resampleVehData(oneHV(ii).data,columns.veh,resampleStation);
+end
+
+oneAVResampled = vertcat(temp.oneAV{:});
+oneHVResampled = vertcat(temp.oneHV{:});
 
 clear temp;
 
 statsRes.avResampled = fcn_AVConsistency_statistics(avResampled.vehicle_speed);
 statsRes.otherVehResampled = fcn_AVConsistency_statistics(othervehResampled.vehicle_speed);
-
-
+statsRes.oneAV = fcn_AVConsistency_statistics(oneAVResampled.vehicle_speed);
+statsRes.oneHV = fcn_AVConsistency_statistics(oneHVResampled.vehicle_speed);
 
 %% resample disparity
 
@@ -187,12 +265,10 @@ end
 
 %% resample acceleration
 
-
-
 for ii = 1:length(files)
     
-    temp.avaccel{ii} = fcn_AVConsistency_resampleDisparity(outputData(ii).avaccel,columns.accel,resampleStation);
-    temp.hvaccel{ii} = fcn_AVConsistency_resampleDisparity(outputData(ii).hvaccel,columns.accel,resampleStation);
+    temp.avAccel{ii} = fcn_AVConsistency_resampleDisparity(outputData(ii).avaccel,columns.accel,resampleStation);
+    temp.hvAccel{ii} = fcn_AVConsistency_resampleDisparity(outputData(ii).hvaccel,columns.accel,resampleStation);
 end
 
 avAccelResampled = vertcat(temp.avAccel{:});
@@ -204,6 +280,19 @@ statsRes.avAccel.acceleration_y = fcn_AVConsistency_statistics(avAccelResampled.
 statsRes.hvAccel.acceleration_x = fcn_AVConsistency_statistics(hvAccelResampled.acceleration_x);
 statsRes.hvAccel.acceleration_y = fcn_AVConsistency_statistics(hvAccelResampled.acceleration_y);
 
+%%
+for ii = 1:length(files)
+    
+    temp.oneavAccel{ii} = fcn_AVConsistency_resampleDisparity(oneAV(ii).accel,columns.accel,resampleStation);
+    temp.onehvAccel{ii} = fcn_AVConsistency_resampleDisparity(oneHV(ii).accel,columns.accel,resampleStation);
+end
+oneAVAccelResampled = vertcat(temp.oneavAccel{:});
+oneHVAccelResampled = vertcat(temp.onehvAccel{:});
+
+statsRes.oneavAccel.acceleration_x = fcn_AVConsistency_statistics(oneAVAccelResampled.acceleration_x);
+statsRes.oneavAccel.acceleration_y = fcn_AVConsistency_statistics(oneAVAccelResampled.acceleration_y);
+statsRes.onehvAccel.acceleration_x = fcn_AVConsistency_statistics(oneHVAccelResampled.acceleration_x);
+statsRes.onehvAccel.acceleration_y = fcn_AVConsistency_statistics(oneHVAccelResampled.acceleration_y);
 
 
  %  _____  _      ____ _______ _____ 
@@ -212,21 +301,25 @@ statsRes.hvAccel.acceleration_y = fcn_AVConsistency_statistics(hvAccelResampled.
  % |  ___/| |   | |  | | | |  \___ \ 
  % | |    | |___| |__| | | |  ____) |
  % |_|    |______\____/  |_| |_____/
-close all;  
-%% site specific speed 
+  
+%% site specific speed: with traffic 
+close all;
 yyflagplot = 1;
 fignum = 100;
 [h1,h2] = fcn_AVConsistency_plotStats(statsRes.avResampled.meanData, ...
-    statsRes.avResampled.upperBD,statsRes.avResampled.lowerBD,resampleStation,'av',fignum,yyflagplot);
+    statsRes.avResampled.upperBD,statsRes.avResampled.lowerBD,resampleStation,'theme1',fignum,yyflagplot);
 
 [h3,h4] = fcn_AVConsistency_plotStats(statsRes.otherVehResampled.meanData, ...
-    statsRes.otherVehResampled.upperBD,statsRes.otherVehResampled.lowerBD,resampleStation,'other',fignum,yyflagplot);
+    statsRes.otherVehResampled.upperBD,statsRes.otherVehResampled.lowerBD,resampleStation,'theme2',fignum,yyflagplot);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
 
-legend([h1,h2,h3,h4,h5,h6],{'Autonomous vehicle mean (N = 10)', 'Autonomous vehicle 2-sigma boundary',...
-    'Human driven vehicle mean (N = 7300)', 'Human driven vehicle 2-sigma boundary',...
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
+
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of autonomous vehicle with traffic interaction (N = 10)', ...
+    '2-sigma boundary of Autonomous vehicle with traffic interaction',...
+    'Mean of human driven vehicle with traffic interaction (N = 7300)', ...
+    '2-sigma boundary of human driven vehicle with traffic interaction ',...
    'Start of work zone','End of work zone'},'location','southwest');
 xlabel('Station (m)');
 yyaxis left;
@@ -234,21 +327,47 @@ ylabel('Speed (m/s)');
 yyaxis right;
 ylabel('Speed (mph)');
 grid on;
-print(gcf,['.\Fig\',sim_name,'_siteSpecificSpeed'],'-dsvg');
+print(gcf,['.\Fig\',sim_name,'_siteSpecificSpeed_withtraffic'],'-dsvg');
 
 
-%% site specific speed disparity 
+%% site specific speed: without traffic 
+fignum = 101;
+[h1,h2] = fcn_AVConsistency_plotStats(statsRes.oneAV.meanData, ...
+    statsRes.oneAV.upperBD,statsRes.oneAV.lowerBD,resampleStation,'theme3',fignum,yyflagplot);
+[h3,h4] = fcn_AVConsistency_plotStats(statsRes.oneHV.meanData, ...
+    statsRes.oneHV.upperBD,statsRes.oneHV.lowerBD,resampleStation,'theme4',fignum,yyflagplot);
+
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
+
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of autonomous vehicle without traffic interaction (N = 10)', ...
+    '2-sigma boundary of Autonomous vehicle without traffic interaction',...
+    'Mean of human driven vehicle without traffic interaction (N = 10)', ...
+    '2-sigma boundary of human driven vehicle without traffic interaction ',...
+   'Start of work zone','End of work zone'},'location','southwest');
+xlabel('Station (m)');
+yyaxis left;
+ylabel('Speed (m/s)');
+yyaxis right;
+ylabel('Speed (mph)');
+grid on;
+print(gcf,['.\Fig\',sim_name,'_siteSpecificSpeed_withouttraffic'],'-dsvg');
+
+
+
+%% site specific speed disparity: with traffic 
 siteSpeSpeedDis.MeanData = statsRes.avResampled.meanData - statsRes.otherVehResampled.meanData;
 siteSpeSpeedDis.SD = sqrt(statsRes.avResampled.SD.^2 + statsRes.otherVehResampled.SD.^2);
 siteSpeSpeedDis.upperBD = siteSpeSpeedDis.MeanData + 2 * siteSpeSpeedDis.SD;
 siteSpeSpeedDis.lowerBD = siteSpeSpeedDis.MeanData -   2 * siteSpeSpeedDis.SD;
 fignum = 150;
 [h1,h2] = fcn_AVConsistency_plotStats(siteSpeSpeedDis.MeanData, ...
-    siteSpeSpeedDis.upperBD,siteSpeSpeedDis.lowerBD,resampleStation,'av',fignum,yyflagplot);
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
+    siteSpeSpeedDis.upperBD,siteSpeSpeedDis.lowerBD,resampleStation,'theme1',fignum,yyflagplot);
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
 
-legend([h1,h2,h5,h6],{'Speed disparity (N = 10)', '2-sigma boundary',...
+legend([h1,h2,hstart,hend],{'Mean of speed disparity of AV relative to human driven vehicle with traffic(N = 10)', ...
+    '2-sigma boundary of speed disparity of AV and human driven vehicle with traffic',...
    'Start of work zone','End of work zone'},'location','southwest');
 xlabel('Station (m)');
 yyaxis left;
@@ -256,25 +375,48 @@ ylabel({'Speed disparity of AV relative', 'to human driven vehicle (m/s)'});
 yyaxis right;
 ylabel({'Speed disparity of AV relative', 'to human driven vehicle (mph)'});
 grid on;
-print(gcf,['.\Fig\',sim_name,'_SpeedDisparity'],'-dsvg');
+print(gcf,['.\Fig\',sim_name,'_SpeedDisparity_withTraffic'],'-dsvg');
+
+%% site specific speed disparity: without traffic 
 
 
+siteSpeOneveh.MeanData = statsRes.oneAV.meanData - statsRes.oneHV.meanData;
+siteSpeOneveh.SD = sqrt(statsRes.oneAV.SD.^2 + statsRes.oneHV.SD.^2);
+siteSpeOneveh.upperBD = siteSpeOneveh.MeanData + 2 * siteSpeOneveh.SD;
+siteSpeOneveh.lowerBD = siteSpeOneveh.MeanData - 2 * siteSpeOneveh.SD;
+
+fignum = 151;
+[h1,h2] = fcn_AVConsistency_plotStats(siteSpeOneveh.MeanData, ...
+    siteSpeOneveh.upperBD,siteSpeOneveh.lowerBD,resampleStation,'theme1',fignum,yyflagplot);
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]);
+
+legend([h1,h2,hstart,hend],{'Mean of speed disparity of AV relative to human driven vehicle without traffic (N = 10)', ...
+    '2-sigma boundary of speed disparity of AV relative to human driven vehicle without traffic',...
+   'Start of work zone','End of work zone'},'location','southwest');
+xlabel('Station (m)');
+yyaxis left;
+ylabel({'Speed disparity of AV relative', 'to human driven vehicle (m/s)'});
+yyaxis right;
+ylabel({'Speed disparity of AV relative', 'to human driven vehicle (mph)'});
+grid on;
+print(gcf,['.\Fig\',sim_name,'_SpeedDisparity_withoutTraffic'],'-dsvg');
 
 
 %% speed disparity to lead vehicle
 % speed disparity of av relative to lead vehicle
 fignum = 200;
 [h1,h2] = fcn_AVConsistency_plotStats(statsRes.avlead.speedDisparity.meanData, ...
-    statsRes.avlead.speedDisparity.upperBD,statsRes.avlead.speedDisparity.lowerBD,resampleStation,'av',fignum,yyflagplot);
+    statsRes.avlead.speedDisparity.upperBD,statsRes.avlead.speedDisparity.lowerBD,resampleStation,'theme1',fignum,yyflagplot);
 
 [h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvlead.speedDisparity.meanData, ...
-    statsRes.hvlead.speedDisparity.upperBD,statsRes.hvlead.speedDisparity.lowerBD,resampleStation,'other',fignum,yyflagplot);
+    statsRes.hvlead.speedDisparity.upperBD,statsRes.hvlead.speedDisparity.lowerBD,resampleStation,'theme2',fignum,yyflagplot);
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h3,h4,h5,h6],{'Mean of speed disparity of AV relative to leading human driven vehicle (N = 10)', ...
-    '2-sigma boundary of AV relative to leading vehicle', ...
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of speed disparity of AV relative to leading human driven vehicle (N = 10)', ...
+    '2-sigma boundary of AV relative to leading human driven vehicle', ...
     'Mean of speed disparity of human driven vehicle relative to leading human driven vehicle (N = 10)',...
     '2-sigma boundary of human driven vehicle relative to leading human driven vehicle', ...
    'Start of work zone', ...
@@ -312,16 +454,16 @@ print(gcf,['.\Fig\',sim_name,'_leadVehSpeedDisparity'],'-dsvg');
 % spacing of av to lead vehicle
 fignum = 300;
 [h1,h2] = fcn_AVConsistency_plotStats(statsRes.avlead.spacing.meanData, ...
-    statsRes.avlead.spacing.upperBD,statsRes.avlead.spacing.lowerBD,resampleStation,'av',fignum,0);
+    statsRes.avlead.spacing.upperBD,statsRes.avlead.spacing.lowerBD,resampleStation,'theme1',fignum,0);
 
 [h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvlead.spacing.meanData, ...
-    statsRes.hvlead.spacing.upperBD,statsRes.hvlead.spacing.lowerBD,resampleStation,'other',fignum,0);
+    statsRes.hvlead.spacing.upperBD,statsRes.hvlead.spacing.lowerBD,resampleStation,'theme2',fignum,0);
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h3,h4,h5,h6],{'Mean of spacing of AV relative to leading human driven vehicle (N = 10)', ...
-    '2-sigma boundary of AV relative to leading vehicle', ...
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of spacing of AV relative to leading human driven vehicle (N = 10)', ...
+    '2-sigma boundary of AV relative to leading human driven vehicle', ...
     'Mean of spacing of human driven vehicle relative to leading human driven vehicle (N = 10)',...
     '2-sigma boundary of human driven vehicle relative to leading human driven vehicle', ...
    'Start of work zone', ...
@@ -355,16 +497,16 @@ print(gcf,['.\Fig\',sim_name,'_leadVehSpacing'],'-dsvg');
 % speed disparity of av relative to follow vehicle
 fignum = 400;
 [h1,h2] = fcn_AVConsistency_plotStats(statsRes.avfollow.speedDisparity.meanData, ...
-    statsRes.avfollow.speedDisparity.upperBD,statsRes.avfollow.speedDisparity.lowerBD,resampleStation,'av',fignum,yyflagplot);
+    statsRes.avfollow.speedDisparity.upperBD,statsRes.avfollow.speedDisparity.lowerBD,resampleStation,'theme1',fignum,yyflagplot);
 
 [h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvfollow.speedDisparity.meanData, ...
-    statsRes.hvfollow.speedDisparity.upperBD,statsRes.hvfollow.speedDisparity.lowerBD,resampleStation,'other',fignum,yyflagplot);
+    statsRes.hvfollow.speedDisparity.upperBD,statsRes.hvfollow.speedDisparity.lowerBD,resampleStation,'theme2',fignum,yyflagplot);
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h3,h4,h5,h6],{'Mean of speed disparity of AV relative to following human driven vehicle (N = 10)', ...
-    '2-sigma boundary of AV relative to following vehicle', ...
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of speed disparity of AV relative to following human driven vehicle (N = 10)', ...
+    '2-sigma boundary of AV relative to following human driven vehicle', ...
     'Mean of speed disparity of human driven vehicle relative to following human driven vehicle (N = 10)',...
     '2-sigma boundary of human driven vehicle relative to following human driven vehicle', ...
    'Start of work zone', ...
@@ -403,16 +545,16 @@ print(gcf,['.\Fig\',sim_name,'_followVehSpeedDisparity'],'-dsvg');
 
 fignum = 500;
 [h1,h2] = fcn_AVConsistency_plotStats(statsRes.avfollow.spacing.meanData, ...
-    statsRes.avfollow.spacing.upperBD,statsRes.avfollow.spacing.lowerBD,resampleStation,'av',fignum,0);
+    statsRes.avfollow.spacing.upperBD,statsRes.avfollow.spacing.lowerBD,resampleStation,'theme1',fignum,0);
 
 [h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvfollow.spacing.meanData, ...
-    statsRes.hvfollow.spacing.upperBD,statsRes.hvfollow.spacing.lowerBD,resampleStation,'other',fignum,0);
+    statsRes.hvfollow.spacing.upperBD,statsRes.hvfollow.spacing.lowerBD,resampleStation,'theme2',fignum,0);
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h3,h4,h5,h6],{'Mean of spacing of AV relative to following human driven vehicle (N = 10)', ...
-    '2-sigma boundary of AV relative to following vehicle', ...
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of spacing of AV relative to following human driven vehicle (N = 10)', ...
+    '2-sigma boundary of AV relative to following human driven vehicle', ...
     'Mean of spacing of human driven vehicle relative to following human driven vehicle (N = 10)',...
     '2-sigma boundary of human driven vehicle relative to following human driven vehicle', ...
    'Start of work zone', ...
@@ -440,37 +582,96 @@ print(gcf,['.\Fig\',sim_name,'_followVehSpacing'],'-dsvg');
 
 
 
-%%
+%% acceleration x  with traffic 
 fignum = 600;
-[h1,h2] = fcn_AVConsistency_plotStats(statsRes.acceleration_x.meanData, ...
-    statsRes.acceleration_x.upperBD,statsRes.acceleration_x.lowerBD,resampleStation,'av',fignum,0);
+[h1,h2] = fcn_AVConsistency_plotStats(statsRes.avAccel.acceleration_x.meanData, ...
+    statsRes.avAccel.acceleration_x.upperBD,statsRes.avAccel.acceleration_x.lowerBD,resampleStation,'theme1',fignum,0);
+[h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvAccel.acceleration_x.meanData, ...
+    statsRes.hvAccel.acceleration_x.upperBD,statsRes.hvAccel.acceleration_x.lowerBD,resampleStation,'theme2',fignum,0);
 
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h5,h6],{'Mean of acceleration (N = 10)','2-sigma boundary', ...
-   'Start of work zone','End of work zone'},'location','southwest');
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration with traffic interaction (N = 10)', ...
+    '2-sigma boundary of AV acceleration with traffic interaction', ...
+    'Mean of human drive vehicle acceleration with traffic interaction (N = 10)', ...
+    '2-sigma boundary of human driven acceleration with traffic interaction', ...
+   'Start of work zone', ...
+   'End of work zone'},'location','southwest');
 xlabel('Station (m)');
 ylabel('Acceleration in X direction (m/s^2)');
 grid on;
-print(gcf,['.\Fig\',sim_name,'_acceleration_x'],'-dsvg');
+print(gcf,['.\Fig\',sim_name,'_acceleration_x_withTraffic'],'-dsvg');
 
-%%
-fignum = 700;
-[h1,h2] = fcn_AVConsistency_plotStats(statsRes.acceleration_y.meanData, ...
-    statsRes.acceleration_y.upperBD,statsRes.acceleration_y.lowerBD,resampleStation,'av',fignum,0);
-y_limits = ylim;
+
+%% acceleration x without traffic 
+fignum = 601;
+[h1,h2] = fcn_AVConsistency_plotStats(statsRes.oneavAccel.acceleration_x.meanData, ...
+    statsRes.oneavAccel.acceleration_x.upperBD,statsRes.oneavAccel.acceleration_x.lowerBD,resampleStation,'theme3',fignum,0);
+[h3,h4] = fcn_AVConsistency_plotStats(statsRes.onehvAccel.acceleration_x.meanData, ...
+    statsRes.onehvAccel.acceleration_x.upperBD,statsRes.onehvAccel.acceleration_x.lowerBD,resampleStation,'theme4',fignum,0);
+
 xlim([0 1500]);
 
-h5=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
-h6=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
-legend([h1,h2,h5,h6],{'Mean of acceleration (N = 10)','2-sigma boundary', ...
-   'Start of work zone','End of work zone'},'location','southwest');
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration without traffic interaction (N = 10)', ...
+    '2-sigma boundary of AV acceleration without traffic interaction', ...
+    'Mean of human driven vehicle acceleration without traffic interaction (N = 10)', ...
+    '2-sigma boundary of human driven vehicle acceleration without traffic interaction', ...
+   'Start of work zone', ...
+   'End of work zone'},'location','southwest');
+xlabel('Station (m)');
+ylabel('Acceleration in X direction (m/s^2)');
+grid on;
+print(gcf,['.\Fig\',sim_name,'_acceleration_x_withoutTraffic'],'-dsvg');
+
+
+%% acceleration y with traffic 
+fignum = 700;
+[h1,h2] = fcn_AVConsistency_plotStats(statsRes.avAccel.acceleration_y.meanData, ...
+    statsRes.avAccel.acceleration_y.upperBD,statsRes.avAccel.acceleration_y.lowerBD,resampleStation,'theme1',fignum,0);
+[h3,h4] = fcn_AVConsistency_plotStats(statsRes.hvAccel.acceleration_y.meanData, ...
+    statsRes.hvAccel.acceleration_y.upperBD,statsRes.hvAccel.acceleration_y.lowerBD,resampleStation,'theme2',fignum,0);
+
+xlim([0 1500]);
+
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration with traffic interaction (N = 10)', ...
+    '2-sigma boundary of AV acceleration with traffic interaction', ...
+    'Mean of human drive vehicle acceleration with traffic interaction (N = 10)', ...
+    '2-sigma boundary of human driven acceleration with traffic interaction', ...
+   'Start of work zone', ...
+   'End of work zone'},'location','southwest');
 xlabel('Station (m)');
 ylabel('Acceleration in Y direction (m/s^2)');
 grid on;
-print(gcf,['.\Fig\',sim_name,'_acceleration_y'],'-dsvg');
+print(gcf,['.\Fig\',sim_name,'_acceleration_y_withTraffic'],'-dsvg');
+
+
+%% acceleration y without traffic 
+fignum = 701;
+[h1,h2] = fcn_AVConsistency_plotStats(statsRes.oneavAccel.acceleration_y.meanData, ...
+    statsRes.oneavAccel.acceleration_y.upperBD,statsRes.oneavAccel.acceleration_y.lowerBD,resampleStation,'theme3',fignum,0);
+[h3,h4] = fcn_AVConsistency_plotStats(statsRes.onehvAccel.acceleration_y.meanData, ...
+    statsRes.onehvAccel.acceleration_y.upperBD,statsRes.onehvAccel.acceleration_y.lowerBD,resampleStation,'theme4',fignum,0);
+
+xlim([0 1500]);
+
+hstart=xline(wzstart, ':', 'LineWidth', 2,'color',[0.4660 0.6740 0.1880]);
+hend=xline(wzend, ':', 'LineWidth', 2,'color',[0.6350 0.0780 0.1840]	);
+legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration without traffic interaction (N = 10)', ...
+    '2-sigma boundary of AV acceleration without traffic interaction', ...
+    'Mean of human driven vehicle acceleration without traffic interaction (N = 10)', ...
+    '2-sigma boundary of human driven vehicle acceleration without traffic interaction', ...
+   'Start of work zone', ...
+   'End of work zone'},'location','north');
+xlabel('Station (m)');
+ylabel('Acceleration in Y direction (m/s^2)');
+grid on;
+print(gcf,['.\Fig\',sim_name,'_acceleration_y_withoutTraffic'],'-dsvg');
 
 toc;
 disp('=============================')

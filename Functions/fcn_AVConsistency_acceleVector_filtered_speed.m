@@ -1,4 +1,4 @@
-function [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,filterFlag,varargin)
+function [station, acceleration_longitudinal, acceleration_lateral] = fcn_AVConsistency_acceleVector_filtered_speed(vehData,filterFlag,varargin)
 % fcn_AVConsistency_acceleVector_filtered_speed.m
 % This function calculates the acceleration vector (both in x and y directions) 
 % of a vehicle, based on either filtered or unfiltered vehicle position. The results are 
@@ -101,7 +101,8 @@ end
     end
     vehicle_speed = vehData.speed_filtered;
     timestep_time = vehData.timestep_time;
-
+    % Convert yaw angle from degrees to radians
+    vehicle_angle_rad = deg2rad(vehData.vehicle_angle);
     % Compute the differences in position, time, and speed to derive acceleration
     % It calculates the differences between consecutive position values in the x and y directions (dx and dy).
     dx = diff(vehicle_x); % x sped differences
@@ -129,6 +130,24 @@ end
 
     % Extract station data for plotting
     station = vehData.snapStation(3:end);
+    % Initialize arrays for longitudinal and lateral accelerations
+    acceleration_longitudinal = zeros(size(acceleration_x));
+    acceleration_lateral = zeros(size(acceleration_y));
+    % Compute longitudinal and lateral accelerations
+    for i = 1:length(acceleration_x)
+        % Create the rotation matrix for each timestep
+        rotation_matrix = [cos(vehicle_angle_rad(i)) -sin(vehicle_angle_rad(i));
+                           sin(vehicle_angle_rad(i))  cos(vehicle_angle_rad(i))];
+        
+        % Rotate the acceleration vector from ENU to vehicle frame
+        acceleration_vehicle_frame = rotation_matrix * [acceleration_x(i); acceleration_y(i)];
+        
+        % Assign the rotated accelerations to longitudinal and lateral components
+        acceleration_longitudinal(i) = acceleration_vehicle_frame(1);
+        acceleration_lateral(i) = acceleration_vehicle_frame(2);
+    end
+
+
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
