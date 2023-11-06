@@ -146,7 +146,8 @@ for ii = 1:length(avTime)
         ind = find(positionDiff == minPositive);
         nearestVehID{ii} = sameLaneVehicles.vehicle_id(ind); % Modified this line to use sameLaneVehicles
         speedDisparity(ii) = avSpeed(ii) - sameLaneVehicles.vehicle_speed(ind); % Modified this line to use sameLaneVehicles
-        spacing(ii) = positionDiff(ind);
+        % spacing(ii) = positionDiff(ind);
+        spacing(ii) = avPosition(ii) - sameLaneVehicles.snapStation(ind);
     else
         % If there are no vehicles ahead, set the speed disparity to NaN
         speedDisparity(ii) = NaN;

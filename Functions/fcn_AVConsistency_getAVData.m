@@ -1,4 +1,4 @@
-function vehicleData = fcn_AVConsistency_getAVData(Data, vehicleID, varargin)
+function [queryVehicleData,otherVehData] = fcn_AVConsistency_getAVData(Data, vehicleID, varargin)
 % fcn_getAVData queris AV speed from SUMO traffic simulation FCD outputs.
 % Data stands for floating car data. It includes the following data:
 %
@@ -111,8 +111,8 @@ end
 vehicleRows = strcmp(Data.vehicle_id,vehicleID);
 
 % Extract the data of the given vehicle
-vehicleData  = Data(vehicleRows,:);
-
+queryVehicleData  = Data(vehicleRows,:);
+otherVehData = Data(~vehicleRows,:);
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

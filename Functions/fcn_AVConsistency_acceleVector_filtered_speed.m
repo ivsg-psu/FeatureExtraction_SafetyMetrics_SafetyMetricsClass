@@ -37,7 +37,7 @@ function [station, acceleration_x, acceleration_y] = fcn_AVConsistency_acceleVec
 % TO DO:
 %
 % -- Add any future improvements or changes here.
-flag_do_debug = 1; % Flag to show function info in UI
+flag_do_debug = 0; % Flag to show function info in UI
 flag_do_plots = 0; % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
 
