@@ -18,7 +18,7 @@ sensorRange = 100;
 wzstart = 1067;
 wzend = 1387; 
 
-for kk = 1:length(fileRegExp)
+for kk = 1:1
 files = dir(fullfile(directory, fileRegExp{kk}));
 currentRegExp = fileRegExp{kk};
 pattern = 'res_(.*?)_seed.*\.csv';
@@ -47,7 +47,7 @@ files_1AV = dir(fullfile(directory, fileRegExp_1AV));
 files_1HV =  dir(fullfile(directory, fileRegExp_1HV));
 
 
-for ii = 1
+for ii = 1:length(files)
     tic;
     filePath = fullfile(directory, files(ii).name);
     data = readtable(filePath);
