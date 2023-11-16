@@ -80,14 +80,61 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 % vehicle_param.position_y =0; % the y-position of the vehicle_param [m]
 % vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
 
-%% Get the trajectory
-% Trajectory has to be in the form of time, x, y, yaw angle, 
+
+%% test - fcn_SafetyMetrics_showVehicleTrajandMetricInputs
+
+% This function takes the real/simulation data as the input to perform SSM
+
+runthis = 1;
+
+if runthis
 clear trajectory
 
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+lane_width = 12/3.281; % 12ft to m (12ft from FHWA highway)
 
 
-%[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+time = 1:1:500;
+time = time';
+
+
+%Specify the x coordinates
+x1 = 1:1:200;
+x2 = 201:1:300;
+x3 = 301:1:500;
+xtotal = [x1,x2,x3];
+%Specify the first y segments
+y1 = zeros(1,200);
+y2 = fcn_INTERNAL_modify_sigmoid(x2,201,300,0,lane_width,17,1);
+y3 = zeros(1,200)+lane_width;
+ytotal = [y1,y2,y3];
+
+vehicleTraj = [xtotal' ytotal'];
+
+
+%object flag
+object = 1;
+%Creating the lanes
+x_lane = 1:1:xtotal(end);
+y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width; % L_L furthest left lane
+y_lane_L = zeros(1,xtotal(end))+lane_width/2;
+y_lane_R = zeros(1,xtotal(end))-lane_width/2;
+
+metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
+
+
+[trajectory(:,1), trajectory(:,2), trajectory(:,3), trajectory(:,4), lanes, centerline, flag_object] = ...
+fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, 1);
+
+end
+
+%% Get the trajectory
+% Trajectory has to be in the form of time, x, y, yaw angle, 
+% clear trajectory
+% 
+% [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+
+
+% [trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
 figure(455)
 plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
 grid on;
@@ -611,3 +658,15 @@ if flag_do_debug
 end
 
 end % Ends function fcn_DebugTools_installDependencies
+
+
+function y = fcn_INTERNAL_modify_sigmoid(t, t0, t1, y0, y1, a_factor, b_factor)
+% MODIFY_SIGMOID computes a modified sigmoid function with adjustable parameters
+
+% Compute the adjusted parameters
+a = a_factor / (t1 - t0);
+b = b_factor * (t0 + t1) / 2;
+
+% Compute the modified sigmoid function
+y = y0 + (y1 - y0) ./ (1 + exp(-a * (t - b)));
+end

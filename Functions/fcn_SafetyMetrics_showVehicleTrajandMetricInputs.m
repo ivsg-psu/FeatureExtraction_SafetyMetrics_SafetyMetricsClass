@@ -121,6 +121,7 @@ y_vehicleTraj = vehicleTraj(:,2);
 
 % yaw of the vehicle
 yawVehicle = fcn_INTERNAL_caculate_yaw(x_vehicleTraj,y_vehicleTraj);
+yawVehicle(isnan(yawVehicle)) = 0;
 
 % lane boundaries and center lines
 total_laneBoundaries = size(metricInputs,2)/2;
