@@ -198,6 +198,15 @@ end
 % http://patorjk.com/software/taag/#p=display&f=Big&t=SMMs                           
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TTC
+
+set(0,'DefaultAxesFontName','Times New Roman');
+set(0,'DefaultTextFontName','Times New Roman');
+set(0,'DefaultAxesFontSize',16);
+set(0,'DefaultTextFontSize',16);
+set(0,'defaulttextinterpreter','latex');
+set(0,'defaultAxesTickLabelInterpreter','latex');
+set(0,'defaultLegendInterpreter','latex');
+
 [TTC]=fcn_SafetyMetrics_TTC(u,trajectory,rear_axle,object)
 
 %TLC

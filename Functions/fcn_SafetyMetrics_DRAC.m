@@ -150,11 +150,11 @@ if flag_object
     slope_V = (xcoor_1(:,3)-trajectory(1:length(xcoor_1),1))./(xcoor_1(:,1)-trajectory(1:length(xcoor_1),2));
     DRAC = slope_V./TTC;
     figure(5438)
-    plot(DRAC);
-    title('DRAC');
+    plot(DRAC, LineWidth=1.5);
+    title('Deceleration Rate to Avoid Crash (DRAC)');
     grid on
-    xlabel('Time');
-    ylabel('DRAC');
+    xlabel('Timestep(s)');
+    ylabel('DRAC(m/s^{2)}');
 end
 
 end

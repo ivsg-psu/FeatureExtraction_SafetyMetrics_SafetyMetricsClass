@@ -24,7 +24,7 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Example - Half-lane change with object
-
+close all
 lane_width = 12/3.281; % 12ft to m (12ft from FHWA highway)
 
 
@@ -56,9 +56,18 @@ y_lane_R = zeros(1,xtotal(end))-lane_width/2;
 
 metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
 
+fig_num = 1234;
 
 [time_total, x_vehicleTraj, y_vehicleTraj, yawVehicle, laneBoundaries, centerLines, flagObject] = ...
-fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, 1234);
+fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, fig_num);
+
+f1 = figure(fig_num);
+box on
+grid on
+xlabel('X(m)')
+ylabel('Y(m)')
+legend('Vehicle Trajectory','Lane Boundaries', 'Center Lane','',location = 'best')
+
 
 %% Example - Function lane change
 

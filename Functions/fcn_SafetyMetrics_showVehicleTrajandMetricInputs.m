@@ -177,7 +177,7 @@ if flag_do_plots
     hold on
     grid on
 
-    plot(x_vehicleTraj, y_vehicleTraj);
+    plot(x_vehicleTraj, y_vehicleTraj, LineWidth=1.5, DisplayName='Vehicle Trajectory');
     
     lane_width = 12/3.281;
     axis([-1 x_vehicleTraj(end) -2*lane_width 2*lane_width]);
@@ -185,14 +185,14 @@ if flag_do_plots
     ylabel('y');
 
     if 2 == total_laneBoundaries
-        plot(leftLane(:,2), leftLane(:,2));
-        plot(rightLane(:,2), rightLane(:,2));
+        plot(leftLane(:,2), leftLane(:,2), LineWidth=1.5, DisplayName='Left Lane');
+        plot(rightLane(:,2), rightLane(:,2), LineWidth=1.5, DisplayName='Right Lane');
     end
 
     if 3 == total_laneBoundaries
-        plot(Left_leftLane(:,1), Left_leftLane(:,2));
-        plot(leftLane(:,1), leftLane(:,2));
-        plot(rightLane(:,1), rightLane(:,2));
+        plot(Left_leftLane(:,1), Left_leftLane(:,2), '-k',LineWidth=1.5, DisplayName='Lane Boundaries');
+        plot(leftLane(:,1), leftLane(:,2), '--k' ,LineWidth=1.5, DisplayName='Center Lane'); 
+        plot(rightLane(:,1), rightLane(:,2), '-k' , LineWidth=1.5, DisplayName='');
         
     end
     % Plot HERE
