@@ -120,11 +120,11 @@ CS = slope_V_car3.*3.6;
 
 CSI =TA'./slope_V_car3
 figure(908)
-plot(TA',CS);
-title('CSI');
+plot(TA',CS, LineWidth=1.5);
+title('Conflict Severity Index (CSI)');
 grid on
-xlabel('TA');
-ylabel('CS');
+xlabel('time-to-accident(s) (TA)');
+ylabel('Conflicting Speed (CS)');
 
 % Version II
 

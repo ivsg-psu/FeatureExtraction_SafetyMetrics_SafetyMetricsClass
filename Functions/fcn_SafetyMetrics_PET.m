@@ -159,11 +159,12 @@ if flag_car2 == 1
     PET = car2_traj(:,1)- xcoor_car1_points(:,3);
     % Plot PET vs time
     figure(578)
-    plot(PET)
-    title('PET')
+    plot(PET, LineWidth=1.5)
+    title('Post-encroachment Time (PET)')
     grid on
-    xlabel('Time');
-    ylabel('PET');
+    xlabel('Timestep(s)');
+    ylabel('PET(s)');
+    box on
 end
 
 end

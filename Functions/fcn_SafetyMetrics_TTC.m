@@ -157,10 +157,11 @@ view(2)
 TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
 % Plot the TTC result vs time
 figure(789)
-plot(TTC)
-title('TTC');
+plot(TTC, LineWidth=1.5)
+title('Time-To-Collision (TTC)');
 grid on
-xlabel('Time');
-ylabel('TTC');
+xlabel('Timestep(s)');
+ylabel('TTC(s)');
+box on
 
 end
