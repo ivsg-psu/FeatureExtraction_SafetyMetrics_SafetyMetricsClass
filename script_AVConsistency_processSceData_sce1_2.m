@@ -21,7 +21,7 @@ else
     pathXY = readtable('\referenceline_20231016.csv');
     pathXY = [pathXY.Var1,pathXY.Var2];
     
-    directory = ['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\TrafficSimulators_Project_SUMOSimulationForADSProject\Scenarios\Scenario1_3\res\'];
+    directory = ['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\TrafficSimulators_Project_SUMOSimulationForADSProject\Scenarios\Scenario1_2\res\'];
 fileRegExp = {'res_highway_Site_1180_peak_seed*.csv',...
     'res_highway_Site_1180_off-peak_seed*.csv',...
     'res_Arterial_Site_1136_peak_seed*.csv',...
@@ -30,8 +30,8 @@ fileRegExp = {'res_highway_Site_1180_peak_seed*.csv',...
     'res_Urban_Site_1135_off-peak_seed*.csv'};
 end
 sensorRange = 100;
-wzstart = 1067;
-wzend = 1387; 
+wzstart = 970;
+wzend = 1364; 
 snap_indicator = false;
 
 for kk = 1:1
@@ -354,7 +354,7 @@ yyaxis right;
 ylabel('Speed (mph)');
 grid on;
 % print(gcf,['.\Fig\',sim_name,'_siteSpecificSpeed_withtraffic'],'-dsvg');
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_siteSpecificSpeed_withtraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_siteSpecificSpeed_withtraffic'],'-dsvg');
 
 
 %% site specific speed: without traffic 
@@ -378,7 +378,7 @@ ylabel('Speed (m/s)');
 yyaxis right;
 ylabel('Speed (mph)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_siteSpecificSpeed_withouttraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_siteSpecificSpeed_withouttraffic'],'-dsvg');
 
 
 
@@ -402,7 +402,7 @@ ylabel({'Speed disparity of AV relative', 'to human driven vehicle (m/s)'});
 yyaxis right;
 ylabel({'Speed disparity of AV relative', 'to human driven vehicle (mph)'});
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_SpeedDisparity_withTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_SpeedDisparity_withTraffic'],'-dsvg');
 
 %% site specific speed disparity: without traffic 
 
@@ -427,7 +427,7 @@ ylabel({'Speed disparity of AV relative', 'to human driven vehicle (m/s)'});
 yyaxis right;
 ylabel({'Speed disparity of AV relative', 'to human driven vehicle (mph)'});
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_SpeedDisparity_withoutTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_SpeedDisparity_withoutTraffic'],'-dsvg');
 
 
 %% speed disparity to lead vehicle
@@ -447,7 +447,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of speed disparity of AV relative to lea
     'Mean of speed disparity of human driven vehicle relative to leading human driven vehicle (N = 10)',...
     '2-sigma boundary of human driven vehicle relative to leading human driven vehicle', ...
    'Start of work zone', ...
-   'End of work zone'},'location','best');
+   'End of work zone'},'location','south');
 
 xlabel('Station (m)');
 yyaxis left;
@@ -455,7 +455,7 @@ ylabel('Speed relative to leading human driven vehicle (m/s)');
 yyaxis right;
 ylabel('Speed relative to leading human driven vehicle (mph)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_leadVehSpeedDisparity'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_leadVehSpeedDisparity'],'-dsvg');
 
 % % speed disparity of human vehicle to lead vehicle 
 % fignum = 250;
@@ -498,7 +498,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of spacing of AV relative to leading hum
 xlabel('Station (m)');
 ylabel('Spacing relative to leading human driven vehicle (m)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_leadVehSpacing'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_leadVehSpacing'],'-dsvg');
 
 % % spacing of hv to lead vehicle
 % fignum = 350;
@@ -545,7 +545,7 @@ ylabel('Speed relative to following human driven vehicle (m/s)');
 yyaxis right;
 ylabel('Speed relative to following human driven vehicle (mph)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_followVehSpeedDisparity'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_followVehSpeedDisparity'],'-dsvg');
 
 % % speed disparity of hv relative to follow vehicle
 % fignum = 450;
@@ -589,7 +589,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of spacing of AV relative to following h
 xlabel('Station (m)');
 ylabel('Spacing relative to following human driven vehicle (m)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_followVehSpacing'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_followVehSpacing'],'-dsvg');
 
 % fignum = 550;
 % [h1,h2] = fcn_AVConsistency_plotStats(statsRes.hvfollow.spacing.meanData, ...
@@ -630,7 +630,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration with traffic interact
 xlabel('Station (m)');
 ylabel('Acceleration in X direction (m/s^2)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_acceleration_x_withTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_acceleration_x_withTraffic'],'-dsvg');
 
 
 %% acceleration x without traffic 
@@ -653,7 +653,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration without traffic inter
 xlabel('Station (m)');
 ylabel('Acceleration in X direction (m/s^2)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_acceleration_x_withoutTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_acceleration_x_withoutTraffic'],'-dsvg');
 
 
 %% acceleration y with traffic 
@@ -677,7 +677,7 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration with traffic interact
 xlabel('Station (m)');
 ylabel('Acceleration in Y direction (m/s^2)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_acceleration_y_withTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_acceleration_y_withTraffic'],'-dsvg');
 
 
 %% acceleration y without traffic 
@@ -697,11 +697,11 @@ legend([h1,h2,h3,h4,hstart,hend],{'Mean of AV acceleration without traffic inter
     'Mean of human driven vehicle acceleration without traffic interaction (N = 10)', ...
     '2-sigma boundary of human driven vehicle acceleration without traffic interaction', ...
    'Start of work zone', ...
-   'End of work zone'},'location','north');
+   'End of work zone'},'location','south');
 xlabel('Station (m)');
 ylabel('Acceleration in Y direction (m/s^2)');
 grid on;
-print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_3\',sim_name,'_acceleration_y_withoutTraffic'],'-dsvg');
+print(gcf,['C:\Users\tomal\OneDrive - The Pennsylvania State University\Documents\GitHub\FeatureExtraction_SafetyMetrics_SafetyMetricsClass\Fig_1_2\',sim_name,'_acceleration_y_withoutTraffic'],'-dsvg');
 
 toc;
 disp('=============================')
