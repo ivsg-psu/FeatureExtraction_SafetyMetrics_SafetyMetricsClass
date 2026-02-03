@@ -1,4 +1,4 @@
-%% Introduction to and Purpose of the Safety Metrics code
+    %% Introduction to and Purpose of the Safety Metrics code
 % This is a demonstration script to show the primary functionality of the
 % safety Metrics code
 %
@@ -199,13 +199,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TTC
 
-set(0,'DefaultAxesFontName','Times New Roman');
-set(0,'DefaultTextFontName','Times New Roman');
-set(0,'DefaultAxesFontSize',16);
-set(0,'DefaultTextFontSize',16);
-set(0,'defaulttextinterpreter','latex');
-set(0,'defaultAxesTickLabelInterpreter','latex');
-set(0,'defaultLegendInterpreter','latex');
+% set(0,'DefaultAxesFontName','Times New Roman');
+% set(0,'DefaultTextFontName','Times New Roman');
+% set(0,'DefaultAxesFontSize',16);
+% set(0,'DefaultTextFontSize',16);
+% set(0,'defaulttextinterpreter','latex');
+% set(0,'defaultAxesTickLabelInterpreter','latex');
+% set(0,'defaultLegendInterpreter','latex');
 
 [TTC]=fcn_SafetyMetrics_TTC(u,trajectory,rear_axle,object)
 

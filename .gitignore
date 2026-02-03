@@ -31,5 +31,9 @@ codegen/
 # Octave session info
 octave-workspace
 
+# MacOS Files
+**/*.DS_Store**
+
+
 # Utilities
 Utilities/

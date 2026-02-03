@@ -72,41 +72,12 @@
     <li>
     <a href="#functions">Functions</a>
     <ul>
-        <li>
-        <a href="#point-set-association-functions">Point-Set Association Functions</a>
-         <ul>
-         <li><a href="#fcn_points_plotsetsxy">fcn_Points_plotSetsXY</a></li>
-          <li><a href="#fcn_points_fillpointsamplesets">fcn_Points_fillPointSampleSets</a></li>
-          <li><a href="#fcn_points_fillpointsetviauserinputs">fcn_Points_fillPointSetViaUserInputs</a></li>
-          <li><a href="#fcn_points_adjustpointsetstatistics">fcn_Points_adjustPointSetStatistics</a></li>
-          <li><a href="#fcn_points_addradialnoise">fcn_Points_addRadialNoise</a></li>
-          <li><a href="#fcn_points_calcpairstatistics">fcn_Points_calcPairStatistics</a></li>
-          <li><a href="#fcn_points_pairxydata">fcn_Points_pairXYdata</a></li>
-          <li><a href="#script_associatepointsincremental">script_AssociatePointsIncremental</a></li>
-        </ul>
-        </li>
-		<li>
-        <a href="#safety-metrics-functions">Safety Metrics Functions</a>
-         <ul>
          <li><a href="#fcn_safetymetrics_create_vehicletraj">fcn_SafetyMetrics_create_vehicleTraj</a></li>
           <li><a href="#fcn_safetymetrics_plottrajectoryxy">fcn_SafetyMetrics_plotTrajectoryXY</a></li>
           <li><a href="#fcn_safetymetrics_add_and_plot_object">fcn_SafetyMetrics_add_and_plot_object</a></li>
           <li><a href="#fcn_safetymetrics_unit_vector">fcn_SafetyMetrics_unit_vector</a></li>
           <li><a href="#fcn_safetymetrics_plot_2d_vehicle">fcn_SafetyMetrics_plot_2D_vehicle</a></li>
           <li><a href="#fcn_safetymetrics_plot_3d_vehicle">fcn_SafetyMetrics_plot_3D_vehicle</a></li>
-        </ul>
-        </li>
-		<li>
-        <a href="#laps-functions">Laps Functions</a>
-         <ul>
-         <li><a href="#fcn_laps_plotlapsxy">fcn_Laps_plotLapsXY</a></li>
-          <li><a href="#fcn_laps_plotpointzonedefinition">fcn_Laps_plotPointZoneDefinition</a></li>
-          <li><a href="#fcn_laps_plotsegmentzonedefinition">fcn_Laps_plotSegmentZoneDefinition</a></li>
-          <li><a href="#fcn_laps_plotzonedefinition">fcn_Laps_plotZoneDefinition</a></li>
-          <li><a href="#fcn_laps_findpointzonestartstopandminimum">fcn_Laps_findPointZoneStartStopAndMinimum</a></li>
-          <li><a href="#fcn_laps_breakdataintolaps">fcn_Laps_breakDataIntoLaps</a></li>
-        </ul>
-        </li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -256,46 +227,6 @@ The dependencies are automatically installed by running the root master script
 <!-- FUNCTION DEFINITIONS -->
 ## Functions
 
-### Point-Set Association Functions
-<ul>
-	<li>fcn_Points_checkInputsToFunctions: TEMPLATE function for checking arguments to functions, such as point sets, etc. to make sure the formatting and sizes are correct</li>
-	<li>fcn_Points_fillPointSampleSets: a function to load some sample data sets to use for testing the other functions</li>
-	<li>fcn_Points_fillPointSetViaUserInputs: a function that allows a user to create (X,Y) point sets by clicking in a figure with the mouse</li>
-	<li>fcn_Points_plotSetsXY: a function that plots (X,Y) point sets with various options</li>
-	<li>fcn_Points_pairXYdata: a function that associates the mutually closest points in two different point sets and returns the pairs as well as points which don't have an obvious mutual pair, in both directions</li>
-	<li>fcn_Points_calcPairStatistics: a function that calculates the statistics for paired sets of points, returning RMS deviation, variance in point locations, and the offset between the centroids of the two point sets (a measurement of the systematic "shift" between two point sets)</li>
-	<li>fcn_Points_adjustPointSetStatistics: a function to add 2D Gaussian noise and/or bias to a point set (e.g. to simulate sensor noise or bias) </li>
-</ul>
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-### Patch Object Creation/Manipulation Functions
-<ul>
-	<li>fcn_Patch_fillSamplePatches: a function to load a few sample patch objects of different sizes, shapes, and colors for testing the other patch object functions</li>
-	<li>fcn_Patch_fillPatchArrayViaUserInputs: a function that allows a user to create patch objects by choosing patch colors and then using a mouse to click in a figure window to define the vertices of the patch object</li>
-	<li>fcn_Patch_plotPatch: a function that plots patch a patch object or an array of patch objects, optionally choosing particular patch objects from the array and/or plotting into a particular figure</li>
-	<li>fcn_Patch_insertPoints: a function that allows the user to insert one or more (X,Y) points into a patch object to add vertices to the patch object</li>
-	<li>fcn_Patch_determineAABB: a function to determine the (X,Y) extremes of the patch object and store them in the patch object attributes</li>
-	<li>fcn_Patch_inferPrimitive: a function to test the fit of circular and rectangular shape primitives to the vertices of the patch object and store the best fit to the patch object attributes (or reject both fits and label the object as irregular)</li>
-	<li>fcn_Patch_checkCollisions: a function to test an array of patch objects to determine impact point and time or, for non-collisions, the closest point and time of closest approach with a rectangular object traveling in a circular trajectory of a given radius, center point, and initial heading</li>
-</ul>
-Each of the functions has an associated test script, using the convention
-	```sh
-	script_test_fcn_fcnname
-	```
-where fcnname is the function name starting with "Patch" or "Point" as listed above.
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-### Safety Metrics Functions
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
 
 #### fcn_SafetyMetrics_create_vehicleTraj
 
@@ -524,48 +455,6 @@ and as well makes the input check process verbose.
 
 **OUTPUTS:**
 
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-### Laps Functions
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_plotLapsXY
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_plotPointZoneDefinition
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_plotSegmentZoneDefinition
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_plotZoneDefinition
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_findPointZoneStartStopAndMinimum
-
-<a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
-
-***
-
-#### fcn_Laps_breakDataIntoLaps
 
 <a href="#featureextraction_safetymetrics_safetymetricsclass">Back to top</a>
 
