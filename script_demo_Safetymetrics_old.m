@@ -84,7 +84,7 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 % Trajectory has to be in the form of time, x, y, yaw angle, 
 clear trajectory
 
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(2,1);
 
 
 %[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
@@ -98,7 +98,7 @@ time_interval = 5; % How many points to plot. 1 means every point, 2 every other
 car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers); % Creates the 3d object of the car to use in SSMs that require a car infront
 %% Plot objects
 flag_barrel = 1; % Flag if a barrel will be used for the object
-if flag_barrel
+    if flag_barrel
     %object_position = [257,1.2];
     object_position = [257,0]; % X, Y location of the object [m]
     x = object_position(1,1);
