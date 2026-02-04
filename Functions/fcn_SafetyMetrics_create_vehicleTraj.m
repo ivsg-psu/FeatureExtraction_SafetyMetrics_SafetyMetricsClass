@@ -169,7 +169,7 @@ if 2 == traj_type
     % Set up x coordinates
     x1 = 1:1:300; %driving up to stop sign
     x2 = zeros(1,100)+301;
-    x3 = 302:1:401;
+    x3 = 302:1:401; 
     xtotal = [x1,x2,x3];
     % Set up y coordinates
     ytotal = zeros(1,500);
@@ -189,7 +189,8 @@ if 2 == traj_type
     
     left_lane = [x_lane',y_lane_L'];
     right_lane = [x_lane',y_lane_R'];
-    centerlane = [x_lane',ytotal'];
+    % centerlane = [x_lane',ytotal(1:401)']; % Modified by Aneesh Batchu - Feb 4, 2026 - Original: [x_lane',ytotal'];
+    centerlane = [xtotal(:)', ytotal(:)']; % Modified by Aneesh Batchu - Feb 4, 2026
     lanes = {left_lane,right_lane};
     centerline = centerlane;
     % Plot the trajectory

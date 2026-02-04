@@ -34,6 +34,5 @@ octave-workspace
 # MacOS Files
 **/*.DS_Store**
 
-
-# Utilities
+# Folders
 Utilities/

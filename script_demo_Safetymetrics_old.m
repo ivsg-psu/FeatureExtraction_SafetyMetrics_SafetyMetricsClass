@@ -1,4 +1,4 @@
-    %% Introduction to and Purpose of the Safety Metrics code
+%% Introduction to and Purpose of the Safety Metrics code
 % This is a demonstration script to show the primary functionality of the
 % safety Metrics code
 %
@@ -12,21 +12,6 @@
 %
 % If you have questions or comments, please contact Sean Brennan at
 % sbrennan@psu.edu or Marcus (mvp5724@psu.edu)
-
-% To-DO
-% 
-% 2026_02_04 by Aneesh Batchu, abb6486@psu.edu
-% - In this repo
-%  % * Organize the demo script to the latest format
-%  % * Add Auto Installer options
-%  % * Modify the functions to the latest format
-%  % * Write scripts to all the functions
-%  % * Move the functions that don't belong here
-%  
-% - In fcn_SafetyMetrics_create_vehicleTraj
-%  % * Fix Trajectory 2 (Stop at a sign) (it doesn't work)
-
-
 
 
 
@@ -95,66 +80,18 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 % vehicle_param.position_y =0; % the y-position of the vehicle_param [m]
 % vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
 
-
-%% test - fcn_SafetyMetrics_showVehicleTrajandMetricInputs
-
-% This function takes the real/simulation data as the input to perform SSM
-
-runthis = 0;
-
-if runthis
-clear trajectory
-
-lane_width = 12/3.281; % 12ft to m (12ft from FHWA highway)
-
-
-time = 1:1:500;
-time = time';
-
-
-%Specify the x coordinates
-x1 = 1:1:200;
-x2 = 201:1:300;
-x3 = 301:1:500;
-xtotal = [x1,x2,x3];
-%Specify the first y segments
-y1 = zeros(1,200);
-y2 = fcn_INTERNAL_modify_sigmoid(x2,201,300,0,lane_width,17,1);
-y3 = zeros(1,200)+lane_width;
-ytotal = [y1,y2,y3];
-
-vehicleTraj = [xtotal' ytotal'];
-
-
-%object flag
-object = 1;
-%Creating the lanes
-x_lane = 1:1:xtotal(end);
-y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width; % L_L furthest left lane
-y_lane_L = zeros(1,xtotal(end))+lane_width/2;
-y_lane_R = zeros(1,xtotal(end))-lane_width/2;
-
-metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
-
-
-[trajectory(:,1), trajectory(:,2), trajectory(:,3), trajectory(:,4), lanes, centerline, flag_object] = ...
-fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, 1);
-
-end
-
 %% Get the trajectory
 % Trajectory has to be in the form of time, x, y, yaw angle, 
-% clear trajectory
-% 
-% [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
-
 clear trajectory
-[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(2,1);
 
-% figure(455)
-% plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
-% grid on;
-% axis equal;
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+
+
+%[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
+figure(455)
+plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
+grid on;
+axis equal;
 %% Plot the data
 time_interval = 5; % How many points to plot. 1 means every point, 2 every other point 
 [fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
@@ -190,7 +127,7 @@ num_of_lanes = size(lanes,2);
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
-        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),485);
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),490);
     end
 end
 %% Calculate the unit vector for each point
@@ -203,7 +140,50 @@ end
 % %% Calculate teh Rear Axle Location for each point.
 % [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
 
-%%
+
+%% Using the unit vector project out two rays off set from the center line representing the vehicle length
+% These rays will be used to determine distances between the vehicle and
+% the object. 
+for i = 1:length(u)
+    % Use the unit vector to determine the direction of the ray 
+    dir = [u(i,2),u(i,3),u(i,1)];
+    % The orgin of the ray. Middle of the rear axel
+    pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
+    
+    %Combine the vertices and the faces for use in the
+    %'TriangleRayIntersection' function
+    vert1_ob = object.Vertices(object.Faces(:,1),:);
+    vert2_ob = object.Vertices(object.Faces(:,2),:);
+    vert3_ob = object.Vertices(object.Faces(:,3),:);
+    
+    %Use 'TriangleRayIntersection' to determine if there is an intersection
+    %between the mesh and the ray. 
+    [intersect_ob, dis_ob, ~, ~, xcoor_ob] = TriangleRayIntersection(pos,dir, vert1_ob, vert2_ob, vert3_ob,'planeType','one sided');
+    % Delete the rows that don't have any data
+    xcoor_ob = rmmissing(xcoor_ob);
+    if isempty(xcoor_ob) == 0
+        % Collect the points that contain the data
+        xcoor_1(i,:) = xcoor_ob;
+        %dis_1(i,:)  = dis_ob(find(intersect_ob));
+        
+        % Plot the data by creating a line from center of rear axel to
+        % intersection point
+        plot3([trajectory(i,2) xcoor_ob(1)],[trajectory(i,3) xcoor_ob(2)],[trajectory(i,1) xcoor_ob(3)])
+        hold on
+    end
+end
+figure(675)
+
+for j = 1:length(xcoor_1)
+    plot3([trajectory(j,2) xcoor_1(j,1)],[trajectory(j,3) xcoor_1(j,2)],[trajectory(j,1) xcoor_1(j,3)])
+    hold on
+%     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+end
+%Add in object to ray plot while scaling the axes
+patch(object)
+set(gca,'DataAspectRatio',[.5 .01 50])
+view(2)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    _____ __  __ __  __     
 %   / ____|  \/  |  \/  |    
@@ -212,35 +192,255 @@ end
 %   ____) | |  | | |  | \__ \
 %  |_____/|_|  |_|_|  |_|___/
 % http://patorjk.com/software/taag/#p=display&f=Big&t=SMMs                           
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TTC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                         
 
-% set(0,'DefaultAxesFontName','Times New Roman');
-% set(0,'DefaultTextFontName','Times New Roman');
-% set(0,'DefaultAxesFontSize',16);
-% set(0,'DefaultTextFontSize',16);
-% set(0,'defaulttextinterpreter','latex');
-% set(0,'defaultAxesTickLabelInterpreter','latex');
-% set(0,'defaultLegendInterpreter','latex');
+%% TTC - Time To Collision - 
+% It's been proven, in thesis, that TTC is equal to the vertical height.
 
-[TTC]=fcn_SafetyMetrics_TTC(u,trajectory,rear_axle,object)
+TTC = xcoor_1(:,3) - trajectory(1:length(xcoor_1),1);
+% Plot the TTC result vs time
+figure(789)
+plot(TTC)
+title('TTC');
+grid on
+xlabel('Time');
+ylabel('TTC');
 
-%TLC
-[TLC1,TLC2]=fcn_SafetyMetrics_TLC(u,trajectory,rear_axle,lane_patches)
+%% TLC - Time to Lane Crossing - 
+% If there is a ray cast to the lane, prefrom similar calculation as TTC
+for i = 1:length(u)
+    dir = [u(i,2),u(i,3),u(i,1)];
+    pos = [rear_axle(i,1),rear_axle(i,2),trajectory(i,1)];
+    
+    for i_1  = 1:length(lane_patches)
+        vert1_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,1),:);
+        vert2_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,2),:);
+        vert3_lane = lane_patches(i_1).Vertices(lane_patches(i_1).Faces(:,3),:);
+        
+        
+        [intersect_lane, dis_lane, ~, ~, xcoor_lane] = TriangleRayIntersection(pos,dir, vert1_lane, vert2_lane, vert3_lane,'planeType','one sided');
+        xcoor_lane = rmmissing(xcoor_lane);
+        % If there is data in the Xcoor_lane save it, if not save NaN.
+        if isempty(xcoor_lane) == 0
+            xcoor_lane1{i_1,:}(i,:) = xcoor_lane;
+            %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+        else
+            xcoor_lane1{i_1,1}(i,:) = [NaN,NaN,NaN];
+        end
+    end
+end
+% Plotting the TLC rays and calculating it. 
+flag_plot_lane_intersect = 1;
+if flag_plot_lane_intersect == 1
+    for i = 1:length(u)
+        figure(485)
+        % The following if statments make sure to only use the rays that
+        % make sense for each lane. (The 'TriangleRayIntersection' shoots
+        % rays off and will continue returning intersections for all lanes
+        % even if the lane is on the other side of another lane.)
+        if xcoor_lane1{1,1}(i,1) ~= 0 && trajectory(i,3) > 1.9
+            plot3([trajectory(i,2) xcoor_lane1{1,1}(i,1)],[trajectory(i,3) xcoor_lane1{1,1}(i,2)],[trajectory(i,1) xcoor_lane1{1,1}(i,3)],'b')
+            hold on
+            TLC2(i) = xcoor_lane1{1,1}(i,3) - trajectory(i,1); 
+        end
+        if xcoor_lane1{2,1}(i,1) ~= 0
+            plot3([trajectory(i,2) xcoor_lane1{2,1}(i,1)],[trajectory(i,3) xcoor_lane1{2,1}(i,2)],[trajectory(i,1) xcoor_lane1{2,1}(i,3)],'g')
+            hold on
+            TLC1(i) = xcoor_lane1{2,1}(i,3) - trajectory(i,1); 
+        end
+    end
+end
+% Plot the TLC vs time.
+figure(848)
+plot(TLC1)
+title('TLC of the middle lane');
+grid on
+xlabel('Time');
+ylabel('TLC');
 
-%PET
-[PET]=fcn_SafetyMetrics_PET(car1_patch,vehicle_param)
+figure(936)
+plot(TLC2)
+title('TLC of the outside lane');
+grid on
+xlabel('Time');
+ylabel('TLC');
 
-%DRAC
-[DRAC]=fcn_SafetyMetrics_DRAC(u,trajectory,rear_axle,TTC,object,flag_object)
 
-%SD
-[SD,TA,slope_V_car3,rear_axle3,u3,car3_traj]=fcn_SafetyMetrics_SD(car1_patch,vehicle_param,trajectory)
+%% PET - Post Enchroachment Time - 
+% Plot another vehicle, going in a straight line over top of the old one.
+% ray cast below to determine the time. Y = 3.657
+flag_car2 =1;
+if flag_car2 == 1
+    car2_x =1:1:500;
+    car2_y = zeros(1,500)+3.657;
+    car2_t = 500:1:999;
+    car2_yaw = zeros(1,500)';
+    
+    car2_traj = [car2_t',flip(car2_x'),car2_y',car2_yaw];
+    % Find the unit vector for this second vehicle
+    [u2,rear_axle2]=fcn_SafetyMetrics_unit_vector(car2_traj,vehicle_param,36363);
+    
+    % Go through the same procedure to use 'TriangleRayIntersection'
+    for i = 1:length(u2)
+        dir = [0,0,-1];
+        pos = [rear_axle2(i,1),rear_axle2(i,2),car2_traj(i,1)];
+        
+        vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+        vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+        vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+        
+        [intersect_car1, dis_car1, ~, ~, xcoor_car1] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+        xcoor_car1 = rmmissing(xcoor_car1);
+        if isempty(xcoor_car1) == 0
+            xcoor_car1_points(i,:) = xcoor_car1;
+            %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+        else
+            xcoor_car1_points(i,:) = [NaN,NaN,NaN];
+        end
+    end
+    figure(36363)
+    for i = 1:length(xcoor_car1_points)
+        %if xcoor_car1_points(i,1) ~=0
+            plot3([car2_traj(i,2) xcoor_car1_points(i,1)],[car2_traj(i,3) xcoor_car1_points(i,2)],[car2_traj(i,1) xcoor_car1_points(i,3)],'b')
+            hold on
+        %end
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+    % Plot first car 3d mesh
+    patch(car1_patch)
+    set(gca,'DataAspectRatio',[10 1 50])
+    view(-40,40);
+    % Calculate the PET use the thesis definition proving that PET is just
+    % the height between the intersection point and the orgin of the ray
+    PET = car2_traj(:,1)- xcoor_car1_points(:,3);
+    % Plot PET vs time
+    figure(578)
+    plot(PET)
+    title('PET')
+    grid on
+    xlabel('Time');
+    ylabel('PET');
+end
 
-%CSI
-[CSI]=fcn_SafetyMetrics_CSI(car1_patch,TA,slope_V_car3,rear_axle3,u3,car3_traj)
+%% DRAC - Deceleration Rate to Avoid Crash - 
+% If there is a ray cast to an entinty, take the current slope, preform
+% newtons equation of montion to calculate how much deceleration is needed
+% to not crash
+if flag_object
+    slope_V = (xcoor_1(:,3)-trajectory(1:length(xcoor_1),1))./(xcoor_1(:,1)-trajectory(1:length(xcoor_1),2));
+    DRAC = slope_V./TTC;
+    figure(5438)
+    plot(DRAC);
+    title('DRAC');
+    grid on
+    xlabel('Time');
+    ylabel('DRAC');
+end
 
-%RLP
+%% SD - Speed Disparity - 
+% If there is a ray cast take the slope of both objects and then subtract
+% eachother to get the SD
+
+%First create a car that is slightly behind the main one, but it is going
+%faster. 
+car3_x =1:1:500;
+car3_y = zeros(1,500);
+car3_t = linspace(50,425,500);
+car3_yaw = zeros(1,500)';
+
+car3_traj = [car3_t',car3_x',car3_y',car3_yaw];
+
+[u3,rear_axle3]=fcn_SafetyMetrics_unit_vector(car3_traj,vehicle_param,687);
+
+% Using procedure as other SSMs to carry out ray casting
+for i = 1:length(u3)
+    dir = [u3(i,2),u3(i,3),u3(i,1)];
+    pos = [rear_axle3(i,1),rear_axle3(i,2),car3_traj(i,1)];
+    
+    vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+    vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+    vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+    
+    [intersect_car1_2, dis_car1_2, ~, ~, xcoor_car1_2] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+    xcoor_car1_2 = rmmissing(xcoor_car1_2);
+    if isempty(xcoor_car1_2) == 0
+        xcoor_car1_2_points(i,:) = xcoor_car1_2;
+        %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+    else
+        xcoor_car1_2_points(i,:) = [NaN,NaN,NaN];
+    end
+end
+
+  for i = 1:length(xcoor_car1_2_points)
+        %if xcoor_car1_points(i,1) ~=0
+        figure(687)
+            plot3([car3_traj(i,2) xcoor_car1_2_points(i,1)],[car3_traj(i,3) xcoor_car1_2_points(i,2)],[car3_traj(i,1) xcoor_car1_2_points(i,3)],'b')
+            hold on
+         TA(i) = xcoor_car1_2_points(i,3) - car3_traj(i,1);
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+
+figure(687)
+patch(car1_patch)
+set(gca,'DataAspectRatio',[10 1 50])
+view(-40,40);
+hold on
+
+%Calculating the velocity of the vehicles by calculating the slope. current
+%point and previous point.
+slope_V_car3 = (xcoor_car1_2_points(:,3)-car3_traj(1:length(xcoor_car1_2_points),1))./(xcoor_car1_2_points(:,1)-car3_traj(1:length(xcoor_car1_2_points),2));
+slope_V = (-trajectory(1,1)+trajectory(end,1))/(-trajectory(1,2)+trajectory(end,2));
+
+SD = slope_V_car3.^-1 - slope_V.^-1;
+% plot3(car3_traj(:,2),car3_traj(:,3),car3_traj(:,1));
+% grid on
+
+%% CSI - Conflict Serverity Index - 
+% Using the SD information, the TA(time to accident) and CS(conflict speed)
+% calulate the CSI. 
+% CSI = TA/CS
+CS = slope_V_car3.*3.6;
+
+CSI =TA'./slope_V_car3
+figure(908)
+plot(TA',CS);
+title('CSI');
+grid on
+xlabel('TA');
+ylabel('CS');
+
+% Version II
+
+for i = 1:length(u3)
+    dir = [0,0,-1];
+    pos = [rear_axle3(i,1),rear_axle3(i,2),car3_traj(i,1)];
+    
+    vert1_car1 = car1_patch.Vertices(car1_patch.Faces(:,1),:);
+    vert2_car1 = car1_patch.Vertices(car1_patch.Faces(:,2),:);
+    vert3_car1 = car1_patch.Vertices(car1_patch.Faces(:,3),:);
+    
+    [~, ~, ~, ~, xcoor_car1_3] = TriangleRayIntersection(pos,dir, vert1_car1, vert2_car1, vert3_car1,'planeType','one sided');
+    xcoor_car1_3 = rmmissing(xcoor_car1_3);
+    if isempty(xcoor_car1_3) == 0
+        xcoor_car1_3_points(i,:) = xcoor_car1_3;
+        %dis_lane1{i_1,:}(i,:)  = dis_lane(find(intersect_lane));
+    else
+        xcoor_car1_3_points(i,:) = [NaN,NaN,NaN];
+    end
+end
+
+    figure(687)
+    for i = 1:length(xcoor_car1_3_points)
+        %if xcoor_car1_points(i,1) ~=0
+            plot3([car3_traj(i,2) xcoor_car1_3_points(i,1)],[car3_traj(i,3) xcoor_car1_3_points(i,2)],[car3_traj(i,1) xcoor_car1_3_points(i,3)],'b')
+            hold on
+        %end
+        %     plot3(trajectory(j,2),trajectory(j,3),trajectory(j,1),'ro')
+    end
+
+
+
+%% RLP - Reltive Lane Position - 
 % Can be calulated all the time, distance from centerline
  RLP1 = trajectory(:,3) - centerline{1,1}(:,2);
  RLP2 = trajectory(:,3) - centerline{1,2}(:,2);
@@ -685,13 +885,3 @@ end
 end % Ends function fcn_DebugTools_installDependencies
 
 
-function y = fcn_INTERNAL_modify_sigmoid(t, t0, t1, y0, y1, a_factor, b_factor)
-% MODIFY_SIGMOID computes a modified sigmoid function with adjustable parameters
-
-% Compute the adjusted parameters
-a = a_factor / (t1 - t0);
-b = b_factor * (t0 + t1) / 2;
-
-% Compute the modified sigmoid function
-y = y0 + (y1 - y0) ./ (1 + exp(-a * (t - b)));
-end
