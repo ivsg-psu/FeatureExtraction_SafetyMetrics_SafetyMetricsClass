@@ -16,12 +16,30 @@
 
 % REVISION HISTORY:
 % 
-% 2023_06_05 - mvp5724@psu.edu
-% - converting what was done before to this documation structure.
-% - Adding the correct code to allow for dependecies 
+% 2026_02_04 by Aneesh Batchu, abb6486@psu.edu
+% - Added auto Installer options
+% - created this demo script from Marcus's old script
+% 
+% 2026_02_07 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_generateVehicleTraj
+%   % * Added DebugTools to check the inputs
+%   % * Added switch cases to generate the trajectory
+%   % * Created INTERNAL functions to generate the trajectories
+%   % * Modified the code to output all the specified outputs for all
+%   %   % trajectory types. Initially, the code was not outputting lanes,
+%   %   % centerline for right and left hand turns. 
+%   % * Modifed name of the function to "fcn_SafetyMetrics_generateVehicleTraj"
+%   %   % from "fcn_SafetyMetrics_create_vehicleTraj"
 
 % TO-DO:
 % 
+% 2026_02_07 by Aneesh Batchu, abb6486@psu.edu
+% - In demo script
+%   % * Fix fcn_SafetyMetrics_plotTrajectoryXY for Trajectories 4 and 5.
+%   % * Create a frunction to setup vehicle parameters 
+%   % * The code works only when trajectory == 3 (lane change). Figure out 
+%   %   % why the code does not work for other trajectories
+
 
 %% Make sure we are running out of root directory
 st = dbstack; 
@@ -161,97 +179,127 @@ vehicle_param.Lr = 1.3;% Length from origin to front bumper
 % vehicle_param.position_y =0; % the y-position of the vehicle_param [m]
 % vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
 
-%% fcn_SafetyMetrics_showVehicleTrajandMetricInputs: Takes the real/simulation data as the input to perform SSM
+%% fcn_SafetyMetrics_create_vehicleTraj: Gets the trajectory 
 
-figNum = 10001;
-titleString = sprintf('fcn_SafetyMetrics_showVehicleTrajandMetricInputs: Takes the real/simulation data as the input to perform SSM');
-fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
-figure(figNum); clf;
+clear trajectory
 
+% Use this for trajectories 1, 2  and 3
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object] = ...
+    fcn_SafetyMetrics_create_vehicleTraj(4,1);
 
-lane_width = 12/3.281; % 12ft to m (12ft from FHWA highway)
+% % Use this for trajectories 4 and 5
+% [trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(5,1);
 
+% Plot trajectory and time 
+figure(455)
+plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
+grid on;
+axis equal;
 
-time = 1:1:500;
-time = time';
+%% Plot the data
+time_interval = 5; % How many points to plot. 1 means every point, 2 every other point 
+[fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
+car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers); % Creates the 3d object of the car to use in SSMs that require a car infront
+%% Plot objects
+flag_barrel = 1; % Flag if a barrel will be used for the object
+if flag_barrel
+    %object_position = [257,1.2];
+    object_position = [257,0]; % X, Y location of the object [m]
+    x = object_position(1,1);
+    y = object_position(1,2);
+    
+    % generate the points of the object
+    % the example shown will be a barrel using dimesions from FHWA.
+    % DIA = 23"
+    
+    dia = 23/39.37; %[m];
+    r = dia/2;
+    theta = linspace(0,2*pi,50); % Createing the points along the circumference of a circle. 50 total points. 
+    
+    x2 = r*sin(theta)+x;
+    y2 = r*cos(theta)+y;
+    object_vertices = [x2;y2];
+end
 
+if flag_object
+    % Plot the object with a choice for slices or 3d Mesh. 1 being mesh, 2
+    % being slices with that number being the 4th input.
+    [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
+end
+%% Plot the lanes
+num_of_lanes = size(lanes,2);
+flag_plot_lanes = 1;
+if flag_plot_lanes
+    for j = 1:num_of_lanes
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),485);
+    end
+end
+%% Calculate the unit vector for each point
 
-%Specify the x coordinates
-x1 = 1:1:200;
-x2 = 201:1:300;
-x3 = 301:1:500;
-xtotal = [x1,x2,x3];
-%Specify the first y segments
-y1 = zeros(1,200);
-y2 = fcn_INTERNAL_modify_sigmoid(x2,201,300,0,lane_width,17,1);
-y3 = zeros(1,200)+lane_width;
-ytotal = [y1,y2,y3];
+[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param,36363);
+if flag_object
+    % Plot the object in the unit vector plot
+    patch(object)
+end
+% %% Calculate teh Rear Axle Location for each point.
+% [rear_axle]=fcn_SafetyMetrics_rear_axle(trajectory,vehicle_param);
 
-vehicleTraj = [xtotal' ytotal'];
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    _____ __  __ __  __     
+%   / ____|  \/  |  \/  |    
+%  | (___ | \  / | \  / |___ 
+%   \___ \| |\/| | |\/| / __|
+%   ____) | |  | | |  | \__ \
+%  |_____/|_|  |_|_|  |_|___/
+% http://patorjk.com/software/taag/#p=display&f=Big&t=SMMs                           
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TTC
 
+% set(0,'DefaultAxesFontName','Times New Roman');
+% set(0,'DefaultTextFontName','Times New Roman');
+% set(0,'DefaultAxesFontSize',16);
+% set(0,'DefaultTextFontSize',16);
+% set(0,'defaulttextinterpreter','latex');
+% set(0,'defaultAxesTickLabelInterpreter','latex');
+% set(0,'defaultLegendInterpreter','latex');
 
-%object flag
-object = 1;
-%Creating the lanes
-x_lane = 1:1:xtotal(end);
-y_lane_L_L = zeros(1,xtotal(end))+3/2*lane_width; % L_L furthest left lane
-y_lane_L = zeros(1,xtotal(end))+lane_width/2;
-y_lane_R = zeros(1,xtotal(end))-lane_width/2;
+%% TTC
 
-metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
+[TTC] = fcn_SafetyMetrics_TTC(u,trajectory,rear_axle,object)
 
+%% TLC  
 
-[trajectory(:,1), trajectory(:,2), trajectory(:,3), trajectory(:,4), lanes, centerline, flag_object] = ...
-fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, (figNum));
+%TLC
+[TLC1,TLC2] = fcn_SafetyMetrics_TLC(u,trajectory,rear_axle,lane_patches)
 
+%% PET
 
-%% fcn_OSM2SHP_convertUTCToDatetime: Convert the timestamp of OSM State College roads from UTC format to date time format
+%PET
+[PET] = fcn_SafetyMetrics_PET(car1_patch,vehicle_param)
 
-figNum = 10002;
-titleString = sprintf('fcn_OSM2SHP_convertUTCToDatetime: Convert the timestamp of OSM State College roads from UTC format to date time format');
-fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
-figure(figNum); close(figNum);
+%% DRAC
 
-% Shape file string of PA highways 
-shapeFileString = "state_college_roads.shp";
+%DRAC
+[DRAC] = fcn_SafetyMetrics_DRAC(u,trajectory,rear_axle,TTC,object,flag_object)
 
-% Create a geospatial table
-geospatial_table = fcn_OSM2SHP_loadShapeFile(shapeFileString, -1);
+%% SD
 
-% Call the function
-date_time = fcn_OSM2SHP_convertUTCToDatetime(geospatial_table, (figNum)); 
+%SD
 
-% Assertions
-assert(isequal(class(date_time), 'datetime'))
-assert(isequal(length(geospatial_table.timestamp(:,1)), length(date_time(:,1))))
+[SD,TA,slope_V_car3,rear_axle3,u3,car3_traj] = fcn_SafetyMetrics_SD(car1_patch,vehicle_param,trajectory)
 
-% Make sure plot did NOT open up
-figHandles = get(groot, 'Children');
-assert(~any(figHandles==figNum));
+%% CSI
+%CSI
+[CSI] = fcn_SafetyMetrics_CSI(car1_patch,TA,slope_V_car3,rear_axle3,u3,car3_traj)
 
-%% fcn_OSM2SHP_extractLLFromGeospatialTable: Extract the LL coordinates of OSM State College road segments
+%% RLP
 
-figNum = 10003;
-titleString = sprintf('fcn_OSM2SHP_extractLLFromGeospatialTable: Extract the LL coordinates of OSM State College road segments');
-fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
-figure(figNum); close(figNum);
+%RLP
+% Can be calulated all the time, distance from centerline
+ RLP1 = trajectory(:,3) - centerline{1,1}(:,2);
+ RLP2 = trajectory(:,3) - centerline{1,2}(:,2);
 
-% Shape file string of PA highways 
-shapeFileString = "state_college_roads.shp";
-
-% Create a geospatial table
-geospatial_table = fcn_OSM2SHP_loadShapeFile(shapeFileString, -1);
-
-% Call the function
-[LLCoordinate_allSegments, LL_allSegments_cell] = fcn_OSM2SHP_extractLLFromGeospatialTable(geospatial_table, (figNum));
-
-% Assertions
-assert(length(LLCoordinate_allSegments(:,1)) > size(geospatial_table, 1)); 
-assert(isequal(length(LL_allSegments_cell), size(geospatial_table, 1)));
-
-% Make sure plot did NOT open up
-figHandles = get(groot, 'Children');
-assert(~any(figHandles==figNum));
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

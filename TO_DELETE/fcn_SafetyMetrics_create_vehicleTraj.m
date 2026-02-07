@@ -1,20 +1,13 @@
-function [time,xtotal,ytotal,yaw,lanes,centerline,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
-traj_type,...
-traj_plot,...
-varargin...
-)
-% fcn_SafetyMetrics_create_vehicleTraj
-% This code will plot a vehicle given the x,y,and angle.
+function [time,xtotal,ytotal,yaw,lanes,centerline,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(traj_type, traj_plot, varargin)
+%% fcn_SafetyMetrics_create_vehicleTraj 
+% 
+% This function generates the trajectory and plots the trajectory. 
 % 
 % 
 % 
 % FORMAT:
 % 
-% function [time,xtotal,ytotal,yaw, flag_object] = fcn_SafetyMetrics_create_vehicleTraj(...
-% traj_type,...
-% traj_plot,...
-% varargin...
-% )
+% [time,xtotal,ytotal,yaw,lanes,centerline,flag_object] = fcn_SafetyMetrics_create_vehicleTraj(traj_type, traj_plot, (figNum))
 % 
 % INPUTS:
 %       traj_type: a number 1 - 5 representing which trajectory is wanted
@@ -23,10 +16,16 @@ varargin...
 %       3: Half-lane change around an object
 %       4: Right hand turn
 %       5: Left hand turn
-%       traj_plot: a boolean value if simple plotting is wanted. 1 = plot
+
+%      (OPTIONAL INPUTS)
+%
+%      figNum: a figure number to plot results. If set to -1, skips any
+%      input checking or debugging, no figures will be generated, and sets
+%      up code to maximize speed.
 %    
 %
 % OUTPUTS:
+% 
 %  time: 500x1 matrix of time
 %  xtotal:500x1 matrix of x coordinates
 %  ytotal:500x1 matrix of y coordinates
@@ -49,7 +48,11 @@ varargin...
 % 
 % 2023_05_17 by Marcus Putz and Sean Brennan
 % -- first write of function
-%
+% 
+% 2026_02_04 by Aneesh Batchu, abb6486@psu.edu
+% - Modified centerlane = [xtotal(:)', ytotal(:)'] in Traj == 2 
+%  % from [x_lane',ytotal'];
+
 % TO DO:
 % 
 % -- fill in to-do items here.
@@ -189,8 +192,8 @@ if 2 == traj_type
     
     left_lane = [x_lane',y_lane_L'];
     right_lane = [x_lane',y_lane_R'];
-    % centerlane = [x_lane',ytotal(1:401)']; % Modified by Aneesh Batchu - Feb 4, 2026 - Original: [x_lane',ytotal'];
-    centerlane = [xtotal(:)', ytotal(:)']; % Modified by Aneesh Batchu - Feb 4, 2026
+    % centerlane = [x_lane',ytotal(1:401)']; % Modified by Aneesh Batchu - Feb 4, 2026 - 
+    centerlane = [xtotal(:)', ytotal(:)']; % Modified by Aneesh Batchu - Feb 4, 2026 - Original: [x_lane',ytotal'];
     lanes = {left_lane,right_lane};
     centerline = centerlane;
     % Plot the trajectory

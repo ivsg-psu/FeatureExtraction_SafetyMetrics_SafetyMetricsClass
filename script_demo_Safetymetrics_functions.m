@@ -144,12 +144,12 @@ end
 
 %% Get the trajectory
 % Trajectory has to be in the form of time, x, y, yaw angle, 
-% clear trajectory
-% 
-% [trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(3,1);
-
 clear trajectory
-[trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(1,1);
+
+[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object]=fcn_SafetyMetrics_create_vehicleTraj(1,1);
+
+% clear trajectory
+% [trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(1,1);
 
 % figure(455)
 % plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
