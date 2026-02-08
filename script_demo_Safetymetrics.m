@@ -30,15 +30,19 @@
 %   %   % centerline for right and left hand turns. 
 %   % * Modifed name of the function to "fcn_SafetyMetrics_generateVehicleTraj"
 %   %   % from "fcn_SafetyMetrics_create_vehicleTraj"
+% 
+% 2026_02_07 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_plotTrajectoryXY
+%   % * Fixed the code Trajectories 4 and 5.
+%   % * Added DebugTools to check the inputs
+%   % * Modified the function to latest format
+%   % * Created the test script for this function
 
 % TO-DO:
 % 
 % 2026_02_07 by Aneesh Batchu, abb6486@psu.edu
 % - In demo script
-%   % * Fix fcn_SafetyMetrics_plotTrajectoryXY for Trajectories 4 and 5.
 %   % * Create a frunction to setup vehicle parameters 
-%   % * The code works only when trajectory == 3 (lane change). Figure out 
-%   %   % why the code does not work for other trajectories
 
 
 %% Make sure we are running out of root directory
@@ -155,53 +159,58 @@ end
 
 disp('Welcome to the demo code for the SafetyMetrics library! Please read the Instructions')
 
-%% Set up vehicle parameters
-vehicle_param.w_vehicle = 69.3/(12*3.281); % the width of the vehicle_param, [m] from 63.9 inches
-vehicle_param.length = 106.3/(12*3.281); % the length of the vehicle_param, [m]
-vehicle_param.tire_width =  12.5/(12*3.281);  % the width of the wheel [m], assuming 12.5 inch width and 3.281 feet in a meter
-vehicle_param.tire_length = 33/(12*3.281);  % the diameter of the wheel [m], assuming 12.5 inch width and 3.281 feet in a meter
-vehicle_param.a = 1; % Location from the CG to the front axle [m]
-vehicle_param.b = 1; % Location from the CG to the rear axle [m]
-vehicle_param.Lf = 1.3;% Length from origin to front bumper
-vehicle_param.Lr = 1.3;% Length from origin to front bumper
+%% fcn_SafetyMetrics_generateVehicleTraj: Generates the trajectory 
 
-% % Use a plain tire - no spokes (see fcn_drawTire for details)
-% vehicle_param.tire_type = 3;
-%
-% % Fill in tire information
-% starter_tire = fcn_tire_initTire;
-% starter_tire.usage = []
-% for i_tire = 1:4
-%     vehicle_param.tire(i_tire)= starter_tire;
-% end
-% vehicle_param.yawAngle_radians = 0; % the yaw angle of the body of the vehicle_param [rad]
-% vehicle_param.position_x = 0; % the x-position of the vehicle_param [m]
-% vehicle_param.position_y =0; % the y-position of the vehicle_param [m]
-% vehicle_param.steeringAngle_radians = 0; % the steering angle of the front tires [rad]
+figNum = 10001;
+titleString = sprintf('fcn_SafetyMetrics_generateVehicleTraj: Generates the trajectory');
+fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
+figure(figNum); close(figNum);
 
-%% fcn_SafetyMetrics_create_vehicleTraj: Gets the trajectory 
 
-clear trajectory
+% Trajectory string
+TrajectoryTypeString = 'Half Lane Change'; % trajectories: 'Lane Change', 'Stopping at a Stop Sign', 'Half Lane Change', 'Right Hand Turn', 'Left Hand Turn'
 
-% Use this for trajectories 1, 2  and 3
-[trajectory(:,1),trajectory(:,2),trajectory(:,3),trajectory(:,4),lanes,centerline,flag_object] = ...
-    fcn_SafetyMetrics_create_vehicleTraj(4,1);
+% Call the function
+[time, xTotal, yTotal, yaw, laneBoundaries, centerline, flagObject] = fcn_SafetyMetrics_generateVehicleTraj(TrajectoryTypeString, (figNum));
 
-% % Use this for trajectories 4 and 5
-% [trajectory(1,:),trajectory(2,:),trajectory(3,:),trajectory(4,:),flag_object]=fcn_SafetyMetrics_create_vehicleTraj(5,1);
+% Assertions
+assert(isequal(length(time), 500))
+assert(isequal(length(xTotal), length(time)))
+assert(isequal(length(yTotal), length(time)))
+assert(isequal(length(yaw), length(time)))
+assert(isequal(flagObject, 1))
+assert(isequal(length(laneBoundaries), 3))
+assert(isequal(length(centerline), 2))
+assert(isequal(class(laneBoundaries), 'cell'))
+assert(isequal(class(centerline), 'cell'))
 
-% Plot trajectory and time 
-figure(455)
-plot3(trajectory(:,2),trajectory(:,3),trajectory(:,1));
-grid on;
-axis equal;
+% Make sure plot opened up
+assert(isequal(get(gcf,'Number'),figNum));
 
 %% Plot the data
-time_interval = 5; % How many points to plot. 1 means every point, 2 every other point 
-[fig_num,car1_layers]=fcn_SafetyMetrics_plotTrajectoryXY(trajectory,vehicle_param,time_interval, 1);
+
+% Pre-allocate trajectory 
+trajectory = [time, xTotal, yTotal, yaw];
+
+% Set up vehicle parameters
+vehicleParameters.w_vehicle = 69.3/(12*3.281); % the width of the vehicle_param, [m] from 63.9 inches
+vehicleParameters.length = 106.3/(12*3.281); % the length of the vehicle_param, [m]
+vehicleParameters.tire_width =  12.5/(12*3.281);  % the width of the wheel [m], assuming 12.5 inch width and 3.281 feet in a meter
+vehicleParameters.tire_length = 33/(12*3.281);  % the diameter of the wheel [m], assuming 12.5 inch width and 3.281 feet in a meter
+vehicleParameters.a = 1; % Location from the CG to the front axle [m]
+vehicleParameters.b = 1; % Location from the CG to the rear axle [m]
+vehicleParameters.Lf = 1.3;% Length from origin to front bumper
+vehicleParameters.Lr = 1.3;% Length from origin to front bumper
+
+timeInterval = 5; % How many points to plot. 1 means every point, 2 every other point 
+fig_num = 485; 
+car1_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, 1, fig_num);
 car1_patch=fcn_PlotWZ_createPatchesFromNSegments(car1_layers); % Creates the 3d object of the car to use in SSMs that require a car infront
-%% Plot objects
-flag_barrel = 1; % Flag if a barrel will be used for the object
+
+%% Plot objects - Only for "Half Lane Change" trajectory 
+
+flag_barrel = 1; % Flag if a barrel will be used for the object (Only for 'Half Lane Change' trajectory (flag_barrel = 1))
+flag_object = flagObject;
 if flag_barrel
     %object_position = [257,1.2];
     object_position = [257,0]; % X, Y location of the object [m]
@@ -224,19 +233,19 @@ end
 if flag_object
     % Plot the object with a choice for slices or 3d Mesh. 1 being mesh, 2
     % being slices with that number being the 4th input.
-    [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicle_param,fig_num);
+    [object]=fcn_SafetyMetrics_add_and_plot_object(trajectory,object_vertices,object_position,1,vehicleParameters,fig_num);
 end
-%% Plot the lanes
-num_of_lanes = size(lanes,2);
+%% Plot the laneBoundaries
+num_of_lanes = size(laneBoundaries,2);
 flag_plot_lanes = 1;
 if flag_plot_lanes
     for j = 1:num_of_lanes
-        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(lanes(1,j),485);
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(laneBoundaries(1,j),485);
     end
 end
 %% Calculate the unit vector for each point
 
-[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicle_param,36363);
+[u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicleParameters,36363);
 if flag_object
     % Plot the object in the unit vector plot
     patch(object)
@@ -276,7 +285,7 @@ end
 %% PET
 
 %PET
-[PET] = fcn_SafetyMetrics_PET(car1_patch,vehicle_param)
+[PET] = fcn_SafetyMetrics_PET(car1_patch,vehicleParameters)
 
 %% DRAC
 
@@ -287,7 +296,7 @@ end
 
 %SD
 
-[SD,TA,slope_V_car3,rear_axle3,u3,car3_traj] = fcn_SafetyMetrics_SD(car1_patch,vehicle_param,trajectory)
+[SD,TA,slope_V_car3,rear_axle3,u3,car3_traj] = fcn_SafetyMetrics_SD(car1_patch,vehicleParameters,trajectory)
 
 %% CSI
 %CSI

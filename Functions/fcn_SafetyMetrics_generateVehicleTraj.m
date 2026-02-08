@@ -4,8 +4,7 @@ function [time,...
     yaw, laneBoundaries, centerline, flagObject] = fcn_SafetyMetrics_generateVehicleTraj(TrajectoryTypeString, varargin)
 %% fcn_SafetyMetrics_generateVehicleTraj 
 % 
-% This function generates the trajectory and plots the trajectory. 
-% 
+% This function generates and plots the selected trajectory. 
 % 
 % 
 % FORMAT:
@@ -20,7 +19,7 @@ function [time,...
 %       Half-lane change around an object
 %       Right hand turn
 %       Left hand turn
-
+% 
 %      (OPTIONAL INPUTS)
 %
 %      figNum: a figure number to plot results. If set to -1, skips any
@@ -61,7 +60,7 @@ function [time,...
 % REVISION HISTORY:
 % 
 % 2023_05_17 by Marcus Putz and Sean Brennan
-% -- first write of function
+% - first write of function
 % 
 % 2026_02_04 by Aneesh Batchu, abb6486@psu.edu
 % - Modified centerlane = [xTotal(:)', yTotal(:)'] in Traj == 2 
@@ -204,36 +203,11 @@ switch lower(erase(TrajectoryTypeString, " "))
 end
 
 
-
-%Road trajectory
-% traj_type 1 is a lane change of a vehicle.
-if 1 == TrajectoryTypeString
-    
-end
-% traj_type: 2 stopping at a stop sign
-
-
-if 2 == TrajectoryTypeString
-
-end
-
-% traj_type: 3 half-lane change around an object
-
-if 3 == TrajectoryTypeString
-    
-end
-
-% traj_type: 4 right hand turn
-if 4 == TrajectoryTypeString
-    
-   
-end
-
-% traj_type: 5 left hand turn
-if 5 == TrajectoryTypeString
-    
-    
-end
+% Make row matrices (1 x 500) into column matrices (500 x 1) 
+time = time';
+xTotal = xTotal';
+yTotal = yTotal';
+yaw = yaw';
 
 
 %% Plot the results (for debugging)?

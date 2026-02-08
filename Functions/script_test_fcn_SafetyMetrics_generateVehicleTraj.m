@@ -1,4 +1,5 @@
 %% script_test_fcn_SafetyMetrics_generateVehicleTraj
+% Exercises the function: fcn_SafetyMetrics_generateVehicleTraj
 
 % REVISION HISTORY:
 %
@@ -36,7 +37,7 @@ fprintf(1,'Figure: 1XXXX: DEMO cases\n');
 figNum = 10001;
 titleString = sprintf('DEMO case: Generate and plot the "Lane Change" trajectory');
 fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
-figure(figNum); close(figNum);
+figure(figNum); clf;
 
 % Trajectory string
 TrajectoryTypeString = 'Lane Change'; 
@@ -63,7 +64,7 @@ assert(isequal(get(gcf,'Number'),figNum));
 figNum = 10002;
 titleString = sprintf('DEMO case: Generate and plot the "Stopping at a stop sign" trajectory');
 fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
-figure(figNum); close(figNum);
+figure(figNum); clf;
 
 % Trajectory string
 TrajectoryTypeString = 'Stopping at a stop sign'; 
@@ -362,12 +363,9 @@ if 1==0
     assert(isequal(class(laneBoundaries), 'cell'))
     assert(isequal(class(centerline), 'cell'))
 
-    % Make sure plot opened up
-    assert(isequal(get(gcf,'Number'),figNum));
-
-
-    % Make sure plot opened up
-    assert(isequal(get(gcf,'Number'),figNum));
+    % Make sure plot did NOT open up
+    figHandles = get(groot, 'Children');
+    assert(~any(figHandles==figNum));
 
     %% Should thrown an error as the TrajectoryTypeString should be 'Left hand Turn' or 'Left Hand Turn' or 'Left hand turn' or 'LEFT HAND TURN'
     % Simply, choose a valid trajectory
@@ -395,12 +393,9 @@ if 1==0
     assert(isequal(class(laneBoundaries), 'cell'))
     assert(isequal(class(centerline), 'cell'))
 
-    % Make sure plot opened up
-    assert(isequal(get(gcf,'Number'),figNum));
-
-    % Make sure plot opened up
-    assert(isequal(get(gcf,'Number'),figNum));
-
+    % Make sure plot did NOT open up
+    figHandles = get(groot, 'Children');
+    assert(~any(figHandles==figNum));
 
 end
 
