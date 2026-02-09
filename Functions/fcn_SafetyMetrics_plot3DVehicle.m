@@ -1,84 +1,76 @@
-function layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParametersStruct, timeInterval, flag3DPlot, varargin)
-%% fcn_SafetyMetrics_plotTrajectoryXY
+function  rotated_rectangle = fcn_SafetyMetrics_plot3DVehicle(vehiclePosition, vehicleParametersStruct, varargin)
+%% fcn_SafetyMetrics_plot3DVehicle
 % 
-% This function plots the vehicle trajectory in 2D (in blue color) and
-% plots the vehicle in a custom time interval in 3d, with the third axis
-% being the time.
+% This code will plot a vehicle given the x,y,t,yaw, and vehicle parameters.
 %
 % FORMAT:
 %
-% layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicle_param,
-% time_interval, (figNum)); 
+% rotated_rectangle = fcn_SafetyMetrics_plot3DVehicle(vehicle_position, vehicle_param, varargin)
 %
 % INPUTS:
 %
-%     trajectory: [time,x,y,yaw_angle] nx4 vector
+%     vehicle_position: [time, x, y, yaw_angle] 1x4 vector
 %
-%     vehicleParametersStruct: sturcture containing
-%       a: distance from origin to front axle (positive)
-%       b: distance from origin to rear axle (positive)
+%     vehicle_param: sturcture containing
+%       a: distnace from origin to front axel (positive)
+%       b: distnace form origin to rear axel (positive)
 %       Lf:Length from origin to front bumper
 %       Lr:Length from origin to rear bumper
 %       w_tire_tire: width from center of tire to center of tire
-%       w_vehicle:width form outermost left side to outermost right side
+%       w_vehicle:width form outer most left side to outer most right side
 %       tire_width: width of one tire
 %       tire_length: diameter of one tire
-%
-%     timeInterval: the interval to plot at.
-%
-%     flag3DPlot: this is a flag: 1 plots in 3d, 0 plots in 2d
 % 
 %      (OPTIONAL INPUTS)
+% 
+%     plot_style: matlab input plotting style such as 'b-'
 %
 %     figNum: a figure number to plot results. If set to -1, skips any
 %     input checking or debugging, no figures will be generated, and sets
 %     up code to maximize speed.
 %
+%
 % OUTPUTS:
-%
-%  layers: Struct array with first column being the data for the point of
-%  the square representation and the second column being the color of that
-%  layer.
-%
+% 
+%     rotated_rectangle: the current layer data points.
 %
 % DEPENDENCIES:
-% 
-%   fcn_SafetyMetrics_plot3DVehicle
-%   fcn_SafetyMetrics_plot_2D_vehicle
-%   fcn_DebugTools_checkInputsToFunctions
+%  
+%     fcn_DebugTools_checkInputsToFunctions
 %
 % EXAMPLES:
-%
+% 
 %       See the script:
 %
-%       script_test_fcn_SafetyMetrics_plotTrajectoryXY.m 
+%       script_test_fcn_SafetyMetrics_plot3DVehicle.m 
 %
 %       for a full test suite.
 %
 % This function was written on 2023_05_19 by Marcus Putz
 % Questions or comments? contact sbrennan@psu.edu
+
 %
 % REVISION HISTORY:
 %
 % 2023_05_17 by Marcus Putz and Sean Brennan
 % - first write of function
-%
+% 
 % 2026_02_08 by Aneesh Batchu, abb6486@psu.edu
 % - Added DebugTools to check the inputs
 % - Modified the function to latest format
 % - Created the test script for this function
 
+
 % TO DO:
-% 
-% 2026_02_08 by Aneesh Batchu, abb6486@psu.edu
-% - Pre-allocate layers variable
+%
+% - fill in to-do items here.
 
 %% Debugging and Input checks
 
 % Check if flag_max_speed set. This occurs if the figNum variable input
 % argument (varargin) is given a number of -1, which is not a valid figure
 % number.
-MAX_NARGIN = 5; % The largest Number of argument inputs to the function
+MAX_NARGIN = 4; % The largest Number of argument inputs to the function
 flag_max_speed = 0;
 if (nargin==MAX_NARGIN && isequal(varargin{end},-1))
     flag_do_debug = 0; %     % Flag to plot the results for debugging
@@ -106,7 +98,7 @@ else
     debug_figNum = []; %#ok<NASGU>
 end
 
-%% check input arguments
+%% check input arguments?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____                   _
 %  |_   _|                 | |
@@ -117,37 +109,36 @@ end
 %              | |
 %              |_|
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 if 0 == flag_max_speed
     if flag_check_inputs == 1
         % Are there the right number of inputs?
-        narginchk(4,MAX_NARGIN);
+        narginchk(2,MAX_NARGIN);
 
-        % trajectory should have 4 column of numbers
+        % vehicle_position should have 4 column of numbers
         fcn_DebugTools_checkInputsToFunctions(...
-            trajectory, '4column_of_numbers');
+            vehiclePosition, '4column_of_numbers');
 
         % % vehicle_param is a structure
         % fcn_DebugTools_checkInputsToFunctions(...
         %     vehicleParametersStruct, 'likestructure');
 
-        % timeInterval should have 1 integer
-        fcn_DebugTools_checkInputsToFunctions(...
-            timeInterval, '1column_of_integers', [1,1]);
-        
-        % flag3DPlot should have 4 column of numbers
-        if ~ismember(flag3DPlot, [0, 1])
-            error('Input must be either 0 or 1');
-        end
-
     end
 end
 
+% Does user want to specify the plot style?
+plot_style = '-'; % Default is a line - changes color each time plot is called
+if (0==flag_max_speed) && (MAX_NARGIN == nargin)
+    temp = varargin{1};
+    if ~isempty(temp)
+        plot_style = temp;
+    end
+end
 
 % Check to see if user specifies figNum?
 flag_do_plots = 0; % Default is to NOT show plots
-if (0==flag_max_speed) && (MAX_NARGIN == nargin) 
+if (0==flag_max_speed) && (MAX_NARGIN == nargin)
     temp = varargin{end};
     if ~isempty(temp)
         figNum = temp;
@@ -155,6 +146,19 @@ if (0==flag_max_speed) && (MAX_NARGIN == nargin)
     end
 end
 
+% %% open figures
+% if isempty(fig_num)
+%     figure; % create new figure with next default index
+% else
+%     % check to see that the handle is an axis. If so, use it and don't just
+%     % go to a new figure
+%     if isgraphics(fig_num,'axes')
+%         axes(fig_num);
+%     else
+%         figure(fig_num); % open specific figure
+%     end
+% end
+% hold on % allow multiple plot calls
 
 %% Start of main code
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -168,17 +172,35 @@ end
 %See: http://patorjk.com/software/taag/#p=display&f=Big&t=Main
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
-%% Interpolate the data to the times that are specified in time_interval
+% Calculate the rectangle vertices
+vertices = [
+    -vehicleParametersStruct.Lr,-(vehicleParametersStruct.w_vehicle/2),vehiclePosition(1,1); %bottom left
+     -vehicleParametersStruct.Lr,(vehicleParametersStruct.w_vehicle/2),vehiclePosition(1,1); %top left
+     vehicleParametersStruct.Lf,(vehicleParametersStruct.w_vehicle/2),vehiclePosition(1,1); %top right
+     vehicleParametersStruct.Lf,-(vehicleParametersStruct.w_vehicle/2),vehiclePosition(1,1); %bottom right
+     -vehicleParametersStruct.Lr,-(vehicleParametersStruct.w_vehicle/2),vehiclePosition(1,1)%bottom left
+    ];
 
-% Vq = interp1(X,V,Xq)
-time_interval_xq = trajectory(1,1):timeInterval:trajectory(end,1);
-x_data_to_plot = interp1(trajectory(:,1),trajectory(:,2),time_interval_xq)';
-y_data_to_plot = interp1(trajectory(:,1),trajectory(:,3),time_interval_xq)';
-yaw_data_to_plot = interp1(trajectory(:,1),trajectory(:,4),time_interval_xq)';
+% Connect the vertices to form the rectangle edges
+edges = [
+    1, 2;
+    2, 3;
+    3, 4;
+    4, 5;
+    5, 1;
+    ];
 
-data_to_plot = [time_interval_xq',x_data_to_plot,y_data_to_plot,yaw_data_to_plot];
+% Yaw angle
+theta = vehiclePosition(1,4);
 
-layers = [];
+% Create the rotation matrix
+R = [cos(theta) -sin(theta),0; sin(theta) cos(theta),0;0,0,1];
+
+% Rotate the translated rectangle
+rotated_translated_rect = (R * vertices')';
+
+% Translate the rotated rectangle to current location
+rotated_rectangle = rotated_translated_rect + [vehiclePosition(1,2) vehiclePosition(1,3) 0];
 
 %% Plot the results (for debugging)?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,65 +222,17 @@ if flag_do_plots
     % if isempty(get(temp_h,'Children'))
     %     flag_rescale_axis = 1;
     % end
-
-    figure(figNum);
-
-    hold on
-    grid on
-
-    if flag3DPlot
-
-        % Sets up the axis so that no matter what the trajectory is the plot
-        % shows all the data
-        axis([data_to_plot(1,2)-10 data_to_plot(end,2)+10 min(data_to_plot(:,3))-5 max(data_to_plot(:,3))+5 data_to_plot(1,1)-5 data_to_plot(end,1)]);
-        view(-40,40);
-        set(gca,'DataAspectRatio',[10 round(max(abs(data_to_plot(:,3)))/10+1) 50]) % Scales the axes so that the viewer can understand what is going on
-        xlabel('x');
-        ylabel('y');
-        zlabel('t');
-
-    end
     
-   
-    % At each of the previously interpolated points plot the data.
-    for ith_interpolatedPoint = 1:length(data_to_plot)
+    figure(figNum); % open specific figure
+    hold on
 
-        traj_to_plot = [data_to_plot(ith_interpolatedPoint,1),data_to_plot(ith_interpolatedPoint,2),data_to_plot(ith_interpolatedPoint,3),data_to_plot(ith_interpolatedPoint,4)];
+    plot3(rotated_rectangle(edges(:,1), 1), rotated_rectangle(edges(:,1), 2),rotated_rectangle(edges(:,1), 3), plot_style, 'LineWidth', 2);
 
-        if flag3DPlot
 
-            % Plot the time-space trajectory in red
-            [layers(ith_interpolatedPoint).data]=fcn_SafetyMetrics_plot3DVehicle(traj_to_plot, vehicleParametersStruct,'r-', figNum); % extract the current layer and keep track of it in layers struct
-            layers(ith_interpolatedPoint).color = [1 0 0];
+    %plot3(rotated_rect(edges(:,2),1), rotated_rect(edges(:,2),2), rotated_rect(edges(:,2),3), 'r', 'LineWidth', 2);
 
-            % Plot the time-space "shadow" in blue
-            % Set time equal to zero, keeping everything else
-            shadow = traj_to_plot;
-            shadow(1) = 0;
-            fcn_SafetyMetrics_plot3DVehicle(shadow, vehicleParametersStruct, 'b-', figNum);
 
-        else
-
-            % Plots the data but only in 2d. Doesn't return the car layers
-            fcn_SafetyMetrics_plot_2D_vehicle(traj_to_plot,vehicleParametersStruct)
-
-            % axis([data_to_plot(2,i)-10 data_to_plot(2,i)+10 -10 +10 ]);
-        end
-        drawnow
-    end
-
-    if ~flag3DPlot
-
-        % Make axis larger when it's 2D
-        temp = axis;
-        axis_range_x = temp(2)-temp(1);
-        axis_range_y = temp(4)-temp(3);
-        percent_larger = 0.1;
-        axis([temp(1)-percent_larger*axis_range_x, temp(2)+percent_larger*axis_range_x,  temp(3)-percent_larger*axis_range_y, temp(4)+percent_larger*axis_range_y]);
-
-    end
-
-    % % Make axis slightly larger?
+     % % Make axis slightly larger?
     % if flag_rescale_axis
     %     temp = axis;
     %     axis_range_x = temp(2)-temp(1);
@@ -288,7 +262,3 @@ end % Ends the function
 %
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-
-
-
-
