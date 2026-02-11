@@ -37,6 +37,12 @@
 %   % * Added DebugTools to check the inputs
 %   % * Modified the function to latest format
 %   % * Created the test script for this function
+% 
+% 2026_02_10 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%   % * Created this function to check for a collison between a vehicle
+%   %   % trajectory and lane markers
+%   % * Created a test script for the corresponding function as well
 
 % TO-DO:
 % 
