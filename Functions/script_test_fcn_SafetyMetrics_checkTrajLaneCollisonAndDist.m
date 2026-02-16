@@ -1,6 +1,5 @@
-
-%% script_test_fcn_SafetyMetrics_checkTrajLaneMarkerCollison
-% Exercises the function: fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%% script_test_fcn_SafetyMetrics_checkTrajLaneCollisonAndDist
+% Exercises the function: fcn_SafetyMetrics_checkTrajLaneCollisonAndDist
 
 % REVISION HISTORY:
 %
@@ -44,7 +43,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -75,7 +74,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -110,7 +109,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -142,7 +141,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -174,7 +173,7 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -249,7 +248,7 @@ laneMarkerString = 'lane C';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -282,7 +281,7 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -338,7 +337,7 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
@@ -414,7 +413,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, ([]));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, ([]));
 
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
@@ -444,7 +443,7 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (-1));
+laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (-1));
 
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
@@ -479,7 +478,7 @@ tic;
 for ith_test = 1:Niterations
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, ([]));
+    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, ([]));
 
 
 end
@@ -491,7 +490,7 @@ tic;
 for ith_test = 1:Niterations
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (-1));
+    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (-1));
 
 
 end
@@ -558,7 +557,7 @@ if 1==0
     [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath(:,1), laneMarkerPath, (figNum));
+    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath(:,1), laneMarkerPath, (figNum));
 
     % Assertions
     assert(isequal(class(laneCollisionStruct), 'struct'))
@@ -588,7 +587,7 @@ if 1==0
     [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath(:,1), (figNum));
+    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath(:,1), (figNum));
 
     % Assertions
     assert(isequal(class(laneCollisionStruct), 'struct'))

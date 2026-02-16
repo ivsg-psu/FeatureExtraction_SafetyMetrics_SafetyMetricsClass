@@ -1,5 +1,5 @@
-function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPaths, varargin)
-%% fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPaths, varargin)
+%% fcn_SafetyMetrics_checkTrajLaneCollisonAndDist
 % 
 % Given a trajectory (points) and lane marker polylines (NaN-separated),
 % this function computes distance-to-lane over the trajectory and finds
@@ -60,7 +60,7 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 %
 %       See the script:
 %
-%       script_test_fcn_SafetyMetrics_checkTrajLaneMarkerCollison.m 
+%       script_test_fcn_SafetyMetrics_checkTrajLaneCollisonAndDist.m 
 %
 %       for a full test suite.
 % 
