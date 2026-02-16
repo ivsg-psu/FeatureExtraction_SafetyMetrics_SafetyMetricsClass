@@ -4,10 +4,13 @@
 % Revision history
 % 2023_11_02 - Aneesh Batchu
 % -- wrote the code originally
+%
+% 2026_02_16 by Sean Brennan, sbrennan@psu.edu
+% - In script_test_fcn_SafetyMetrics_showVehicleTrajandMetricInputs
+%   % * Removed cl+c call
 
 %% Set up the workspace
 
-clc
 close all
 
 %% Examples for basic path operations and function testing
@@ -59,7 +62,7 @@ metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
 fig_num = 1234;
 
 [time_total, x_vehicleTraj, y_vehicleTraj, yawVehicle, laneBoundaries, centerLines, flagObject] = ...
-fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, fig_num);
+fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, fig_num); %#ok<ASGLU>
 
 f1 = figure(fig_num);
 box on
@@ -111,7 +114,7 @@ metricInputs = [x_lane', y_lane_L_L', x_lane', y_lane_L', x_lane', y_lane_R'];
 
 
 [time_total, x_vehicleTraj, y_vehicleTraj, yawVehicle, laneBoundaries, centerLines, flagObject] = ...
-fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, 234);
+fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, object, 234); %#ok<ASGLU>
 
 %% Example - Stopping at a stop sign
 

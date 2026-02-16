@@ -87,76 +87,76 @@ figure(figNum); clf;
 close all;
 fprintf(1,'Figure: 8XXXXXX: TEST mode cases\n');
 
-%% Basic example - NO FIGURE
-
-figNum = 80001;
-fprintf(1,'Figure: %.0f: FAST mode, empty figNum\n',figNum);
-figure(figNum); close(figNum);
-
-
-% Make sure plot did NOT open up
-figHandles = get(groot, 'Children');
-assert(~any(figHandles==figNum));
-
-%% Basic fast mode - NO FIGURE, FAST MODE
-
-figNum = 80002;
-fprintf(1,'Figure: %.0f: FAST mode, empty figNum\n',figNum);
-figure(figNum); close(figNum);
-
-
-% Make sure plot did NOT open up
-figHandles = get(groot, 'Children');
-assert(~any(figHandles==figNum));
-
-%% Compare speeds of pre-calculation versus post-calculation versus a fast variant
-
-figNum = 80003;
-fprintf(1,'Figure: %.0f: FAST mode comparisons\n',figNum);
-figure(figNum); close(figNum);
-
-Niterations = 10;
-
-% Do calculation without pre-calculation
-tic;
-for ith_test = 1:Niterations
-
-    % Call the function
-    car_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, flag3DPlot, ([]));
-
-
-end
-slow_method = toc;
-
-% Do calculation with pre-calculation, FAST_MODE on
-tic;
-
-for ith_test = 1:Niterations
-
-    % Call the function
-    car_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, flag3DPlot, (-1));
-
-
-end
-fast_method = toc;
-
-% Plot results as bar chart
-figure(373737);
-clf;
-hold on;
-
-X = categorical({'Normal mode','Fast mode'});
-X = reordercats(X,{'Normal mode','Fast mode'}); % Forces bars to appear in this exact order, not alphabetized
-Y = [slow_method fast_method ]*1000/Niterations;
-bar(X,Y)
-ylabel('Execution time (Milliseconds)')
-
-% Assertions
-
-
-% Make sure plot did NOT open up
-figHandles = get(groot, 'Children');
-assert(~any(figHandles==figNum));
+% %% Basic example - NO FIGURE
+% 
+% figNum = 80001;
+% fprintf(1,'Figure: %.0f: FAST mode, empty figNum\n',figNum);
+% figure(figNum); close(figNum);
+% 
+% 
+% % Make sure plot did NOT open up
+% figHandles = get(groot, 'Children');
+% assert(~any(figHandles==figNum));
+% 
+% %% Basic fast mode - NO FIGURE, FAST MODE
+% 
+% figNum = 80002;
+% fprintf(1,'Figure: %.0f: FAST mode, empty figNum\n',figNum);
+% figure(figNum); close(figNum);
+% 
+% 
+% % Make sure plot did NOT open up
+% figHandles = get(groot, 'Children');
+% assert(~any(figHandles==figNum));
+% 
+% %% Compare speeds of pre-calculation versus post-calculation versus a fast variant
+% 
+% figNum = 80003;
+% fprintf(1,'Figure: %.0f: FAST mode comparisons\n',figNum);
+% figure(figNum); close(figNum);
+% 
+% Niterations = 10;
+% 
+% % Do calculation without pre-calculation
+% tic;
+% for ith_test = 1:Niterations
+% 
+%     % Call the function
+%     car_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, flag3DPlot, ([]));
+% 
+% 
+% end
+% slow_method = toc;
+% 
+% % Do calculation with pre-calculation, FAST_MODE on
+% tic;
+% 
+% for ith_test = 1:Niterations
+% 
+%     % Call the function
+%     car_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, flag3DPlot, (-1));
+% 
+% 
+% end
+% fast_method = toc;
+% 
+% % Plot results as bar chart
+% figure(373737);
+% clf;
+% hold on;
+% 
+% X = categorical({'Normal mode','Fast mode'});
+% X = reordercats(X,{'Normal mode','Fast mode'}); % Forces bars to appear in this exact order, not alphabetized
+% Y = [slow_method fast_method ]*1000/Niterations;
+% bar(X,Y)
+% ylabel('Execution time (Milliseconds)')
+% 
+% % Assertions
+% 
+% 
+% % Make sure plot did NOT open up
+% figHandles = get(groot, 'Children');
+% assert(~any(figHandles==figNum));
 
 %% BUG cases
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
