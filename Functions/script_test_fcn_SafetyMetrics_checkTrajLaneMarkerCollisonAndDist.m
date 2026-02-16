@@ -4,7 +4,7 @@
 
 % REVISION HISTORY:
 %
-% 2026_02_15 by Aneesh Batchu, abb6486@psu.edu
+% 2026_02_10 by Aneesh Batchu, abb6486@psu.edu
 % - wrote the code originally
 
 % TO-DO:
@@ -46,11 +46,15 @@ laneMarkerString = 'lane A';
 % Call the function
 laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
-sgtitle(titleString, 'Interpreter','none','Fontsize',15);
+sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(~laneCollisionStruct.did_intersect)
 assert(isempty(laneCollisionStruct.intersections_pathXY))
 assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -73,11 +77,16 @@ laneMarkerString = 'lane A';
 % Call the function
 laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
-sgtitle(titleString, 'Interpreter','none','Fontsize',15);
+sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct.min_dist_btw_traj_and_path, 2), 0.02));
+assert(isequal(laneCollisionStruct.closest_point_pathXY_at_min, [33, 0]));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(laneCollisionStruct.did_intersect)
 assert(~isempty(laneCollisionStruct.intersections_pathXY))
 assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -108,6 +117,11 @@ sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(laneCollisionStruct.closest_point_pathXY_at_min, [75, 0]));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(~laneCollisionStruct.did_intersect)
 assert(isempty(laneCollisionStruct.intersections_pathXY))
 assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -135,6 +149,10 @@ sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct.min_dist_btw_traj_and_path, 6), 0));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(laneCollisionStruct.did_intersect)
 assert(~isempty(laneCollisionStruct.intersections_pathXY))
 assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -166,22 +184,33 @@ assert(isequal(length(laneCollisionStruct),3))
 
 % Assertions - Lane marker A
 assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(1).min_dist_btw_traj_and_path, 6), 1));
 assert(~laneCollisionStruct(1).did_intersect)
 assert(isempty(laneCollisionStruct(1).intersections_pathXY))
 assert(isempty(laneCollisionStruct(1).intersection_traj_vector_index))
-
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker B
 assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(2).min_dist_btw_traj_and_path, 6), 2.6));
 assert(~laneCollisionStruct(2).did_intersect)
 assert(isempty(laneCollisionStruct(2).intersections_pathXY))
 assert(isempty(laneCollisionStruct(2).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(2).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(2).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker C
 assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(3).min_dist_btw_traj_and_path, 6), 0.021422));
 assert(laneCollisionStruct(3).did_intersect)
 assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
 
 % Make sure plot opened up
@@ -227,6 +256,10 @@ sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct.min_dist_btw_traj_and_path, 6), 0.013065));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(laneCollisionStruct.did_intersect)
 assert(~isempty(laneCollisionStruct.intersections_pathXY))
 assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -259,22 +292,34 @@ assert(isequal(length(laneCollisionStruct),3))
 
 % Assertions - Lane marker A
 assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(1).min_dist_btw_traj_and_path, 6), 0));
 assert(laneCollisionStruct(1).did_intersect)
 assert(~isempty(laneCollisionStruct(1).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(1).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(1).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(1).intersections_pathXY(:,1))))
 
 % Assertions - Lane marker B
 assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(2).min_dist_btw_traj_and_path, 6), 2.801579));
 assert(~laneCollisionStruct(2).did_intersect)
 assert(isempty(laneCollisionStruct(2).intersections_pathXY))
-assert(isempty(laneCollisionStruct(2).intersection_traj_vector_index));
+assert(isempty(laneCollisionStruct(2).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(2).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(2).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker C
 assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(3).min_dist_btw_traj_and_path, 6), 0.013065));
 assert(laneCollisionStruct(3).did_intersect)
 assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
 
 % Make sure plot opened up
@@ -303,23 +348,35 @@ assert(isequal(length(laneCollisionStruct),3))
 
 % Assertions - Lane marker A
 assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(1).min_dist_btw_traj_and_path, 6), 0.02));
 assert(laneCollisionStruct(1).did_intersect)
 assert(~isempty(laneCollisionStruct(1).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(1).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(1).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(1).intersections_pathXY(:,1))))
 
 % Assertions - Lane marker B
 assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(2).min_dist_btw_traj_and_path, 6), 0.02));
 assert(laneCollisionStruct(2).did_intersect)
 assert(~isempty(laneCollisionStruct(2).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(2).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(2).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(2).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(2).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(2).intersections_pathXY(:,1))))
 
 % Assertions - Lane marker C
 assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneCollisionStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneCollisionStruct(3).min_dist_btw_traj_and_path, 6), 0.001745));
 assert(laneCollisionStruct(3).did_intersect)
 assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
 assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
+assert(isequal(length(laneCollisionStruct(1).closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct(1).min_distance_traj_index(:,1))));
 assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
 
 % Make sure plot opened up
@@ -362,6 +419,10 @@ laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTraje
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(~laneCollisionStruct.did_intersect)
 assert(isempty(laneCollisionStruct.intersections_pathXY))
 assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -388,6 +449,10 @@ laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTraje
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(~laneCollisionStruct.did_intersect)
 assert(isempty(laneCollisionStruct.intersections_pathXY))
 assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -446,6 +511,10 @@ ylabel('Execution time (Milliseconds)')
 % Assertions
 assert(isequal(class(laneCollisionStruct), 'struct'))
 assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
 assert(~laneCollisionStruct.did_intersect)
 assert(isempty(laneCollisionStruct.intersections_pathXY))
 assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -494,6 +563,10 @@ if 1==0
     % Assertions
     assert(isequal(class(laneCollisionStruct), 'struct'))
     assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+    assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+    assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
     assert(~laneCollisionStruct.did_intersect)
     assert(isempty(laneCollisionStruct.intersections_pathXY))
     assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
@@ -520,6 +593,10 @@ if 1==0
     % Assertions
     assert(isequal(class(laneCollisionStruct), 'struct'))
     assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+    assert(isequal(length(laneCollisionStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(length(laneCollisionStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(laneCollisionStruct.min_dist_btw_traj_and_path, 1));
+    assert(isequal(length(laneCollisionStruct.closest_point_pathXY_at_min(:,1)), length(laneCollisionStruct.min_distance_traj_index(:,1))));
     assert(~laneCollisionStruct.did_intersect)
     assert(isempty(laneCollisionStruct.intersections_pathXY))
     assert(isempty(laneCollisionStruct.intersection_traj_vector_index))

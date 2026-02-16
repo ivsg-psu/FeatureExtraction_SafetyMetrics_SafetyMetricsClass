@@ -1,6 +1,6 @@
 
-%% script_test_fcn_SafetyMetrics_checkTrajLaneMarkerCollison
-% Exercises the function: fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%% script_test_fcn_SafetyMetrics_computeTrajLaneDistance
+% Exercises the function: fcn_SafetyMetrics_computeTrajLaneDistance
 
 % REVISION HISTORY:
 %
@@ -44,16 +44,17 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
-sgtitle(titleString, 'Interpreter','none','Fontsize',15);
+sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(~laneCollisionStruct.did_intersect)
-assert(isempty(laneCollisionStruct.intersections_pathXY))
-assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -71,16 +72,19 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
-sgtitle(titleString, 'Interpreter','none','Fontsize',15);
+sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(laneCollisionStruct.did_intersect)
-assert(~isempty(laneCollisionStruct.intersections_pathXY))
-assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct.min_dist_btw_traj_and_path, 2), 0.02));
+assert(isequal(laneDistanceStruct.closest_point_pathXY_at_min, [33, 0]));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
+
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -101,16 +105,19 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(~laneCollisionStruct.did_intersect)
-assert(isempty(laneCollisionStruct.intersections_pathXY))
-assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(laneDistanceStruct.closest_point_pathXY_at_min, [75, 0]));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
+
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -128,17 +135,18 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(laneCollisionStruct.did_intersect)
-assert(~isempty(laneCollisionStruct.intersections_pathXY))
-assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct.intersection_traj_vector_index(:,1)), length(laneCollisionStruct.intersections_pathXY(:,1))))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct.min_dist_btw_traj_and_path, 6), 0));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
+
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -156,33 +164,35 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions 
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct),3))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct),3))
 
 % Assertions - Lane marker A
-assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(~laneCollisionStruct(1).did_intersect)
-assert(isempty(laneCollisionStruct(1).intersections_pathXY))
-assert(isempty(laneCollisionStruct(1).intersection_traj_vector_index))
-
+assert(length(laneDistanceStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(1).min_dist_btw_traj_and_path, 6), 1));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker B
-assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(~laneCollisionStruct(2).did_intersect)
-assert(isempty(laneCollisionStruct(2).intersections_pathXY))
-assert(isempty(laneCollisionStruct(2).intersection_traj_vector_index))
+assert(length(laneDistanceStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(2).min_dist_btw_traj_and_path, 6), 2.6));
+assert(isequal(length(laneDistanceStruct(2).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(2).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker C
-assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(3).did_intersect)
-assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(3).min_dist_btw_traj_and_path, 6), 0.021422));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
+
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -220,17 +230,17 @@ laneMarkerString = 'lane C';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(laneCollisionStruct.did_intersect)
-assert(~isempty(laneCollisionStruct.intersections_pathXY))
-assert(~isempty(laneCollisionStruct.intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct.intersection_traj_vector_index(:,1)), length(laneCollisionStruct.intersections_pathXY(:,1))))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct.min_dist_btw_traj_and_path, 6), 0.013065));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -249,33 +259,35 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions 
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct),3))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct),3))
 
 % Assertions - Lane marker A
-assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(1).did_intersect)
-assert(~isempty(laneCollisionStruct(1).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(1).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(1).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(1).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(1).min_dist_btw_traj_and_path, 6), 0));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
+
 
 % Assertions - Lane marker B
-assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(~laneCollisionStruct(2).did_intersect)
-assert(isempty(laneCollisionStruct(2).intersections_pathXY))
-assert(isempty(laneCollisionStruct(2).intersection_traj_vector_index));
+assert(length(laneDistanceStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(2).min_dist_btw_traj_and_path, 6), 2.801579));
+assert(isequal(length(laneDistanceStruct(2).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(2).min_distance_traj_index(:,1))));
 
 % Assertions - Lane marker C
-assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(3).did_intersect)
-assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(3).min_dist_btw_traj_and_path, 6), 0.013065));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -293,34 +305,37 @@ laneMarkerString = 'lane ABC';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (figNum));
 
 sgtitle(titleString, 'Interpreter','none','Fontsize',10);
 
 % Assertions 
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct),3))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct),3))
 
 % Assertions - Lane marker A
-assert(length(laneCollisionStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(1).did_intersect)
-assert(~isempty(laneCollisionStruct(1).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(1).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(1).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(1).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(1).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(1).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(1).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(1).min_dist_btw_traj_and_path, 6), 0.02));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
+
 
 % Assertions - Lane marker B
-assert(length(laneCollisionStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(2).did_intersect)
-assert(~isempty(laneCollisionStruct(2).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(2).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(2).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(2).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(2).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(2).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(2).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(2).min_dist_btw_traj_and_path, 6), 0.02));
+assert(isequal(length(laneDistanceStruct(2).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(2).min_distance_traj_index(:,1))));
+
 
 % Assertions - Lane marker C
-assert(length(laneCollisionStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
-assert(laneCollisionStruct(3).did_intersect)
-assert(~isempty(laneCollisionStruct(3).intersections_pathXY))
-assert(~isempty(laneCollisionStruct(3).intersection_traj_vector_index))
-assert(isequal(length(laneCollisionStruct(3).intersection_traj_vector_index(:,1)), length(laneCollisionStruct(3).intersections_pathXY(:,1))))
+assert(length(laneDistanceStruct(3).lane_marker_pathXY(:,1)) < length(laneMarkerPath(:,1)));
+assert(isequal(length(laneDistanceStruct(3).distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct(3).closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(round(laneDistanceStruct(3).min_dist_btw_traj_and_path, 6), 0.001745));
+assert(isequal(length(laneDistanceStruct(1).closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct(1).min_distance_traj_index(:,1))));
+
 
 % Make sure plot opened up
 assert(isequal(get(gcf,'Number'),figNum));
@@ -357,14 +372,15 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, ([]));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, ([]));
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(~laneCollisionStruct.did_intersect)
-assert(isempty(laneCollisionStruct.intersections_pathXY))
-assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
 
 % Make sure plot did NOT open up
@@ -383,14 +399,15 @@ laneMarkerString = 'lane A';
 [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
 % Call the function
-laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (-1));
+laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (-1));
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(~laneCollisionStruct.did_intersect)
-assert(isempty(laneCollisionStruct.intersections_pathXY))
-assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
 % Make sure plot did NOT open up
 figHandles = get(groot, 'Children');
@@ -414,7 +431,7 @@ tic;
 for ith_test = 1:Niterations
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, ([]));
+    laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, ([]));
 
 
 end
@@ -426,7 +443,7 @@ tic;
 for ith_test = 1:Niterations
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (-1));
+    laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath, (-1));
 
 
 end
@@ -444,12 +461,12 @@ bar(X,Y)
 ylabel('Execution time (Milliseconds)')
 
 % Assertions
-assert(isequal(class(laneCollisionStruct), 'struct'))
-assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-assert(~laneCollisionStruct.did_intersect)
-assert(isempty(laneCollisionStruct.intersections_pathXY))
-assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
-
+assert(isequal(class(laneDistanceStruct), 'struct'))
+assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
 % Make sure plot did NOT open up
 figHandles = get(groot, 'Children');
@@ -489,15 +506,15 @@ if 1==0
     [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath(:,1), laneMarkerPath, (figNum));
+    laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath(:,1), laneMarkerPath, (figNum));
 
     % Assertions
-    assert(isequal(class(laneCollisionStruct), 'struct'))
-    assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-    assert(~laneCollisionStruct.did_intersect)
-    assert(isempty(laneCollisionStruct.intersections_pathXY))
-    assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
-
+    assert(isequal(class(laneDistanceStruct), 'struct'))
+    assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+    assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+    assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
     % Make sure plot did NOT open up
     figHandles = get(groot, 'Children');
@@ -515,15 +532,15 @@ if 1==0
     [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString);
 
     % Call the function
-    laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath(:,1), (figNum));
+    laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleTrajectoryPath, laneMarkerPath(:,1), (figNum));
 
     % Assertions
-    assert(isequal(class(laneCollisionStruct), 'struct'))
-    assert(isequal(length(laneCollisionStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
-    assert(~laneCollisionStruct.did_intersect)
-    assert(isempty(laneCollisionStruct.intersections_pathXY))
-    assert(isempty(laneCollisionStruct.intersection_traj_vector_index))
-
+    assert(isequal(class(laneDistanceStruct), 'struct'))
+    assert(isequal(length(laneDistanceStruct.lane_marker_pathXY(:,1)),length(laneMarkerPath(:,1))));
+    assert(isequal(length(laneDistanceStruct.distance_profile(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(length(laneDistanceStruct.closest_points_on_pathXY_to_traj(:,1)),length(vehicleTrajectoryPath(:,1))));
+    assert(isequal(laneDistanceStruct.min_dist_btw_traj_and_path, 1));
+    assert(isequal(length(laneDistanceStruct.closest_point_pathXY_at_min(:,1)), length(laneDistanceStruct.min_distance_traj_index(:,1))));
 
     % Make sure plot did NOT open up
     figHandles = get(groot, 'Children');
@@ -542,7 +559,7 @@ end
 %  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 %
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 function [vehicleTrajectoryPath, laneMarkerPath] = fcn_INTERNAL_generateTrajAndLaneMarkerPath(vehicleTrajString, laneMarkerString)
 

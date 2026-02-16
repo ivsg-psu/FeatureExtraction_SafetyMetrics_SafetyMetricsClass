@@ -43,6 +43,27 @@
 %   % * Created this function to check for a collison between a vehicle
 %   %   % trajectory and lane markers
 %   % * Created a test script for the corresponding function as well
+% 
+% 2026_02_16 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_generateVehicleBoundary2D
+%   % * Created this function to generate a vehicle boundary in 2D
+%   % * Created a test script for the corresponding function as well
+% - In fcn_SafetyMetrics_checkTrajLaneMarkerCollisonAndDist
+%   % * Renamed the function name from
+%   %   % "fcn_SafetyMetrics_checkTrajLaneMarkerCollison"
+%   % * This function calculates the distances from lane marker to
+%   %   % trajectory and as well as finds the intersections between them.
+% - In fcn_SafetyMetrics_computeTrajLaneDistance
+%   % * Created this function to find distance betweeen lane marker and the
+%   %   % vehicle trajectory
+%   % * Seperated this function from
+%   %   % "fcn_SafetyMetrics_checkTrajLaneMarkerCollisonAndDist"
+% - In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%   % * Created this function to find intersection betweeen lane marker and 
+%   %   % the vehicle trajectory
+%   % * Seperated this function from
+%   %   % "fcn_SafetyMetrics_checkTrajLaneMarkerCollisonAndDist"
+
 
 % TO-DO:
 % 

@@ -5,13 +5,13 @@ function  rotated_rectangle = fcn_SafetyMetrics_plot3DVehicle(vehiclePosition, v
 %
 % FORMAT:
 %
-% rotated_rectangle = fcn_SafetyMetrics_plot3DVehicle(vehicle_position, vehicle_param, varargin)
+% rotated_rectangle = fcn_SafetyMetrics_plot3DVehicle(vehiclePosition, vehicleParametersStruct, varargin)
 %
 % INPUTS:
 %
-%     vehicle_position: [time, x, y, yaw_angle] 1x4 vector
+%     vehiclePosition: [time, x, y, yaw_angle] 1x4 vector
 %
-%     vehicle_param: sturcture containing
+%     vehicleParametersStruct: sturcture containing
 %       a: distnace from origin to front axel (positive)
 %       b: distnace form origin to rear axel (positive)
 %       Lf:Length from origin to front bumper
@@ -116,11 +116,11 @@ if 0 == flag_max_speed
         % Are there the right number of inputs?
         narginchk(2,MAX_NARGIN);
 
-        % vehicle_position should have 4 column of numbers
+        % vehiclePosition should have 4 column of numbers
         fcn_DebugTools_checkInputsToFunctions(...
             vehiclePosition, '4column_of_numbers');
 
-        % % vehicle_param is a structure
+        % % vehicleParametersStruct is a structure
         % fcn_DebugTools_checkInputsToFunctions(...
         %     vehicleParametersStruct, 'likestructure');
 
@@ -228,7 +228,7 @@ if flag_do_plots
 
     plot3(rotated_rectangle(edges(:,1), 1), rotated_rectangle(edges(:,1), 2),rotated_rectangle(edges(:,1), 3), plot_style, 'LineWidth', 2);
 
-
+    % plot3(rotated_rectangle(edges(:,2), 1), rotated_rectangle(edges(:,2), 2),rotated_rectangle(edges(:,2), 3), plot_style, 'LineWidth', 2);
     %plot3(rotated_rect(edges(:,2),1), rotated_rect(edges(:,2),2), rotated_rect(edges(:,2),3), 'r', 'LineWidth', 2);
 
 

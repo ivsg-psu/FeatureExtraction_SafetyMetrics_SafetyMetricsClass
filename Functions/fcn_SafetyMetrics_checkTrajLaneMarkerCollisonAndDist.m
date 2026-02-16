@@ -2,7 +2,8 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 %% fcn_SafetyMetrics_checkTrajLaneMarkerCollison
 % 
 % Given a trajectory (points) and lane marker polylines (NaN-separated),
-% this function finds intersections.
+% this function computes distance-to-lane over the trajectory and finds
+% intersections.
 % 
 % FORMAT:
 % 
@@ -27,6 +28,21 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 %   laneCollisionStruct: struct array (one per lane marker) with fields:
 %       .lane_marker_pathXY: (Lane marker path)
 % 
+%       .closest_points_on_pathXY_to_traj: (Closest points on lane marker 
+%                                           to the each trajectory point)
+% 
+%       .distance_profile: (The distance from the closest points on lane
+%                           marker to the trajectory points)
+% 
+%       .min_dist_btw_traj_and_path: (Minimum distance of the distance
+%                                     profile)
+% 
+%       .min_distance_traj_index: (The index of trajectory point closest to 
+%                                  lane marker) 
+% 
+%       .closest_point_pathXY_at_min: (Closest point of the lane marker to
+%                                       trajectory)
+% 
 %       .did_intersect: (Check for an intersection)
 % 
 %       .intersections_pathXY: (intersection points on lane marker)
@@ -37,6 +53,7 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 % DEPENDENCIES:
 % 
 %     fcn_DebugTools_checkInputsToFunctions
+%     fcn_Path_snapPointOntoNearestPath
 %     fcn_Path_findProjectionHitOntoPath
 %
 % EXAMPLES:
@@ -47,13 +64,13 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 %
 %       for a full test suite.
 % 
-% This function was written on 2026_02_15 by Aneesh Batchu
+% This function was written on 2026_02_10 by Aneesh Batchu
 % Questions or comments? contact abb6486@psu.edu or sbrennan@psu.edu
 
 % 
 % REVISION HISTORY:
 % 
-% 2026_02_15 by Aneesh Batchu, abb6486@psu.edu
+% 2026_02_10 by Aneesh Batchu, abb6486@psu.edu
 % - wrote the code originally
 
 % TO DO:
@@ -156,6 +173,11 @@ laneMarkerXY_cell = fcn_INTERNAL_generateLaneMarkerCell(laneMarkersXY);
 % Preallocate output struct
 laneCollisionStruct = repmat(struct( ...
     'lane_marker_pathXY', [], ...
+    'closest_points_on_pathXY_to_traj', [],...
+    'distance_profile', [], ...
+    'min_dist_btw_traj_and_path', [], ...
+    'min_distance_traj_index', [], ...
+    'closest_point_pathXY_at_min', [], ...
     'did_intersect', false, ...
     'intersections_pathXY', [], ...
     'intersection_traj_vector_index', []), ...
@@ -172,12 +194,17 @@ for ith_lane = 1:length(laneMarkerXY_cell(:,1))
         laneCollisionStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
         continue;
     end
-
-   % ----------- DECLARE VARIABLES TO FIND ALL INTERSECTIONS -------------
+    
+    % -------- DECLARE VARIABLES TO CALCULATE THE DISTANCE PROFILE --------
 
     % Number of points in the trajectory
     N_trajPoints = length(trajectoryXY(:,1));
-    
+
+    % Pre-allocate the closest_point matrix
+    closest_path_points = nan(N_trajPoints,2);
+
+    % ----------- DECLARE VARIABLES TO FIND ALL INTERSECTIONS -------------
+
     % Initialize the matrix of intersection points of lane marker path
     all_hits_laneMarker = [];
 
@@ -187,34 +214,105 @@ for ith_lane = 1:length(laneMarkerXY_cell(:,1))
     % Returns all the intersections (no projections)
     flag_search_type = 2;
 
+    N_trajVectors = (1:(N_trajPoints-1))';
+
+    % Loop over all trajectory points
+    for ith_trajPoint = 1:N_trajPoints
+
+        % --------------- CALCULATE THE DISTANCE PROFILE ------------------
+
+        % Select a single trajectory point
+        trajPointXY = trajectoryXY(ith_trajPoint,:);
+
+        % Find the closest point on lane marker path from the trajectory point
+        [closest_path_point, ~, ~, ~, ~] = ...
+            fcn_Path_snapPointOntoNearestPath(trajPointXY, laneMarker_pathXY, (-1));
+
+        % Closest path points
+        closest_path_points(ith_trajPoint,:) = closest_path_point;
+
+        % ------------------- FIND ALL INTERSECTIONS ----------------------
+
+        if ith_trajPoint < (N_trajPoints - 1)
+
+            ith_vector = N_trajVectors(ith_trajPoint,1);
+            % Start vector of a segement of a trajectory
+            start_vector = trajectoryXY(ith_vector,:);
+            end_vector   = trajectoryXY(ith_vector+1,:);
+
+            % locations is Mx2 if multiple hits
+            [~, locations] = fcn_Path_findProjectionHitOntoPath( ...
+                laneMarker_pathXY, start_vector, end_vector, flag_search_type, (-1));
+
+            if all(~isnan(locations(:)))
+                
+                % Get only the unique locations for one iteration
+                locations_unique = unique(round(locations, 6), 'rows');
+
+                % Append the intersection points of lane marker
+                all_hits_laneMarker = [all_hits_laneMarker; locations_unique]; %#ok<AGROW>
+
+                % If same vector intersects with the lane marker path N times,
+                % the index will be repeated N times. For example, 17th vector
+                % hits the lane marker at locations [1, 0; 2, 0; 3, 0]. The
+                all_trajIndices_of_hits = [all_trajIndices_of_hits; repmat(ith_vector, size(locations_unique,1), 1)]; %#ok<AGROW>
+            end
+        end
+
+    end
+
+
+    % Distance between the trajectory points and closest lane marker path points
+    distance_btw_traj_to_laneMarkerPath = ((trajectoryXY(:,1) - closest_path_points(:,1)).^2 +...
+        (trajectoryXY(:,2) - closest_path_points(:,2)).^2).^0.5;
+    
+    % Round the distances to the 6th decimal 
+    distance_btw_traj_to_laneMarkerPath = round(distance_btw_traj_to_laneMarkerPath, 6);
+
+    % Find the minimum distance from traj to lane marker path
+    [min_distance, ~] = min(distance_btw_traj_to_laneMarkerPath);
+
+    % Find all indices of trajectory whose distance from traj to lane
+    % marker path is measured min_distance
+    min_indices = find(min_distance == distance_btw_traj_to_laneMarkerPath); 
+
+
+
     % ------------------- FIND ALL INTERSECTIONS ----------------------
 
-    for ith_vector = 1:N_trajPoints-1
-        % Start vector of a segement of a trajectory
-        start_vector = trajectoryXY(ith_vector,:);
-        end_vector   = trajectoryXY(ith_vector+1,:);
-
-        % locations is Mx2 if multiple hits
-        [~, locations, ~, ~, ~] = fcn_Path_findProjectionHitOntoPath( ...
-            laneMarker_pathXY, start_vector, end_vector, flag_search_type, (-1));
-
-        if all(~isnan(locations(:)))
-
-            % Append the intersection points of lane marker
-            all_hits_laneMarker = [all_hits_laneMarker; locations]; %#ok<AGROW>
-
-            % If same vector intersects with the lane marker path N times,
-            % the index will be repeated N times. For example, 17th vector
-            % hits the lane marker at locations [1, 0; 2, 0; 3, 0]. The
-            all_trajIndices_of_hits = [all_trajIndices_of_hits; repmat(ith_vector, size(locations,1), 1)]; %#ok<AGROW>
-        end
-    end
+    % for ith_vector = 1:N_trajPoints-1
+    %     % Start vector of a segement of a trajectory
+    %     start_vector = trajectoryXY(ith_vector,:);
+    %     end_vector   = trajectoryXY(ith_vector+1,:);
+    %
+    %     % locations is Mx2 if multiple hits
+    %     [~, locations, ~, ~, ~] = fcn_Path_findProjectionHitOntoPath( ...
+    %         laneMarker_pathXY, start_vector, end_vector, flag_search_type, (115));
+    %
+    %     if all(~isnan(locations(:)))
+    %
+    %         % Append the intersection points of lane marker
+    %         all_hits_laneMarker = [all_hits_laneMarker; locations]; %#ok<AGROW>
+    %
+    %         % If same vector intersects with the lane marker path N times,
+    %         % the index will be repeated N times. For example, 17th vector
+    %         % hits the lane marker at locations [1, 0; 2, 0; 3, 0]. The
+    %         all_trajIndices_of_hits = [all_trajIndices_of_hits; repmat(ith_vector, size(locations,1), 1)]; %#ok<AGROW>
+    %     end
+    % end
 
 
     % Populate Results
 
-    % Intersection related
+    % Distance related
     laneCollisionStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
+    laneCollisionStruct(ith_lane).closest_points_on_pathXY_to_traj = closest_path_points;
+    laneCollisionStruct(ith_lane).distance_profile = distance_btw_traj_to_laneMarkerPath;
+    laneCollisionStruct(ith_lane).min_dist_btw_traj_and_path = min_distance;
+    laneCollisionStruct(ith_lane).min_distance_traj_index = min_indices;
+    laneCollisionStruct(ith_lane).closest_point_pathXY_at_min = closest_path_points(min_indices,:);
+
+    % Intersection related
     laneCollisionStruct(ith_lane).did_intersect = ~isempty(all_hits_laneMarker);
     laneCollisionStruct(ith_lane).intersections_pathXY = all_hits_laneMarker;
     laneCollisionStruct(ith_lane).intersection_traj_vector_index = all_trajIndices_of_hits;
@@ -249,46 +347,47 @@ if flag_do_plots
     grid on;
     axis equal;
 
-    % Plot the trajectory once
-    hTraj = plot(trajectoryXY(:,1), trajectoryXY(:,2), 'k.-', 'MarkerSize', 15, 'LineWidth', 2);
-    hTraj.DisplayName = 'Trajectory';
+    for ith_resultCell = 1:length(laneCollisionStruct)
+        
+        % Lane marker path
+        path = laneCollisionStruct(ith_resultCell).lane_marker_pathXY;
+        
+        % Trajectory of a vehicle
+        trajectory = trajectoryXY;
+        
+        % Closest points of lane marker path to trajectory 
+        closest_path_points_plotting = laneCollisionStruct(ith_resultCell).closest_points_on_pathXY_to_traj;
 
-    for ith_lane = 1:length(laneCollisionStruct)
+        % This is to plot quiver (arrow)
+        dx = closest_path_points_plotting(:,1) - trajectory(:,1);
+        dy = closest_path_points_plotting(:,2) - trajectory(:,2);
 
-        path = laneCollisionStruct(ith_lane).lane_marker_pathXY;
+        % Plot the path
+        hPath = plot(path(:,1),path(:,2),'r.-','Linewidth',3,'Markersize',20);
 
-        % Plot lane marker
-        hPath = plot(path(:,1), path(:,2), 'r.-', 'LineWidth', 3, 'MarkerSize', 15);
-        if ith_lane == 1
-            hPath.DisplayName = 'Lane marker';
+        % Plot the query point
+        hTraj = plot(trajectory(:,1),trajectory(:,2),'k.-','MarkerSize',20);
+
+        % Plot the closest points on the lane marker path from trajectory
+        hClosest = plot(closest_path_points_plotting(:,1),closest_path_points_plotting(:,2),'b.','MarkerSize',15);
+
+        % Plot a quiver (an arrow)
+        hArrow = quiver(trajectory(:,1), trajectory(:,2), dx, dy, 0, 'g', 'LineWidth', 1.5, 'MaxHeadSize', 0.5);
+        
+        % Show legend only once
+        if ith_resultCell == 1
+            hPath.DisplayName    = 'Path';
+            hTraj.DisplayName    = 'Trajectory';
+            hClosest.DisplayName = 'Closest Path Point';
+            hArrow.HandleVisibility = 'off';
         else
-            hPath.HandleVisibility = 'off';
-        end
-
-        % Plot hits (if any)
-        hits = laneCollisionStruct(ith_lane).intersections_pathXY;
-        % hitSegIdx = laneCollisionStruct(ith_lane).intersection_traj_vector_index;
-
-        if ~isempty(hits)
-
-            hHits = plot(hits(:,1), hits(:,2), 'bo', 'MarkerSize', 12, 'LineWidth', 2);
-
-            if ith_lane == 1
-                hHits.DisplayName = 'Intersections';
-            else
-                hHits.HandleVisibility = 'off';
-            end
-
-            % % Annotate each hit with its traj vector index
-            % for ith_hit = 1:size(hits,1)
-            %     text(hits(ith_hit,1), hits(ith_hit,2), ...
-            %         sprintf('seg %d', hitSegIdx(ith_hit)), ...
-            %         'Color', [0 0 1], 'FontSize', 10);
-            % end
+            hPath.HandleVisibility    = 'off';
+            hTraj.HandleVisibility    = 'off';
+            hClosest.HandleVisibility = 'off';
+            hArrow.HandleVisibility   = 'off';
         end
 
     end
-    
 
     % Make axis slightly larger?
     if flag_rescale_axis
