@@ -65,8 +65,12 @@ function laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleT
 % - wrote the code originally
 % 
 % 2026_02_15 by Aneesh Batchu, abb6486@psu.edu
-% - Seperated this function from
+% - Separated this function from
 % "fcn_SafetyMetrics_checkTrajLaneMarkerCollison"
+%
+% 2026_02_16 by Sean Brennan, sbrennan@psu.edu
+% - In fcn_SafetyMetrics_computeTrajLaneDistance
+%   % * Replaced OSM+2SHP flags with SAFETYMETRICS
 
 % TO DO:
 % 
@@ -87,11 +91,11 @@ else
     % Check to see if we are externally setting debug mode to be "on"
     flag_do_debug = 0; %     % Flag to plot the results for debugging
     flag_check_inputs = 1; % Flag to perform input checking
-    MATLABFLAG_OSM2SHP_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_SAFETYMETRICS_FLAG_CHECK_INPUTS");
-    MATLABFLAG_OSM2SHP_FLAG_DO_DEBUG = getenv("MATLABFLAG_SAFETYMETRICS_FLAG_DO_DEBUG");
-    if ~isempty(MATLABFLAG_OSM2SHP_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_OSM2SHP_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_OSM2SHP_FLAG_DO_DEBUG); 
-        flag_check_inputs  = str2double(MATLABFLAG_OSM2SHP_FLAG_CHECK_INPUTS);
+    MATLABFLAG__FLAG_CHECK_INPUTS = getenv("MATLABFLAG_SAFETYMETRICS_FLAG_CHECK_INPUTS");
+    MATLABFLAG__FLAG_DO_DEBUG = getenv("MATLABFLAG_SAFETYMETRICS_FLAG_DO_DEBUG");
+    if ~isempty(MATLABFLAG__FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG__FLAG_DO_DEBUG)
+        flag_do_debug = str2double(MATLABFLAG__FLAG_DO_DEBUG); 
+        flag_check_inputs  = str2double(MATLABFLAG__FLAG_CHECK_INPUTS);
     end
 end
 

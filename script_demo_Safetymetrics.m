@@ -63,7 +63,16 @@
 %   %   % "fcn_SafetyMetrics_checkTrajLaneMarkerCollison"
 %   % * This function calculates the distances from lane marker to
 %   %   % trajectory and as well as finds the intersections between them.
-
+%
+% 2026_02_16 by Sean Brennan, sbrennan@psu.edu
+% - In script_test_fcn_SafetyMetrics_generateVehicleBoundary2D
+%   % * added definitions of vehicleParametersStruct in each call to avoid
+%   %   % throwing errors if user jumps into test case directly (which is normal)
+% - In fcn_SafetyMetrics_generateVehicleBoundary2D
+%   % * removed dashed plotting style
+%   % * Replaced OSM+2SHP flags with SAFETYMETRICS
+% - In fcn_SafetyMetrics_computeTrajLaneDistance
+%   % * Replaced OSM+2SHP flags with SAFETYMETRICS
 
 % TO-DO:
 % 

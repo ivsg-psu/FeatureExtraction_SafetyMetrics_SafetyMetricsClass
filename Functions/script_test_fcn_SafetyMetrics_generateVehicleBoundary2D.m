@@ -6,6 +6,12 @@
 %
 % 2026_02_16 by Aneesh Batchu, abb6486@psu.edu
 % - wrote the code originally
+%
+% 2026_02_16 by Sean Brennan, sbrennan@psu.edu
+% - In script_test_fcn_SafetyMetrics_generateVehicleBoundary2D
+%   % * added definitions of vehicleParametersStruct in each call to avoid
+%   %   % throwing errors if user jumps into test case directly (which is normal)
+
 
 % TO-DO:
 % 
@@ -46,6 +52,11 @@ yaw = zeros(N,1);
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
 
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
+
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
 
@@ -77,6 +88,11 @@ yaw = (pi/2)*ones(N,1);
 
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
 
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
@@ -128,7 +144,7 @@ vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
 vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
 
 % Simple trajectory: N x 3 [x y yaw]
-N = 40;
+N = 5;
 x = linspace(0,20,N)';
 y = 1.5*sin(0.25*x);
 yaw = atan2([diff(y); y(end)-y(end-1)], [diff(x); x(end)-x(end-1)]); % approx heading
@@ -169,6 +185,12 @@ yaw = atan2([diff(y); y(end)-y(end-1)], [diff(x); x(end)-x(end-1)]);
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
 
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
+
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
 
@@ -201,6 +223,12 @@ yaw = pi*ones(N,1);      % facing negative x
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
 
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
+
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
 
@@ -232,6 +260,12 @@ yaw = linspace(-pi, pi, N)';   % rotate full circle
 
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
+
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
 
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
@@ -282,6 +316,12 @@ yaw = zeros(N,1);
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
 
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
+
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, ([]));
 
@@ -313,6 +353,12 @@ yaw = zeros(N,1);
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
 
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
+
 % Call the function
 vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (-1));
 
@@ -343,6 +389,12 @@ yaw = zeros(N,1);
 
 % Vehicle trajectory
 vehicleTraj = [x y yaw];
+
+
+% Vehicle parameters
+vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
 
 Niterations = 10;
 
@@ -429,6 +481,12 @@ if 1==0
 
     % Vehicle trajectory
     vehicleTraj = [x y];
+
+
+    % Vehicle parameters
+    vehicleParametersStruct.Lf = 1.5; % Length from origin to front bumper
+    vehicleParametersStruct.Lr = 1.2; % Length from origin to rear bumper
+    vehicleParametersStruct.w_vehicle = 1.8; % the width of the vehicle_param, [m]
 
     % Call the function
     vehicle_boundary = fcn_SafetyMetrics_generateVehicleBoundary2D(vehicleTraj, vehicleParametersStruct, (figNum));
