@@ -289,6 +289,8 @@ if flag_do_plots
 
     end
     
+    % Legend ON
+    legend('show','Location','best');
 
     % Make axis slightly larger?
     if flag_rescale_axis
