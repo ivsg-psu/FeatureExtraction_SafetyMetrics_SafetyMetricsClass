@@ -1,7 +1,11 @@
 function [time_total, x_vehicleTraj, y_vehicleTraj, yawVehicle, laneBoundaries, centerLines, flagObject] = ...
     fcn_SafetyMetrics_showVehicleTrajandMetricInputs(time, vehicleTraj, metricInputs, varargin)
-% fcn_SafetyMetrics_showVehicleTrajandMetricInputs
-% This code will ... (???)
+%% fcn_SafetyMetrics_showVehicleTrajandMetricInputs
+% 
+% This function calculates the yaw of the vehicle, Lane boundaries and
+% centerilines (of each lane) given the vehicle trajectory and the metric
+% inputs of all the lanes (coordinates of all lanes are given in the same
+% matrix)
 % 
 % FORMAT:
 % 

@@ -82,6 +82,26 @@
 %   % * Removed cl+c call
 % - In fcn_SafetyMetrics_showVehicleTrajandMetricInputs
 %   % * Formatted into standard form
+% 
+% 2026_02_18 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_calcTimeToCollision
+%   % * Renamed "fcn_SafetyMetrics_TTC" to fcn_SafetyMetrics_calcTimeToCollision
+%   % * Added DebugTools to check the inputs
+%   % * Updated the function and variable names to match the latest format
+% - In fcn_SafetyMetrics_calcTimeToLaneCollision
+%   % * Renamed "fcn_SafetyMetrics_TLC" to fcn_SafetyMetrics_calcTimeToLaneCollision
+%   % * Added DebugTools to check the inputs
+%   % * Updated the function and variable names to match the latest format
+% 2026_02_18 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_calcPostEnchrochmentTime
+%   % * Renamed "fcn_SafetyMetrics_PET" to fcn_SafetyMetrics_calcPostEnchrochmentTime
+%   % * Updated the function and variable names to match the latest format
+% - In fcn_SafetyMetrics_calcDecelerationRateToAvoidCrash
+%   % * Renamed "fcn_SafetyMetrics_DRAC" to fcn_SafetyMetrics_calcDecelerationRateToAvoidCrash
+%   % * Added DebugTools to check the inputs
+%   % * Updated the function and variable names to match the latest format
+
+
 
 % TO-DO:
 %
@@ -93,6 +113,101 @@
 % - In fcn_SafetyMetrics_showVehicleTrajandMetricInputs
 %   % * Need to explain purpose of code
 %   % * Need assertion testing in test script
+% 
+% 2026_02_18 by Aneesh Batchu, abb6486@psu.edu
+% - In fcn_SafetyMetrics_calcTimeToCollision
+%   % * Preallocate outputs and always fill with NaN by default
+%   %   % * Set TTC_time = NaN(N,1); upfront (where N = size(vehicleTraj,1)).
+%   % * Avoid growing xcoor_1 dynamically and avoid “missing rows” changing
+%   %   % length.%   % * Use correct ray origin points
+%   %   % * Right now you use rear_axle2. For generality, allow choosing ray origin:
+%   %   % * rear axle / CG / front axle / polygon vertices
+%   %   %   % across vehicle footprint.
+%   %   % * Return struct with:
+%   %   %   % * TTC_time (N×1, NaN if no hit)
+%   %   %   % * did_intersect flags (N×1 logical)
+%   %   %   % * intersection_points (N×2, NaN row if no hit)
+%   %   %   % * intersection_time (N×1)
+%   %   %   % * event indices (indices of key events; e.g., hit exists, TTC<threshold)
+%   %   %   % * event timestamps (timestamps: (time column) vehicleTraj(event_indices,1))
+%   % * Need a test script
+% - In fcn_SafetyMetrics_calcTimeToLaneCollision
+%   % * Remove hard-coded “two lanes only” assumption
+%   %   % * Right now outputs are fixed: TLC_lane1_time, TLC_lane2_time.
+%   %   % * Upgrade to:
+%   %   %   % * TLC_time as N x numLanes matrix, or
+%   %   %   % * TLC_time_byLane as cell array.%   % * Need a test script
+%   % * Move the 3D plot (figure(485)) to the debug section
+%   % * Eliminate hard-coded scenario gating like vehicleTraj(i,3) > 1.9
+%   %   % * That is “default data being analyzed” (a scenario-specific threshold).
+%   %   % * Replace with a geometric rule:
+%   %   %   % * pick the nearest lane boundary intersection in front of the
+%   %   %   %   % vehicle, or select lane surfaces based on lane IDs, 
+%   %   %   %   % side (left/right), or distance sign.
+%   % * Replace invalid checks xcoor_lane1{1,1}(i,1) ~= 0
+%   %   % * Code stores [NaN NaN NaN] for no hit — so you should check:
+%   %   %   % * ~isnan(xcoor_lane1{k}(i,3))
+%   %   %   % * Checking ~=0 can falsely reject a valid intersection at x=0.
+%   % * Preallocate TLC outputs with NaN
+%   % * Move all figure to debug section
+%   % * Use correct ray origin points
+%   %   % * Right now you use rear_axle2. For generality, allow choosing ray origin:
+%   %   % * rear axle / CG / front axle / polygon vertices  
+%   %   %   % across vehicle footprint.
+%   % * Return richer outputs (not just TLC_time)
+%   %   % * Return struct with:
+%   %   %   % * TLC_time (N×1, NaN if no hit)
+%   %   %   % * did_intersect flags (N×1 logical)
+%   %   %   % * intersection_points (N×2, NaN row if no hit)
+%   %   %   % * intersection_time (N×1)
+%   %   %   % * event indices (indices of key events; e.g., hit exists, TTC<threshold)
+%   %   %   % * event timestamps (timestamps: (time column) vehicleTraj(event_indices,1))
+%   % * Need a test script
+% - In fcn_SafetyMetrics_calcPostEnchrochmentTime
+%   % * Remove hard-coded car2 trajectory generation and define a clear API
+%   %   % * Delete the flag_car2 block and require car2_traj as an input.
+%   % * Move all plots to debug section
+%   % * Preallocate arrays
+%   %   % * Preallocate xcoor_car1_points = NaN(N,3);
+%   %   % * Avoid growing arrays in loops.
+%   % * Handle “no intersection” correctly
+%   %   % * Keep NaNs for intersection time.
+%   %   % * Define how PET should behave: NaN vs Inf vs large number.
+%   % * Use correct ray origin points
+%   %   % * Right now you use rear_axle2. For generality, allow choosing ray origin:
+%   %   % * rear axle / CG / front axle / polygon vertices
+%   %   %   % across vehicle footprint.
+%   % * Return richer outputs (not just PET_time)
+%   %   % * Return struct with:
+%   %   %   % * PET_time
+%   %   %   % * intersection_points
+%   %   %   % * intersection_time
+%   %   %   % * did_intersect flags
+%   %   %   % * indices/timestamps of events
+% - In fcn_SafetyMetrics_calcDecelerationRateToAvoidCrash
+%   % * Preallocate outputs and always fill with NaN by default
+%   %   % * Set DRAC = NaN(N,1); upfront (where N = size(trajectory,1)).
+%   % * Ensure TTC and DRAC are consistent-length vectors (N×1) and aligned by index.
+%   %   % * Validate size(TTC,1) == N 
+%   % * Use correct ray origin and allow selecting the origin point.
+%   %   % * Add an optional setting to choose ray origin:
+%   %   %   % * rear axle / CG / front axle / vehicle boundary vertices.
+%   % * Robustly handle edge cases to prevent Inf/NaN explosions.
+%   %   % * If no intersection: DRAC(i)=NaN.
+%   %   % * If TTC(i)<=0: DRAC(i)=NaN (or Inf) and flag as invalid.
+%   %   % * If distance_to_hit <= 0: ignore/NaN.
+%   %   % * Guard against divide-by-zero in both TTC and distance/time terms.
+%   % * Return richer outputs (not just DRAC).
+%   %   % * Return a struct with:
+%   %   %   % * DRAC (N×1)
+%   %   %   % * did_intersect (N×1 logical)
+%   %   %   % * intersection_points (N×3, NaN rows if no hit)
+%   %   %   % * distance_to_hit (N×1)
+%   %   %   % * closing_speed (N×1)
+%   %   %   % * event indices/timestamps (e.g., DRAC > threshold, TTC < threshold)
+%   % * Need a test script with multiple scenarios
+
+
 
 %% Make sure we are running out of root directory
 st = dbstack;
@@ -288,9 +403,9 @@ end
 num_of_lanes = size(laneBoundaries,2);
 flag_plot_lanes = 1;
 if flag_plot_lanes
-    lane_patches = nan(size(laneBoundaries,2));
+    % lane_patches = nan(size(laneBoundaries,2));
     for j = 1:num_of_lanes
-        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(laneBoundaries(1,j),485);
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(laneBoundaries(1,j),fig_num);
     end
 end
 %% Calculate the unit vector for each point
@@ -325,22 +440,72 @@ end
 
 %% TTC
 
-[TTC] = fcn_SafetyMetrics_TTC(u,trajectory,rear_axle,object);
+figNum = 20009;
+titleString = sprintf('fcn_SafetyMetrics_TimeToCollision: Generates TTC time for an object during a half-lane change');
+fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
+figure(figNum); close(figNum);
+
+TTC_time = fcn_SafetyMetrics_calcTimeToCollision(u,trajectory,rear_axle,object, (figNum));
+
+sgtitle(titleString, 'Interpreter','none','Fontsize',15);
+
+% % Assertions
+% assert(isequal(length(time), 236))
+
+% Make sure plot opened up
+assert(isequal(get(gcf,'Number'),figNum));
 
 %% TLC
 
+figNum = 20010;
+titleString = sprintf('fcn_SafetyMetrics_TimeToLaneCollision: Generates TLC time');
+fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
+figure(figNum); close(figNum);
+
+timeInterval = 5; % How many points to plot. 1 means every point, 2 every other point
+fig_num = 495;
+car1_layers = fcn_SafetyMetrics_plotTrajectoryXY(trajectory, vehicleParameters, timeInterval, 1, fig_num);
+
+% Plot the laneBoundaries
+num_of_lanes = size(laneBoundaries,2);
+flag_plot_lanes = 1;
+if flag_plot_lanes
+    % lane_patches = nan(size(laneBoundaries,2));
+    for j = 1:num_of_lanes
+        [lane_patches(j)]=fcn_SafetyMetrics_plot_lanes(laneBoundaries(1,j),fig_num);
+    end
+end
+
 %TLC
-[TLC1,TLC2] = fcn_SafetyMetrics_TLC(u,trajectory,rear_axle,lane_patches);
+[TLC1,TLC2] = fcn_SafetyMetrics_calcTimeToLaneCollision(u,trajectory,rear_axle,lane_patches, (figNum));
+
+% sgtitle(titleString, 'Interpreter','none','Fontsize',15);
 
 %% PET
 
+figNum = 20011;
+titleString = sprintf('fcn_SafetyMetrics_PostEnchrochmentTime: Generates PET time');
+fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
+figure(figNum); close(figNum);
+
 %PET
-[PET] = fcn_SafetyMetrics_PET(car1_patch,vehicleParameters);
+[PET] = fcn_SafetyMetrics_calcPostEnchrochmentTime(car1_patch,vehicleParameters, (figNum));
 
 %% DRAC
 
+figNum = 20012;
+titleString = sprintf('fcn_SafetyMetrics_PostEnchrochmentTime: Generates PET time');
+fprintf(1,'Figure %.0f: %s\n',figNum, titleString);
+figure(figNum); close(figNum);
+
+% [u,rear_axle]=fcn_SafetyMetrics_unit_vector(trajectory,vehicleParameters,7182);
+% if flag_object
+%     % Plot the object in the unit vector plot
+%     patch(object)
+% end
+
 %DRAC
-[DRAC] = fcn_SafetyMetrics_DRAC(u,trajectory,rear_axle,TTC,object,flag_object);
+[DRAC] = fcn_SafetyMetrics_calcDecelerationRateToAvoidCrash(u, trajectory, rear_axle, TTC_time, object, flag_object, (figNum));
 
 %% SD
 
