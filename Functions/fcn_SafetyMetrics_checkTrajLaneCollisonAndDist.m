@@ -7,7 +7,7 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(ve
 % 
 % FORMAT:
 % 
-% laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum))
+% laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(vehicleTrajectoryPath, laneMarkerPath, (figNum))
 % 
 % INPUTS:
 % 
@@ -72,6 +72,14 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneCollisonAndDist(ve
 % 
 % 2026_02_10 by Aneesh Batchu, abb6486@psu.edu
 % - wrote the code originally
+% 
+% 2026_02_23 by Aneesh Batchu, abb6486@psu.edu
+% In fcn_SafetyMetrics_checkTrajLaneCollisonAndDist
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
+%   % * Modified debug optiond to skip plotting if there are no
+%   %   % closest_path_points_plotting for plotting
+
 
 % TO DO:
 % 
@@ -354,9 +362,14 @@ if flag_do_plots
         
         % Trajectory of a vehicle
         trajectory = trajectoryXY;
-        
-        % Closest points of lane marker path to trajectory 
+
+        % Closest points of lane marker path to trajectory
         closest_path_points_plotting = laneCollisionStruct(ith_resultCell).closest_points_on_pathXY_to_traj;
+
+        if isempty(closest_path_points_plotting)
+            % ith_resultCell
+            continue
+        end
 
         % This is to plot quiver (arrow)
         dx = closest_path_points_plotting(:,1) - trajectory(:,1);
@@ -430,7 +443,7 @@ laneMarkerXY_cell = {};
 for ith_laneMarker = 1:length(nan_indices)
     stop_index = nan_indices(ith_laneMarker) - 1; 
 
-    if stop_index > start_index
+    if stop_index >= start_index
         laneMarkerSegment = laneMarkersXY(start_index:stop_index, :); 
         % laneMarkerSegment = laneMarkerSegment(~any(isnan(laneMarkerSegment),2),:);
         if ~isempty(laneMarkerSegment)

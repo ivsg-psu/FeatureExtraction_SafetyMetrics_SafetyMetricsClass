@@ -71,6 +71,13 @@ function laneDistanceStruct = fcn_SafetyMetrics_computeTrajLaneDistance(vehicleT
 % 2026_02_16 by Sean Brennan, sbrennan@psu.edu
 % - In fcn_SafetyMetrics_computeTrajLaneDistance
 %   % * Replaced OSM+2SHP flags with SAFETYMETRICS
+% 
+% 2026_02_23 by Aneesh Batchu, abb6486@psu.edu
+% In fcn_SafetyMetrics_computeTrajLaneDistance
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
+%   % * Modified debug optiond to skip plotting if there are no
+%   %   % closest_path_points_plotting for plotting
 
 % TO DO:
 % 
@@ -273,15 +280,20 @@ if flag_do_plots
     axis equal;
 
     for ith_resultCell = 1:length(laneDistanceStruct)
-        
+
         % Lane marker path
         path = laneDistanceStruct(ith_resultCell).lane_marker_pathXY;
-        
+
         % Trajectory of a vehicle
         trajectory = trajectoryXY;
-        
-        % Closest points of lane marker path to trajectory 
+
+        % Closest points of lane marker path to trajectory
         closest_path_points_plotting = laneDistanceStruct(ith_resultCell).closest_points_on_pathXY_to_traj;
+
+        if isempty(closest_path_points_plotting)
+            % ith_resultCell
+            continue
+        end
 
         % This is to plot quiver (arrow)
         dx = closest_path_points_plotting(:,1) - trajectory(:,1);
@@ -298,7 +310,7 @@ if flag_do_plots
 
         % Plot a quiver (an arrow)
         hArrow = quiver(trajectory(:,1), trajectory(:,2), dx, dy, 0, 'g', 'LineWidth', 1.5, 'MaxHeadSize', 0.5);
-        
+
         % Show legend only once
         if ith_resultCell == 1
             hPath.DisplayName    = 'Path';
@@ -357,7 +369,7 @@ for ith_laneMarker = 1:length(nan_indices)
     % Finds the last index of a lane marker
     stop_index = nan_indices(ith_laneMarker) - 1; 
 
-    if stop_index > start_index
+    if stop_index >= start_index
 
         % Grabs the lane marker based on calculated start and stop index
         laneMarkerSegment = laneMarkersXY(start_index:stop_index, :); 

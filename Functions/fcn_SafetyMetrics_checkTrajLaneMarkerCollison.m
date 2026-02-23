@@ -55,6 +55,11 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 % 
 % 2026_02_15 by Aneesh Batchu, abb6486@psu.edu
 % - wrote the code originally
+% 
+% 2026_02_23 by Aneesh Batchu, abb6486@psu.edu
+% In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
 
 % TO DO:
 % 
@@ -333,7 +338,7 @@ laneMarkerXY_cell = {};
 for ith_laneMarker = 1:length(nan_indices)
     stop_index = nan_indices(ith_laneMarker) - 1; 
 
-    if stop_index > start_index
+    if stop_index >= start_index
         laneMarkerSegment = laneMarkersXY(start_index:stop_index, :); 
         % laneMarkerSegment = laneMarkerSegment(~any(isnan(laneMarkerSegment),2),:);
         if ~isempty(laneMarkerSegment)

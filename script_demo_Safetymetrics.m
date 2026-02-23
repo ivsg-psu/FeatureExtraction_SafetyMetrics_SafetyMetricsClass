@@ -100,6 +100,21 @@
 %   % * Renamed "fcn_SafetyMetrics_DRAC" to fcn_SafetyMetrics_calcDecelerationRateToAvoidCrash
 %   % * Added DebugTools to check the inputs
 %   % * Updated the function and variable names to match the latest format
+% 
+% 2026_02_23 by Aneesh Batchu, abb6486@psu.edu
+% In fcn_SafetyMetrics_computeTrajLaneDistance
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
+%   % * Modified debug optiond to skip plotting if there are no
+%   %   % closest_path_points_plotting for plotting
+% In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
+% In fcn_SafetyMetrics_checkTrajLaneCollisonAndDist
+%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
+%   %   % point lane markers as a seperate lane marker. 
+%   % * Modified debug optiond to skip plotting if there are no
+%   %   % closest_path_points_plotting for plotting
 
 
 

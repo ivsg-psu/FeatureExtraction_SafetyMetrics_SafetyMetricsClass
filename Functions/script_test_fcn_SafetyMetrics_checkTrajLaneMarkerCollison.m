@@ -657,7 +657,7 @@ end
 % % plot(traj3XY(:,1), traj3XY(:,2), 'g-', 'LineWidth', 2);
 % % plot(traj4XY(:,1), traj4XY(:,2), 'm-', 'LineWidth', 2);
 % 
-% % legend('Lane markers', 'Traj1 parallel', 'Traj2 cross once', 'Traj3 wavy', 'Traj4 follow curve');
+% % legend('Lane markers', 'Traj1 parallel', 'Traj2 cross once', 'Traj3 wavy', 'Traj4');
 % title('Synthetic Lane Markers and Test Trajectories');
 % xlabel('X (m)'); ylabel('Y (m)');
 
