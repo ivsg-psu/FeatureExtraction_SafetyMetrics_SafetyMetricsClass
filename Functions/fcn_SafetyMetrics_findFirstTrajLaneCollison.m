@@ -1,12 +1,12 @@
-function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPaths, varargin)
+function firstHitStruct = fcn_SafetyMetrics_findFirstTrajLaneCollison(vehicleTrajectoryPath, laneMarkerPaths, varargin)
 %% fcn_SafetyMetrics_checkTrajLaneMarkerCollison
 % 
-% Given a trajectory (points) and lane marker polylines (NaN-separated),
-% this function finds intersections.
+% Finds the FIRST true (non-projected) intersection between a vehicle
+% trajectory and one or more lane marker polylines (NaN-separated).
 % 
 % FORMAT:
 % 
-% laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum))
+% laneCollisionStruct = fcn_SafetyMetrics_findFirstTrajLaneCollison(vehicleTrajectoryPath, laneMarkerPath, (figNum))
 % 
 % INPUTS:
 % 
@@ -29,10 +29,12 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 % 
 %       .did_intersect: (Check for an intersection)
 % 
-%       .intersections_pathXY: (intersection points on lane marker)
+%       .intersection_pathXY: (intersection points on lane marker)
 % 
 %       .intersection_traj_vector_index: (Index of the trajectory point 
 %                              that is intersected with the lane marker)
+% 
+%       .intersection_traj_station   (meters along trajectory)
 % 
 % DEPENDENCIES:
 % 
@@ -43,7 +45,7 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 %
 %       See the script:
 %
-%       script_test_fcn_SafetyMetrics_checkTrajLaneMarkerCollison.m 
+%       script_test_fcn_SafetyMetrics_findFirstTrajLaneCollison.m 
 %
 %       for a full test suite.
 % 
@@ -53,13 +55,10 @@ function laneCollisionStruct = fcn_SafetyMetrics_checkTrajLaneMarkerCollison(veh
 % 
 % REVISION HISTORY:
 % 
-% 2026_02_15 by Aneesh Batchu, abb6486@psu.edu
-% - wrote the code originally
-% 
 % 2026_02_23 by Aneesh Batchu, abb6486@psu.edu
 % In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
-%   % * Modified "fcn_INTERNAL_generateLaneMarkerCell" to store one
-%   %   % point lane markers as a seperate lane marker. 
+%   % * wrote the code originally
+
 
 % TO DO:
 % 
@@ -158,23 +157,35 @@ laneMarkersXY = laneMarkerPaths(:,1:2);
 % a cell array
 laneMarkerXY_cell = fcn_INTERNAL_generateLaneMarkerCell(laneMarkersXY);
 
+% Precompute station along trajectory
+dXY = diff(trajectoryXY,1,1);
+
+% Length of each segment
+length_trajSegments = sqrt(sum(dXY.^2,2));     % (N-1)x1 segment lengths
+stationDist_Traj = [0; cumsum(length_trajSegments)];         % Nx1 station at each trajectory vertex
+
 % Preallocate output struct
-laneCollisionStruct = repmat(struct( ...
+firstHitStruct = repmat(struct( ...
     'lane_marker_pathXY', [], ...
     'did_intersect', false, ...
-    'intersections_pathXY', [], ...
-    'intersection_traj_vector_index', []), ...
+    'intersection_pathXY', [], ...
+    'intersection_traj_vector_index', [], ...
+    'intersection_traj_station', []), ...
     length(laneMarkerXY_cell), 1);
+
+
+% Returns the first intersections (no projections)
+flag_search_type = 0;
 
 % Loop over each lane marker path
 for ith_lane = 1:length(laneMarkerXY_cell(:,1))
 
     % Grab a cell of the lane marker
-    laneMarker_pathXY = laneMarkerXY_cell{ith_lane, 1};
+    laneMarker_pathXY = laneMarkerXY_cell{ith_lane, 1}; 
 
     % Skip degenerate lane markers
     if size(laneMarker_pathXY,1) < 2
-        laneCollisionStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
+        firstHitStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
         continue;
     end
 
@@ -182,15 +193,6 @@ for ith_lane = 1:length(laneMarkerXY_cell(:,1))
 
     % Number of points in the trajectory
     N_trajPoints = length(trajectoryXY(:,1));
-    
-    % Initialize the matrix of intersection points of lane marker path
-    all_hits_laneMarker = [];
-
-    % Initialize the matrix of intersection points of lane marker path
-    all_trajIndices_of_hits = [];
-
-    % Returns all the intersections (no projections)
-    flag_search_type = 2;
 
     % ------------------- FIND ALL INTERSECTIONS ----------------------
 
@@ -200,29 +202,36 @@ for ith_lane = 1:length(laneMarkerXY_cell(:,1))
         end_vector   = trajectoryXY(ith_vector+1,:);
 
         % locations is Mx2 if multiple hits
-        [~, locations, ~, ~, ~] = fcn_Path_findProjectionHitOntoPath( ...
+        [~, locations, ~, ~, u] = fcn_Path_findProjectionHitOntoPath( ...
             laneMarker_pathXY, start_vector, end_vector, flag_search_type, (-1));
 
         if all(~isnan(locations(:)))
+            
+            % Station length of the vector
+            segLen = length_trajSegments(ith_vector);
 
-            % Append the intersection points of lane marker
-            all_hits_laneMarker = [all_hits_laneMarker; locations]; %#ok<AGROW>
+            % Just to make sure that this works at the end cases
+            u_clamped = max(0, min(1, u(1))); 
+            
+            % Populate the result
+            firstHitStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
+            firstHitStruct(ith_lane).did_intersect = true;
+            firstHitStruct(ith_lane).intersection_pathXY = locations(1,:);
+            firstHitStruct(ith_lane).intersection_traj_vector_index = ith_vector;
+            firstHitStruct(ith_lane).intersection_traj_station = stationDist_Traj(ith_vector) + u_clamped*segLen;
 
-            % If same vector intersects with the lane marker path N times,
-            % the index will be repeated N times. For example, 17th vector
-            % hits the lane marker at locations [1, 0; 2, 0; 3, 0]. The
-            all_trajIndices_of_hits = [all_trajIndices_of_hits; repmat(ith_vector, size(locations,1), 1)]; %#ok<AGROW>
+            break; % first collision for this lane marker found
+
+        else
+             % Populate the result
+             firstHitStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
+            firstHitStruct(ith_lane).intersection_pathXY = [];
+            firstHitStruct(ith_lane).intersection_traj_vector_index = [];
+            firstHitStruct(ith_lane).intersection_traj_station = [];
+
         end
+       
     end
-
-
-    % Populate Results
-
-    % Intersection related
-    laneCollisionStruct(ith_lane).lane_marker_pathXY = laneMarker_pathXY;
-    laneCollisionStruct(ith_lane).did_intersect = ~isempty(all_hits_laneMarker);
-    laneCollisionStruct(ith_lane).intersections_pathXY = all_hits_laneMarker;
-    laneCollisionStruct(ith_lane).intersection_traj_vector_index = all_trajIndices_of_hits;
 
 
 end
@@ -258,9 +267,9 @@ if flag_do_plots
     hTraj = plot(trajectoryXY(:,1), trajectoryXY(:,2), 'k.-', 'MarkerSize', 15, 'LineWidth', 2);
     hTraj.DisplayName = 'Trajectory';
 
-    for ith_resultCell = 1:length(laneCollisionStruct)
+    for ith_resultCell = 1:length(firstHitStruct)
 
-        path = laneCollisionStruct(ith_resultCell).lane_marker_pathXY;
+        path = firstHitStruct(ith_resultCell).lane_marker_pathXY;
 
         % Plot lane marker
         hPath = plot(path(:,1), path(:,2), 'r.-', 'LineWidth', 3, 'MarkerSize', 15);
@@ -270,26 +279,21 @@ if flag_do_plots
             hPath.HandleVisibility = 'off';
         end
 
-        % Plot hits (if any)
-        hits = laneCollisionStruct(ith_resultCell).intersections_pathXY;
-        % hitSegIdx = laneCollisionStruct(ith_lane).intersection_traj_vector_index;
 
-        if ~isempty(hits)
+        if firstHitStruct(ith_resultCell).did_intersect
 
-            hHits = plot(hits(:,1), hits(:,2), 'bo', 'MarkerSize', 12, 'LineWidth', 2);
+            hit = firstHitStruct(ith_resultCell).intersection_pathXY;
+            hHit = plot(hit(1), hit(2), 'bo', 'MarkerSize', 14, 'LineWidth', 2);
 
             if ith_resultCell == 1
-                hHits.DisplayName = 'Intersections';
+                hHit.DisplayName = 'Intersection';
             else
-                hHits.HandleVisibility = 'off';
+                hHit.HandleVisibility = 'off';
             end
 
-            % % Annotate each hit with its traj vector index
-            % for ith_hit = 1:size(hits,1)
-            %     text(hits(ith_hit,1), hits(ith_hit,2), ...
-            %         sprintf('seg %d', hitSegIdx(ith_hit)), ...
-            %         'Color', [0 0 1], 'FontSize', 10);
-            % end
+            % s_hit = firstHitStruct(ith_lane).intersection_traj_station;
+            % text(hit(1), hit(2), sprintf('  s=%.2f m', s_hit), ...
+            %     'Color', [0 0 1], 'FontSize', 11);
         end
 
     end
