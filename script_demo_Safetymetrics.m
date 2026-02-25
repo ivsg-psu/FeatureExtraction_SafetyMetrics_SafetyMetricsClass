@@ -115,10 +115,17 @@
 %   %   % point lane markers as a separate lane marker. 
 %   % * Modified debug option to skip plotting if there are no
 %   %   % closest_path_points_plotting for plotting
+% 
+% (new release)
+%
+% 2026_02_24 by Aneesh Batchu, abb6486@psu.edu
 % - In fcn_SafetyMetrics_checkTrajLaneMarkerCollison
 %   % * wrote the code originally
 % - In script_test_fcn_SafetyMetrics_findFirstTrajLaneCollison
 %   % * wrote the code originally
+% 
+% (new release)
+%
 
 
 
